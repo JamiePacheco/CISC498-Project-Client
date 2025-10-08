@@ -3,7 +3,9 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  display:flex;
+  left: 110%;
+  height: 10vmin;
   pointer-events: none;
 }
 
@@ -16,8 +18,6 @@
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
@@ -28,6 +28,14 @@
   color: #61dafb;
 }
 
+.link {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  height: 10vmin;
+  cursor: pointer;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,4 +43,113 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Header {
+  background-color: #1f2127ff;
+  min-height: 10%;
+  min-width: 100%;
+  position: fixed;
+  top: 0%;
+  border: #14161aff solid 2px;
+  display: flex;
+}
+
+.Sidebar {
+  min-height: 100vh;
+  width: 20vh;
+  border: 2rem;
+  background-color: #1f2127ff;
+  border-right: 2px solid #14161aff;
+  flex-shrink: 0; /* prevent sidebar from shrinking */
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.main1 {
+  flex: 1;
+  padding-top: 5rem;
+  display: relative;
+}
+
+.button {
+  min-height: 5vh;
+  min-width: 10rem;
+  background-image: linear-gradient(to bottom left, rgba(4, 20, 68, 1) 0%, rgba(8, 35, 191, 1) 51%, rgba(5, 165, 154, 1) 100%);
+  color: white;
+  border: 2px solid blue;
+  transition: 1s;
+  padding: 1vh;
+  padding-left: 3vh;
+  padding-right: 3vh;
+  background-size: 200% auto;
+  text-decoration: none;
+  font-size: 0.5em;
+}
+
+.button:hover{
+  background-position: right center;
+}
+
+.join-button{
+  min-height: 3vh;
+  min-width: 7rem;
+  background-image: linear-gradient(to bottom left, rgba(4, 20, 68, 1) 0%, rgba(8, 35, 191, 1) 51%, rgba(5, 165, 154, 1) 100%);
+  color: white;
+  border: 2px solid blue;
+  transition: 1s;
+  padding: 1vh;
+  background-size: 200% auto;
+  margin-top: 1vh;
+}
+
+.join-button:hover{
+  background-position: right center;
+}
+
+button:hover {
+  background: linear-gradient(to_bottom_left, #03a881, #003a90);
+}
+
+.overlay{
+  background-color: rgba(39, 41, 53, 1);
+  border: 3px solid rgba(74, 237, 252, 1);
+  position:absolute;
+  border-radius: 1em;
+  width: 40vh;
+  height: 60vh;
+  top: 20%;
+  left: 44%;
+  padding-top: 1em;
+}
+
+.input{
+  margin-top: 0.5em;
+}
+
+.text-box{
+  background-color: #1f2127ff;
+  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border-radius: 0.4em;
+  min-height: 2ch;
+  width: 22ch;
+  font-size: 0.8em;
+  text-align: center;
+  color: white;
+}
+
+.text-box:disabled{
+  background-color: #5c5c5cff;
+}
+
+.exit{
+  position: absolute;
+  top: 1%;
+  left: 90%;
+  color: red;
+  cursor: pointer;
 }
