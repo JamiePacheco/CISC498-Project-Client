@@ -135,8 +135,8 @@ button:hover {
   background-color: #1f2127ff;
   border: 0.1em solid  rgba(74, 237, 252, 1);
   border-radius: 0.4em;
-  min-height: 2ch;
-  width: 22ch;
+  min-height: 10%;
+  min-width: 30%;
   font-size: 0.8em;
   text-align: center;
   color: white;
@@ -152,4 +152,23 @@ button:hover {
   left: 90%;
   color: red;
   cursor: pointer;
+}
+
+.enter-lobby-button{
+  background-color: #1f2127ff;
+  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border-radius: 0.4em;
+  min-height: 2ch;
+  width: 22ch;
+  font-size: 0.8em;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  padding-left: 2em;
+  padding-right: 2em;
+  transition: 2s;
+}
+
+.enter-lobby-button:hover{
+  background-color: grey;
 }

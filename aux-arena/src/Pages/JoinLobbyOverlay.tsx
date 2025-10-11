@@ -1,16 +1,24 @@
+
 import "../App.css"
+import { Link } from "react-router-dom";
 
 export interface userStatus{
-    username: string;
+    user: string;
     setUser: (name: string)=>void;
-    loggedIn: boolean;
+    loggedIn: string;
     setJoining: (isJoining:boolean)=>void;
+    lobby: string;
+    setLobby: (code:string)=>void;
 }
 
-export default function LobbyOverlay({username, setUser, loggedIn, setJoining}: userStatus) {
+export default function LobbyOverlay({user, setUser, loggedIn, setJoining, lobby, setLobby}: userStatus) {
 
     function changeName(event:any){
         setUser(event.target.value);
+    }
+
+    function lobbyHelper(event:any){
+        setLobby(event.target.value)
     }
 
     return(
@@ -20,14 +28,19 @@ export default function LobbyOverlay({username, setUser, loggedIn, setJoining}: 
             <div className="input">
                 Username:
                 <div>
-                    <input disabled={loggedIn} className="text-box" placeholder={username} type="text" onChange={changeName}></input>
+                    <input disabled={loggedIn? true: false} className="text-box" placeholder={user} type="text" onChange={changeName}></input>
                 </div>
+                {user}
             </div>
             <div className="input">
                 Lobby Code:
                 <div>
-                    <input className="text-box" type="text"></input>
+                    <input className="text-box" type="text" onChange={lobbyHelper}></input>
                 </div>
+            </div>
+
+            <div>
+                <Link to="/game-lobby" className="enter-lobby-button">Test</Link>
             </div>
         </div>
     )
