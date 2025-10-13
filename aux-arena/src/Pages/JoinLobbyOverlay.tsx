@@ -30,7 +30,6 @@ export default function LobbyOverlay({user, setUser, loggedIn, setJoining, lobby
                 <div>
                     <input disabled={loggedIn? true: false} className="text-box" placeholder={user} type="text" onChange={changeName}></input>
                 </div>
-                {user}
             </div>
             <div className="input">
                 Lobby Code:

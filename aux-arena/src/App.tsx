@@ -5,6 +5,7 @@ import CreateLobby from './Pages/CreateLobby';
 import logo from "./logo.svg"
 import GameLobby from "./Pages/GameLobby";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function App() {
   const [username, setUsername] = useState<string>(() => {
@@ -39,9 +40,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <header className='Header'>
-          <a href="/" className="link">
+          <Link to="/" className="link">
             <img src={logo} className="App-logo" alt="logo"/>
-          </a>
+          </Link>
         </header>
         <Routes>
           <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn} lobby={lobby} setLobby={setLobby} handleLogOut={handleLogout}/>}></Route>
