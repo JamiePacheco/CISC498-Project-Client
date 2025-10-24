@@ -1,5 +1,5 @@
-
 import "../App.css"
+import './overlay.css'
 import { Link } from "react-router-dom";
 
 export interface userStatus{
@@ -38,8 +38,8 @@ export default function LobbyOverlay({user, setUser, loggedIn, setJoining, lobby
                 </div>
             </div>
 
-            <div>
-                <Link to="/game-lobby" className="enter-lobby-button">Test</Link>
+            <div className="input">
+                <Link to="/game-lobby" className="enter lobby-button">Test</Link>
             </div>
         </div>
     )

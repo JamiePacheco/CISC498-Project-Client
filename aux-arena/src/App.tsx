@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import './App.css';
 import Home from './Pages/HomePage'
-import CreateLobby from './Pages/CreateLobby';
 import logo from "./logo.svg"
 import GameLobby from "./Pages/GameLobby";
 import { useState } from "react";
@@ -28,6 +27,8 @@ function App() {
 
   const [lobby, setLobby] = useState<string>("")
 
+  const [lobbyPrivate, setPrivate] = useState<boolean>(false)
+
 
   const handleLogout = () => {
     localStorage.clear();
@@ -45,9 +46,8 @@ function App() {
           </Link>
         </header>
         <Routes>
-          <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn} lobby={lobby} setLobby={setLobby} handleLogOut={handleLogout}/>}></Route>
-          <Route path='/make-lobby' element={<CreateLobby/>}></Route>
-          <Route path='/game-lobby' element={<GameLobby user={username} loggedIn={loggedIn}/>}/>
+          <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn} lobby={lobby} setLobby={setLobby} handleLogOut={handleLogout} lobbyPrivate={lobbyPrivate} setPrivate={setPrivate}/>}></Route>
+          <Route path='/game-lobby' element={<GameLobby user={username} loggedIn={loggedIn} lobbyPrivate={lobbyPrivate} setPrivate={setPrivate}/>}/>
         </Routes>
       </header>
     </div>

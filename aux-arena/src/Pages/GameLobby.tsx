@@ -3,9 +3,11 @@ import "./Lobby.css"
 export interface information{
   user: string;
   loggedIn: string;
+  lobbyPrivate: boolean;
+  setPrivate: (something:boolean)=>void;
 }
 
-export default function GameLobby({user, loggedIn}: information) {
+export default function GameLobby({user, loggedIn, lobbyPrivate, setPrivate}: information) {
 
 
     return (

@@ -95,6 +95,10 @@
   background-position: right center;
 }
 
+.button.login{
+  margin-top: 15ch;
+}
+
 .join-button{
   min-height: 3vh;
   min-width: 7rem;
@@ -104,7 +108,6 @@
   transition: 1s;
   padding: 1vh;
   background-size: 200% auto;
-  margin-top: 1vh;
 }
 
 .join-button:hover{
@@ -113,62 +116,4 @@
 
 button:hover {
   background: linear-gradient(to_bottom_left, #03a881, #003a90);
-}
-
-.overlay{
-  background-color: rgba(39, 41, 53, 1);
-  border: 3px solid rgba(74, 237, 252, 1);
-  position:absolute;
-  border-radius: 1em;
-  width: 40vh;
-  height: 60vh;
-  top: 20%;
-  left: 44%;
-  padding-top: 1em;
-}
-
-.input{
-  margin-top: 0.5em;
-}
-
-.text-box{
-  background-color: #1f2127ff;
-  border: 0.1em solid  rgba(74, 237, 252, 1);
-  border-radius: 0.4em;
-  min-height: 10%;
-  min-width: 30%;
-  font-size: 0.8em;
-  text-align: center;
-  color: white;
-}
-
-.text-box:disabled{
-  background-color: #5c5c5cff;
-}
-
-.exit{
-  position: absolute;
-  top: 1%;
-  left: 90%;
-  color: red;
-  cursor: pointer;
-}
-
-.enter-lobby-button{
-  background-color: #1f2127ff;
-  border: 0.1em solid  rgba(74, 237, 252, 1);
-  border-radius: 0.4em;
-  min-height: 2ch;
-  width: 22ch;
-  font-size: 0.8em;
-  text-align: center;
-  color: white;
-  text-decoration: none;
-  padding-left: 2em;
-  padding-right: 2em;
-  transition: 2s;
-}
-
-.enter-lobby-button:hover{
-  background-color: grey;
 }
