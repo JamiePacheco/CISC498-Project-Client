@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "../App.css"
 import './overlay.css'
 import { Link } from "react-router-dom";
@@ -7,11 +8,10 @@ export interface userStatus{
     setUser: (name: string)=>void;
     loggedIn: string;
     setJoining: (isJoining:boolean)=>void;
-    lobby: string;
-    setLobby: (code:string)=>void;
 }
 
-export default function LobbyOverlay({user, setUser, loggedIn, setJoining, lobby, setLobby}: userStatus) {
+export default function LobbyOverlay({user, setUser, loggedIn, setJoining}: userStatus) {
+    const [lobby, setLobby] = useState<string>("");
 
     function changeName(event:any){
         setUser(event.target.value);
@@ -39,7 +39,7 @@ export default function LobbyOverlay({user, setUser, loggedIn, setJoining, lobby
             </div>
 
             <div className="input">
-                <Link to="/game-lobby" className="enter lobby-button">Test</Link>
+                <Link to="/game-lobby" className="enter lobby-button" state={{lobby:lobby}}>Test</Link>
             </div>
         </div>
     )

@@ -11,7 +11,7 @@ function App() {
     return localStorage.getItem("username") || "";
   })
 
-  const handleUser = (name: string) => {
+  const handleUser = (name: string) => { //Change to store user data when accounts are made
     setUsername(name);
     localStorage.setItem("username", name);
 };
@@ -24,11 +24,6 @@ function App() {
     setLoggedIn(truthy);
     localStorage.setItem("loggedIn", truthy);
 };
-
-  const [lobby, setLobby] = useState<string>("")
-
-  const [lobbyPrivate, setPrivate] = useState<boolean>(false)
-
 
   const handleLogout = () => {
     localStorage.clear();
@@ -46,8 +41,8 @@ function App() {
           </Link>
         </header>
         <Routes>
-          <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn} lobby={lobby} setLobby={setLobby} handleLogOut={handleLogout} lobbyPrivate={lobbyPrivate} setPrivate={setPrivate}/>}></Route>
-          <Route path='/game-lobby' element={<GameLobby user={username} loggedIn={loggedIn} lobbyPrivate={lobbyPrivate} setPrivate={setPrivate}/>}/>
+          <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn}handleLogOut={handleLogout}/>}></Route>
+          <Route path='/game-lobby' element={<GameLobby user={username} loggedIn={loggedIn} />}/>
         </Routes>
       </header>
     </div>

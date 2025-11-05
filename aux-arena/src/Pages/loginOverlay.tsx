@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import './overlay.css'
+import { authenticateUser } from '../service/AuthenticationService';
 
 
 export interface login{
+    username: string;
     setUsername: (name:string)=>void;
     setLoggedIn: (isLoggedIn:string)=>void;
     setLoggingIn: (isLoggingIn:boolean)=>void;
@@ -10,16 +12,29 @@ export interface login{
 
 type mode = "Login" | "Register" | "Reset"; // 1: Login, 2: Register, 3: Reset
 
-export default function LoginOverlay({setUsername, setLoggingIn, setLoggedIn}: login){
+export default function LoginOverlay({username, setUsername, setLoggingIn, setLoggedIn}: login){
     const [loginMode, setMode] = useState<mode>("Login");
+    const [password, setPassword] = useState<string>("")
+
     function changeName(event:any){
         setUsername(event.target.value);
     }
 
-    function loggingIn(){
-        setLoggedIn("true")
-        setLoggingIn(false)
+    function changePassword(event:any){ //Just to store password and send to database to compare
+        setPassword(event.target.value);
     }
+
+    function loggingIn(){
+        if(authenticateUser(username, password))//Change to use the real authenticateUser later on
+        {
+            setLoggedIn("true")
+            setLoggingIn(false)
+        }
+    }
+
+    /*function compare(){//Compare values, be it password or code
+        //Call database
+    }*/
 
     return(
         <div className={`${loginMode}`==="Register" ? "overlay register" : "overlay"}>
@@ -33,9 +48,9 @@ export default function LoginOverlay({setUsername, setLoggingIn, setLoggedIn}: l
                     </div>
                 </div>
                 <div className="input">
-                    Password:
+                    Password: 
                     <div>
-                        <input className="text-box" type="password"></input>
+                        <input className="text-box" type="password" onChange={changePassword}></input>
                     </div>
                 </div>
                 <small className='forgot-password' onClick={()=>setMode('Reset')}>Forgot Login |</small>
@@ -47,7 +62,7 @@ export default function LoginOverlay({setUsername, setLoggingIn, setLoggedIn}: l
                 <div className="input">
                     Username:
                     <div>
-                        <input className="text-box" type="text" onChange={changeName}></input>
+                        <input className="text-box" type="text" defaultValue={username} onChange={changeName}></input>
                     </div>
                 </div>
                 <div className="input">
@@ -60,13 +75,6 @@ export default function LoginOverlay({setUsername, setLoggingIn, setLoggedIn}: l
                     Email Address:
                     <div>
                         <input className="text-box" type="text"></input>
-                    </div>
-                    <button className='lobby-button'>Send Code</button>
-                </div>
-                <div className='input'>
-                    Code
-                    <div>
-                        <input className='text-box' type='number' placeholder='Change to boxes'></input>
                     </div>
                 </div>
                 <small className='forgot-password' onClick={()=>setMode('Login')}> Login</small>

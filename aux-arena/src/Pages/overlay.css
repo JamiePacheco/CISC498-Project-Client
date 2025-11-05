@@ -35,6 +35,17 @@
   background-color: #5c5c5cff;
 }
 
+.small-text-box{
+  background-color: #1f2127ff;
+  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border-radius: 0.4em;
+
+  font-size: 0.8em;
+  text-align: center;
+  color: white;
+  min-width: 10%;
+}
+
 .exit{
   position: absolute;
   top: 1%;

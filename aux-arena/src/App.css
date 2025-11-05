@@ -89,6 +89,7 @@
   background-size: 200% auto;
   text-decoration: none;
   font-size: 0.5em;
+  cursor:pointer;
 }
 
 .button:hover{
@@ -108,6 +109,7 @@
   transition: 1s;
   padding: 1vh;
   background-size: 200% auto;
+  cursor:pointer;
 }
 
 .join-button:hover{
