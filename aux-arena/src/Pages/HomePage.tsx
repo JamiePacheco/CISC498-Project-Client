@@ -32,9 +32,6 @@ export default function HomePage({username, setUsername, loggedIn, setLoggedIn, 
             <div>
               <button className='join-button' onClick={()=>setJoining(!joining)}> Join Lobby</button>
             </div>
-            <div>
-              <button className="join-button"> Spectate</button>
-            </div>
         </div>
     </div>
     );

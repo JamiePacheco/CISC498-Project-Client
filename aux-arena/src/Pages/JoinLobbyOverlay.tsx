@@ -37,9 +37,12 @@ export default function LobbyOverlay({user, setUser, loggedIn, setJoining}: user
                     <input className="text-box" type="text" onChange={lobbyHelper}></input>
                 </div>
             </div>
-
             <div className="input">
-                <Link to="/game-lobby" className="enter lobby-button" state={{lobby:lobby}}>Test</Link>
+                Spectator Mode
+                <input type="checkbox"></input>
+            </div>
+            <div className="input">
+                <Link to="/game-lobby" className="enter lobby-button" state={{lobby:lobby}}>Join</Link>
             </div>
         </div>
     )

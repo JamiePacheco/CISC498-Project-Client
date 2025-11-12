@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import './App.css';
 import Home from './Pages/HomePage'
-import logo from "./logo.svg"
+import logo from "./Images/logo.svg"
 import GameLobby from "./Pages/GameLobby";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -24,6 +24,8 @@ function App() {
     setLoggedIn(truthy);
     localStorage.setItem("loggedIn", truthy);
 };
+
+
 
   const handleLogout = () => {
     localStorage.clear();

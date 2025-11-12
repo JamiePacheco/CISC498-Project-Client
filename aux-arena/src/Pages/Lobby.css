@@ -17,6 +17,44 @@
   max-height: 10%;
 }
 
+.chatbox{
+  height: 88%;
+  width: 30%;
+  top: 11%;
+  right: 0;
+  border: 3px rgba(113, 210, 232, 1) solid;
+  border-radius: 3rem;
+  flex: 2;
+  position: absolute;
+  background: rgba(4, 10, 57, 1);
+  display:flex;
+}
+
+.chat{
+  display:flex;
+  justify-content: flex-start;
+  padding-left: 1em;
+}
+
+.send-box{
+  border-radius: 0.4em;
+  min-height: 5%;
+  min-width: 40%;
+  right: 35%;
+  position: absolute;
+  bottom: 5%;
+}
+
+.send-button{
+  min-height: 5%;
+  min-width: 10%;
+  right: 20%;
+  position: absolute;
+  bottom: 5%;
+  background: rgba(36, 61, 161, 1);
+  color: white;
+}
+
 .lobbyText {
   padding-top: 5em;
   justify-content: center;

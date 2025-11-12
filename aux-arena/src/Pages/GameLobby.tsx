@@ -23,6 +23,8 @@ export default function GameLobby({user, loggedIn}: information) {
     const {lobby} = location.state 
     const [playerList, updatePlayerList] = useState<UserSession[]>([])
     const playerCount = playerList.length
+    const [chatLog, updateChat] = useState<string[]>(["Hello!", "Testing"]) // Should pair with user who sent it 
+    const [input, setInput] = useState<string>("")// Helps with sending messages to chat
 
     const player:UserSession = {userID: 1, sessionID: 1, displayName: user,
          lobbyID:lobby, lastPingTime:"9:38AM", active:true, isSpectator:false}
@@ -35,7 +37,7 @@ export default function GameLobby({user, loggedIn}: information) {
     }
     useEffect(()=>{
         updatePlayers(player)
-    }, [])
+    }, [])//FOR TESTING PURPOSES, REMOVE LATER
 
     function addPlayer(){ //For testing 
         const newPlayer:UserSession = {userID: 1, sessionID: 1, displayName: "newUser",
@@ -61,6 +63,26 @@ export default function GameLobby({user, loggedIn}: information) {
 
     }, [playerList])*/
 
+    function updateInput(event:any){
+        setInput(event.target.value)
+    }
+
+    function newChat(chat:string){
+        if(input){
+            updateChat([...chatLog, chat])
+            if(chatLog.length > 50)
+                updateChat(chatLog.splice(1))
+            setInput("")
+        }
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+        newChat(input);
+        }
+    };
+
+
     return (
         <div>
             <div className="lobbyStatus">
@@ -68,15 +90,25 @@ export default function GameLobby({user, loggedIn}: information) {
                 <div>Lobby ID: {lobby}</div>
                 <div>{}</div>
             </div>
-
             <button onClick={addPlayer} className="button">Debug</button>
-                
             <div className="playerbox">
                 {playerList.map((player, index)=>(
                     <div key={index} className="players">
                         {player.displayName} 
                     </div>
                 ))}
+            </div>
+            <div className="chatbox">
+                <div style={{paddingTop:"1em"}}>
+                    {chatLog.map((chat, index)=>(
+                        <div key={index} className="chat">
+                            {chat} 
+                        </div>
+                    ))}
+                </div>
+
+                <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
+                <button className="send-button" onClick={()=>newChat(input)}>Send</button>
             </div>
         </div>
     )
