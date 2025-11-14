@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./Lobby.css"
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export interface information{
   user: string;
@@ -17,13 +17,18 @@ type UserSession = {
     isSpectator: boolean;
 }
 
+type messages = {
+    message: string;
+    name: string;
+}
+
 export default function GameLobby({user, loggedIn}: information) {
     const [maxPlayer] = useState<number>(20) // Not letting change in lobby
     const location = useLocation()
     const {lobby} = location.state 
     const [playerList, updatePlayerList] = useState<UserSession[]>([])
     const playerCount = playerList.length
-    const [chatLog, updateChat] = useState<string[]>(["Hello!", "Testing"]) // Should pair with user who sent it 
+    const [chatLog, updateChat] = useState<messages[]>([{message:"Hello!", name:"System"}, {message:"Testing", name:"System"}]) // Should pair with user who sent it 
     const [input, setInput] = useState<string>("")// Helps with sending messages to chat
 
     const player:UserSession = {userID: 1, sessionID: 1, displayName: user,
@@ -67,9 +72,9 @@ export default function GameLobby({user, loggedIn}: information) {
         setInput(event.target.value)
     }
 
-    function newChat(chat:string){
+    function newChat(chat:string, username:string){
         if(input){
-            updateChat([...chatLog, chat])
+            updateChat([...chatLog, {message:chat, name:username}])
             if(chatLog.length > 50)
                 updateChat(chatLog.splice(1))
             setInput("")
@@ -78,7 +83,7 @@ export default function GameLobby({user, loggedIn}: information) {
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
-        newChat(input);
+        newChat(input, user);
         }
     };
 
@@ -88,7 +93,7 @@ export default function GameLobby({user, loggedIn}: information) {
             <div className="lobbyStatus">
                 <div>Players: {playerCount} / {maxPlayer} </div>
                 <div>Lobby ID: {lobby}</div>
-                <div>{}</div>
+                <Link to={"/aux-arena"} className="button" >Start</Link>
             </div>
             <button onClick={addPlayer} className="button">Debug</button>
             <div className="playerbox">
@@ -102,13 +107,13 @@ export default function GameLobby({user, loggedIn}: information) {
                 <div style={{paddingTop:"1em"}}>
                     {chatLog.map((chat, index)=>(
                         <div key={index} className="chat">
-                            {chat} 
+                            {chat.name} : {chat.message} 
                         </div>
                     ))}
                 </div>
 
                 <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
-                <button className="send-button" onClick={()=>newChat(input)}>Send</button>
+                <button className="send-button" onClick={()=>newChat(input, user)}>Send</button>
             </div>
         </div>
     )

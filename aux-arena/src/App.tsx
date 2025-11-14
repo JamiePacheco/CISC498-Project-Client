@@ -45,6 +45,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn}handleLogOut={handleLogout}/>}></Route>
           <Route path='/game-lobby' element={<GameLobby user={username} loggedIn={loggedIn} />}/>
+          <Route path="/aux-arena"></Route>
         </Routes>
       </header>
     </div>
