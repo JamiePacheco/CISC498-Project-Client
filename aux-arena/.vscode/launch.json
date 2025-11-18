@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/levichen/Documents/AuxArena/aux-arena",
+      "program": "/Users/levichen/Documents/AuxArena/aux-arena/build/Debug/outDebug"
+    }
+  ]
+}

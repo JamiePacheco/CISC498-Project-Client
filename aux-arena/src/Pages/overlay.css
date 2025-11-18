@@ -1,0 +1,94 @@
+
+
+.overlay{
+  background-color: rgba(39, 41, 53, 1);
+  border: 3px solid rgba(74, 237, 252, 1);
+  position:absolute;
+  border-radius: 1em;
+  width: 40vh;
+  height: 50vh;
+  top: 20%;
+  left: 44%;
+  padding-top: 1em;
+}
+
+.register{
+    height: 60vh;
+}
+
+.input{
+  margin-top: 0.5em;
+}
+
+.text-box{
+  background-color: #1f2127ff;
+  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border-radius: 0.4em;
+  min-height: 10%;
+  min-width: 30%;
+  font-size: 0.8em;
+  text-align: center;
+  color: white;
+}
+
+.text-box:disabled{
+  background-color: #5c5c5cff;
+}
+
+.small-text-box{
+  background-color: #1f2127ff;
+  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border-radius: 0.4em;
+  font-size: 0.8em;
+  text-align: center;
+  color: white;
+  min-width: 10%;
+}
+
+.exit{
+  position: absolute;
+  top: 1%;
+  left: 90%;
+  color: red;
+  cursor: pointer;
+}
+
+/* For enter buttons use "enter lobby-button"*/
+.lobby-button{
+  background-color: #1f2127ff;
+  border: 0.1em solid  rgba(74, 237, 252, 1);
+  min-height: 10%;
+  min-width: 40%;
+  font-size: 0.8em;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  transition: 2s;
+  cursor: pointer;
+}
+
+.lobby-button:hover{
+  color:  #1f2127ff;
+  background-color:white;
+}
+
+/* For both create and join lobby */
+.enter{ 
+  border-radius: 0.4em;
+  min-height: 5%;
+  min-width: 40%;
+  right: 30%;
+  position: absolute;
+  bottom: 5%;
+  cursor: pointer;
+}
+
+.enter:disabled{
+  background-color: grey;
+}
+
+.forgot-password{
+    cursor: pointer;
+    font-size: 0.5em;
+    color: rgba(77, 190, 255, 1);
+}
