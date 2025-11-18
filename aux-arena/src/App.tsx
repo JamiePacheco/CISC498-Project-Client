@@ -5,6 +5,8 @@ import logo from "./Images/logo.svg"
 import GameLobby from "./Pages/GameLobby";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { RxStomp, RxStompConfig } from "@stomp/rx-stomp";
+import SockJS from 'sockjs-client'
 
 function App() {
   const [username, setUsername] = useState<string>(() => {
@@ -24,6 +26,37 @@ function App() {
     setLoggedIn(truthy);
     localStorage.setItem("loggedIn", truthy);
 };
+
+  const lobbyConnectConfig: RxStompConfig = {
+    webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+    debug: (msg) => {
+    console.log(msg);
+  },
+    heartbeatIncoming: 0,
+    heartbeatOutgoing: 20000,
+    reconnectDelay: 200,
+  }
+
+  const lobbyConnect = new RxStomp();
+  lobbyConnect.configure(lobbyConnectConfig);
+  lobbyConnect.activate();
+
+
+  lobbyConnect.watch('/topic/game-lobby').subscribe(msg => {
+      console.log(msg.body);
+  });
+
+  lobbyConnect.publish(
+    {
+      destination: '/topic/game-lobby',
+      body: 'User has connected!'
+    });
+
+    
+    lobbyConnect.deactivate();
+
+
+
 
 
 
