@@ -2,6 +2,8 @@ import { useState } from 'react';
 import '../App.css';
 import './overlay.css'
 import { Link } from "react-router-dom";
+import { createNewGameLobby } from '../service/GameLobbyService';
+import { GameLobby } from '../Interfaces/GameLobby';
 
 export interface userStatus{
     user: string;
@@ -46,6 +48,29 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
         const packet:Packet = {name:user, maxPlayer:numPlayers, lobbyPrivacy:lobbyPrivate, password:password}
     }
 
+    const createGameLobby = () => {
+
+        const newGameLobby : GameLobby = {
+            maxPlayers : numPlayers,
+            privateStatus : lobbyPrivate,
+            password : password,
+            name : `${user}'s lobby`
+        }
+
+        /* 
+            we need to account for two cases when creating a game lobby
+            - a user HAS an account and a user DOES NOT HAVE an account
+            - If they have an account we simply take that data and associate it with the new account
+            - If they do not have an account we create the temp account and associate it with the game lobby
+        
+        */
+
+        createNewGameLobby(newGameLobby).then(res => {
+            console.log(res)
+        })
+    }
+
+
     return(
         <div className="overlay">
             <div className="exit" onClick={()=>setCreating(false)}>x</div>
@@ -77,6 +102,7 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
             <div className='input'>
                 <Link to="/game-lobby" className="enter lobby-button" state={{lobby:lobby}}>Create</Link>
             </div>
+            <button onClick={() => {createGameLobby()}}> Create Lobby </button>
         </div>
     )
 }
