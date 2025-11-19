@@ -5,6 +5,7 @@ import logo from "./Images/logo.svg"
 import GameLobby from "./Pages/GameLobby";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import AuxArena from "./Pages/AuxArena";
 
 function App() {
   const [username, setUsername] = useState<string>(() => {
@@ -25,8 +26,6 @@ function App() {
     localStorage.setItem("loggedIn", truthy);
 };
 
-
-
   const handleLogout = () => {
     localStorage.clear();
     setUsername(""); 
@@ -45,7 +44,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn}handleLogOut={handleLogout}/>}></Route>
           <Route path='/game-lobby' element={<GameLobby user={username} loggedIn={loggedIn} />}/>
-          <Route path="/aux-arena"></Route>
+          <Route path="/aux-arena" element={<AuxArena/>}></Route>
         </Routes>
       </header>
     </div>

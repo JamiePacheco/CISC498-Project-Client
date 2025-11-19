@@ -1,20 +1,23 @@
 .playerbox{
   margin-top: 2em;
+  margin-left: 1em;
   flex: 1;
-  min-height: 60vh;
+  min-height: 67vh;
   background-color: rgba(113, 210, 232, 1);
   border-radius: 0.5em;
-  max-width: 65%;
+  max-width: 64%;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
   padding-left: 1em;
+
 }
 
 .players{
   padding-top: 0.5em;
-  max-height: 10%;
+  min-width: 32%;
+  text-align: left;
 }
 
 .chatbox{
