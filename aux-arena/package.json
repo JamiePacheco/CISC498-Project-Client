@@ -11,6 +11,7 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.126",
     "@types/react-dom": "^19.1.9",
+    "axios": "^1.13.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.3",

@@ -5,3 +5,7 @@ export function authenticateUser(username : string, password : string) : string{
         output = "logged in"
     return output
 }
+
+export function createGuestUser(username : string, gameLobbyCode : string, isAuthor : boolean) {
+
+}
