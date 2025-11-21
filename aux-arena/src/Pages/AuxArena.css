@@ -1,3 +1,29 @@
 .game-screen{
     padding-top: 5em;
 }
+
+.game-display{
+    padding-top:2em;
+}
+
+.prompt-sfx{
+    color: rgba(255, 194, 159, 1);
+    text-shadow: -1px 0 blue, 0 1px blue, 1px 0 blue, 0 -1px blue;
+}
+
+.timer{
+    position: absolute;
+    font-size: 2em;
+    left: 2rem;
+    border: 5px solid;
+    border-radius: 20rem;
+    min-width: 20px;
+    min-height: 20px;
+}
+
+/*These are for different timer color based on phase*/
+.Prompt{border-color: rgba(255, 194, 159, 1);}
+.Picking{border-color: rgba(243, 149, 18, 1);}
+.Viewing{border-color: rgba(246, 255, 0, 1);}
+.Voting{border-color: rgba(0, 255, 60, 1);}
+.Winner{border-color: rgba(0, 183, 255, 1);}
