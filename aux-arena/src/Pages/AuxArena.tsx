@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./AuxArena.css"
 import "./Lobby.css"
+import testCase from "../testCaseTOBEREMOVED/aux_arena_bird_brain_test_data.json"
+import Results from "./Results";
 
 //Prompt Phase: Players creates a prompt
 //Picking Phase: Choosing a song (Only for participating players)
@@ -11,20 +13,23 @@ import "./Lobby.css"
 type phases = "Prompt" | "Picking" | "Viewing" | "Voting" | "Winner"; 
 type player = "Player" | "Spectator";
 
+type items = { // Keeping only the two info needed for song picking, may need video link too
+    title: string;
+    thumbnail: string; // Jpg link
+    id: string;
+}
+
 export default function AuxArena(){
     const [promptList, setList] = useState<string[]>([])
+    //Initially for prompt phase, then for picking phase
     const [input, setInput] = useState<string>("") //Send this one to server, used for each phase
     // Input can be different things depending on turn,
-    // Prompt in prompt phase, maybe more I didn't get to the other phases yet 
+    // Prompt in prompt phase, search query in picking phase 
     const [currPhase, setPhase] = useState<phases>("Prompt")
     const [timer, setTime] = useState<number>(90) //Timer for each phase, pulled from server instead of local time
     const [playerType, setType] = useState<player>("Player") //Check type on serverside and setType if spectator
-
-    /*useEffect(()=>{ //Thought of a better idea, keeping in case I need it back
-        if(playerType === "Spectator")
-            setPhase("Viewing");
-        console.log("Hey Listen!")
-    }, [playerType])*/ 
+    const [songList, setSongs] = useState<items[]>([])
+    const [selectedSong, setSelection] = useState<string>("")
 
     function updateInput(event:any){
         setInput(event.target.value)
@@ -65,6 +70,16 @@ export default function AuxArena(){
                 setList([input])// CHANGE THIS TO SENDING PROMPT TO SERVER
                 setInput("")
             }
+            if(currPhase === "Picking"){
+                //Send "input" to server, input is song name here
+                const list: items[] = testCase.items.map(i => ({
+                    title: i.snippet.title,
+                    thumbnail:i.snippet.thumbnails.high.url,
+                    id: i.id.videoId
+                }))
+                setSongs([...list])
+                setInput("")
+            }
         }
     };
 
@@ -84,12 +99,13 @@ export default function AuxArena(){
                 {currPhase==="Picking" && playerType==="Player" && <div>
                     Search a song: 
                     <br></br>
-                    <input type="text" placeholder="Press Enter to submit" onKeyDown={handleKeyDown}
+                    <input type="text" placeholder="Press Enter to send" onKeyDown={handleKeyDown}
                         value={input} onChange={updateInput} className="text-box">
                     </input>
                     <br></br>
                     <div className="game-display">
-                        Results:
+                        Results: {selectedSong}
+                        {songList[0] && <Results songs={songList} setSelected={setSelection} selected={selectedSong}></Results>}
                     </div>
                     
                 </div>}

@@ -27,3 +27,30 @@
 .Viewing{border-color: rgba(246, 255, 0, 1);}
 .Voting{border-color: rgba(0, 255, 60, 1);}
 .Winner{border-color: rgba(0, 183, 255, 1);}
+
+.results{
+    display: grid;
+    place-items: center;
+}
+
+.songResults{
+    width: 60%;
+    height: 5em;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.unselected{
+    background: rgba(24, 21, 38, 1);
+}
+
+.selected{
+    background: rgba(8, 136, 199, 1);
+}
+
+.thumbnail{
+    padding-left: 1rem;
+    width: 4em;
+}
