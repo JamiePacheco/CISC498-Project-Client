@@ -97,6 +97,11 @@
   background-position: right center;
 }
 
+.button:disabled{
+  border: 2px inset red;
+  background-image: linear-gradient(to bottom left, rgba(223, 224, 228, 1) 0%, rgba(242, 165, 163, 1) 51%, rgba(255, 47, 0, 1) 100%);
+}
+
 .button.login{
   margin-top: 15ch;
 }

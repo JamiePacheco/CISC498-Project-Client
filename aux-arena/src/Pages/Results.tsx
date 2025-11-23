@@ -8,8 +8,8 @@ type items = {
 
 export interface results{
     songs: items[];
-    selected: string;
-    setSelected: (link:string)=>void;
+    selected: items;
+    setSelected: (link:items)=>void;
 }
 
 export default function SongResults({songs, setSelected, selected}:results){
@@ -19,7 +19,7 @@ export default function SongResults({songs, setSelected, selected}:results){
     return (
         <div className="results">
             {songList.map((song) => (
-                <div className={`${selected===song.id? "selected" : "unselected"} songResults`} onClick={()=> setSelected(song.id)}>
+                <div className={`${selected===song? "selected" : "unselected"} songResults`} onClick={()=> setSelected(song)}>
                     <img className="thumbnail" src={song.thumbnail} alt="Thumbnail"></img>
                     <div>{song.title}</div>
                 </div>
