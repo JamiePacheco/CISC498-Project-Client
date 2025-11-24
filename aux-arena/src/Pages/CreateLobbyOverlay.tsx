@@ -28,7 +28,11 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
     }
 
     function numberHelper(event:any){
-        setNum(event.target.value)
+        if(event.target.value < 3)
+            setNum(3)
+        else if(event.target.value > 20)
+            setNum(20)
+        else setNum(event.target.value)
     }
 
     function passwordHelper(event:any){
@@ -59,7 +63,7 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
 
             <div className='input'>
                 Max Players:
-                <input type='number' className='small-text-box' min={3} max={20} value={numPlayers} onChange={numberHelper}></input>
+                <input type='text' disabled className='small-text-box' min={3} max={20} value={numPlayers} onChange={numberHelper}></input>
                 <div>
                     <input type="range" min="3" max="20" className='text-box' value={numPlayers} onChange={numberHelper}></input>
                 </div>
@@ -67,7 +71,7 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
 
             <div className='input'>
                 <label form="private" >Private Lobby?</label>
-                <input type='checkbox' id='private' name='private' onClick={privateHelper}/>
+                <input type='radio' id='private' name='private' onClick={privateHelper}/>
             </div>
             
             {lobbyPrivate&& <div className='input'>

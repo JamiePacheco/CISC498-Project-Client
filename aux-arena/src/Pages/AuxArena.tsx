@@ -28,7 +28,7 @@ export default function AuxArena(){
     // Input can be different things depending on turn,
     // Prompt in prompt phase, search query in picking phase 
     const [currPhase, setPhase] = useState<phases>("Prompt")
-    const [timer, setTime] = useState<number>(90) 
+    const [timer, setTimer] = useState<number>(90) 
     //Timer for each phase, pulled from server instead of local time
     const [playerType, setType] = useState<player>("Player") 
     //Check type on serverside and setType if spectator
@@ -36,6 +36,8 @@ export default function AuxArena(){
     //Pulled from server
     const [selectedSong, setSelection] = useState<items>({title:"", thumbnail:"", id:""})// Selected by clientside player
     //Send this ^ to server
+    const [timeStamp, setTimeStamp] = useState<number[]>([0, 15]) // Keeps track of start and end of clip, [0] = start [1] = end
+    //Send this ^ to server with selected song
     const [songList, setSongs] = useState<items[]>([])
     const [myVote, setVote] = useState<number>(0)
     //Sent vote to server, could change this to hold player name, but currently don't have that info
@@ -130,7 +132,8 @@ export default function AuxArena(){
                         <br></br>
                         <div className="game-display">
                             Results: {selectedSong.title}
-                            {resultList[0] && <Results songs={resultList} setSelected={setSelection} selected={selectedSong}></Results>}
+                            {resultList[0] && <Results timeStamp={timeStamp} setTimeStamp={setTimeStamp} songs={resultList} 
+                            setSelected={setSelection} selected={selectedSong}></Results>}
                         </div>
                     </div>}
                     {playerType==="Spectator" && <div>

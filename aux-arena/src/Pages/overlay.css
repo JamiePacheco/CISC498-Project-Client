@@ -42,13 +42,13 @@
   font-size: 0.8em;
   text-align: center;
   color: white;
-  min-width: 10%;
+  width: 20%;
 }
 
 .exit{
   position: absolute;
   top: 1%;
-  left: 90%;
+  right: 5%;
   color: red;
   cursor: pointer;
 }

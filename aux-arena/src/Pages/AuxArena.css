@@ -64,6 +64,24 @@
     width: 4em;
 }
 
+.songEdit{
+    align-self: top;
+    position: fixed;
+    z-index: 10;
+    border: 2px solid rgba(11, 209, 227, 1);
+    top: 20%;
+    padding-top: 5%;
+    height: 60%;
+    width: 60%;
+    border-radius: 2em;
+    background: rgba(24, 21, 38, 1);
+}
+
+.timeStamp{
+    display:flex;
+    justify-content: space-around;
+}
+
 .viewing{
     padding-top: 0em;
     display: flex;
