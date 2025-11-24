@@ -22,7 +22,7 @@ export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: so
     const [lastChange, setchanged] = useState<options>("start");
 
     function convertTime(time:string): number{
-        if(/^\d{1,2}:\d{1,2}$/.test(time) || /^\d{1}:\d{1,2}$/.test(time)){ //If time is m:ss or mm:ss
+        if(/^\d+ç:\d{1,2}$/.test(time) || /^\d{1}:\d{1,2}$/.test(time)){ //If time is m:ss or mm:ss
             const [minutes, seconds] = time.split(":");
             console.log("reached minutes case");
             return (Number(minutes) * 60) + Number(seconds)
@@ -32,14 +32,20 @@ export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: so
             return Number(time)
         }
         else {
-            alert("Please use mm:ss or s format, where m and s are numbers representing minute and seconds\nExample: 1:20 or 78\n");
+            alert("Please use mm:ss or s format, where m and s are numbers representing minute and seconds\nExample: 1:20 or 78\n you entered" +
+                time
+            );
         }
         return 0;
     }
 
-    function changeStart(event:any){
-        setStart(event?.target.value)
-
+    function handleInput(event:any, start:boolean){
+        const value = event;
+        const filtered = value.replace(/[^0-9:]/g, "");
+        if(start)
+            setStart(filtered)
+        else
+            setEnd(filtered)
     }
 
     function saveTime(){
@@ -69,13 +75,13 @@ export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: so
                 <div>
                     Start:
                     <input value={startText} type="text"
-                    onChange={(e) => {setStart(e.target.value); setchanged("start")}} className="small-text-box"></input>
+                    onChange={(e) => {handleInput(e.target.value, true); setchanged("start")}} className="small-text-box"></input>
                 </div>
                 <button className="button" onClick={saveTime}>Set Timestamps</button>
                 <div>
                     End:
                     <input value={endText} type="text"
-                    onChange={(e) => {setEnd(e.target.value); setchanged("end")}} className="small-text-box"></input>
+                    onChange={(e) => {handleInput(e.target.value, false); setchanged("end")}} className="small-text-box"></input>
                 </div>
             </div>
             Input "minutes:seconds" or "seconds" 
