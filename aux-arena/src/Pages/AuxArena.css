@@ -24,8 +24,10 @@
 /*These are for different timer color based on phase*/
 .Prompt{border-color: rgba(255, 194, 159, 1);}
 .Picking{border-color: rgba(243, 251, 16, 1);}
-.Viewing{border-color: rgba(1, 242, 74, 1);}
-.Winner{border-color: rgba(0, 89, 255, 1);}
+.Viewing1{border-color: rgba(1, 242, 74, 1);}
+.Viewing2{border-color: rgba(0, 191, 255, 1)}
+.Voting{border-color: rgba(118, 0, 244, 1)}
+.Winner{border-color: rgba(228, 0, 11, 1);}
 
 .prompt-box{
     margin-top: 2em;

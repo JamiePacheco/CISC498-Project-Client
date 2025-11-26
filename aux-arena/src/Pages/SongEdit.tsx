@@ -51,11 +51,16 @@ export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: so
     function saveTime(){
         let start = convertTime(startText);
         let end = convertTime(endText)
-        if(end > start + 30 || start > end){
+        if(end > start + 30){
             if(lastChange === "start")
                 end = start + 30
             else
                 start = (end-30)>0 ? end - 30 : 0;
+        }else if(start > end){
+            if(lastChange === "start")
+                end = start + 15
+            else
+                start = (end-15)>0 ? end - 15 : 0;
         }
         setTimeStamp([start, end]);
     }

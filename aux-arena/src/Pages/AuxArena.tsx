@@ -11,7 +11,7 @@ import background from "../Images/PlaceHolderBackground.png"
 //      Spectators start here watching players in two previous phases
 //Voting Phase: Picking the song you like most/fits the theme best
 //Winner Phase: Show winner
-type phases = "Prompt" | "Picking" | "Viewing" | "Winner"; 
+type phases = "Prompt" | "Picking" | "Viewing1" | "Viewing2" | "Voting" | "Winner"; 
 type player = "Player" | "Spectator";
 
 type items = { // Keeping only the two info needed for song picking, may need video link too 
@@ -36,8 +36,9 @@ export default function AuxArena(){
     //Pulled from server
     const [selectedSong, setSelection] = useState<items>({title:"", thumbnail:"", id:""})// Selected by clientside player
     //Send this ^ to server
-    const [timeStamp, setTimeStamp] = useState<number[]>([0, 15]) // Keeps track of start and end of clip, [0] = start [1] = end
+    const [player1TimeStamp, setPlayer1Time] = useState<number[]>([0, 15]) // Keeps track of start and end of clip, [0] = start [1] = end
     //Send this ^ to server with selected song
+    const [player2TimeStamp, setPlayer2Time] = useState<number[]>([0, 15])
     const [songList, setSongs] = useState<items[]>([])
     const [myVote, setVote] = useState<number>(0)
     //Sent vote to server, could change this to hold player name, but currently don't have that info
@@ -55,24 +56,31 @@ export default function AuxArena(){
                 break
             case "Picking":
                 if(resultList[0]){
-                    setPhase("Viewing")
+                    setPhase("Viewing1")
                     setSongs([resultList[0], resultList[1]])
                 }
                 else{
                     alert("NO SONGS SELECTED(click search bar and press enter)")
                 }
                 break
-            case "Viewing":
+            case "Viewing1":
+                setPhase("Viewing2")
+                break
+            case "Viewing2":
+                setPhase("Voting")
+                break
+            case "Voting":
                 setPhase("Winner")
-                const newList = promptList.slice(1)
-                setList([...newList])
                 break
             case "Winner":
+                const newList = promptList.slice(1)//Remove current prompt, should be done on serverside?
+                setList([...newList])
+                setPhase("Winner")
                 if(promptList.length === 0)
                     setPhase("Prompt")//Looping for now, maybe change?
                 else
                     setPhase("Picking")
-                break;
+                break
             default:
                 break
         }
@@ -132,7 +140,7 @@ export default function AuxArena(){
                         <br></br>
                         <div className="game-display">
                             Results: {selectedSong.title}
-                            {resultList[0] && <Results timeStamp={timeStamp} setTimeStamp={setTimeStamp} songs={resultList} 
+                            {resultList[0] && <Results timeStamp={player1TimeStamp} setTimeStamp={setPlayer1Time} songs={resultList} 
                             setSelected={setSelection} selected={selectedSong}></Results>}
                         </div>
                     </div>}
@@ -140,16 +148,32 @@ export default function AuxArena(){
                         {playerNames[0]} and {playerNames[1]} are choosing songs, get ready to vote!
                     </div>}
                 </div>}
-                {currPhase==="Viewing" && <div className="viewing">
+                {currPhase==="Viewing1" && <div>
+                    <div style={{pointerEvents: "none"}}> Player 1: {playerNames[0]}<div>
+                        <iframe id="ytplayer" width="640" height="360" title={songList[0].title}
+                            src={`https://www.youtube.com/embed/${songList[0].id}?autoplay=1&start=${player1TimeStamp[0]}&end=${player1TimeStamp[1]}`}></iframe>
+                        </div>
+                        You'll get a chance to rewatch when voting
+                    </div>
+                </div>}
+                {currPhase==="Viewing2" && <div>
+                    <div style={{pointerEvents: "none"}}> Player 1: {playerNames[0]}<div>
+                        <iframe id="ytplayer" width="640" height="360" title={songList[0].title}
+                            src={`https://www.youtube.com/embed/${songList[1].id}?autoplay=1&start=${player2TimeStamp[0]}&end=${player2TimeStamp[1]}`}></iframe>
+                        </div>
+                        You'll get a chance to rewatch when voting
+                    </div>
+                </div>}
+                {currPhase==="Voting" && <div className="viewing">
                     <div> Player 1: {playerNames[0]}<div>
                         <iframe id="ytplayer" width="640" height="360" title={songList[0].title}
-                            src={`https://www.youtube.com/embed/${songList[0].id}?autoplay=1`}></iframe>
+                            src={`https://www.youtube.com/embed/${songList[0].id}?start=${player1TimeStamp[0]}&end=${player1TimeStamp[1]}`}></iframe>
                         </div>
                         <button disabled={myVote===1 ? true : false} onClick={()=>vote(1)} className="button">Vote for this player</button>
                     </div>
                     <div> Player 2: {playerNames[1]}<div>
                         <iframe id="ytplayer" width="640" height="360" title={songList[1].title}
-                            src={`https://www.youtube.com/embed/${songList[1].id}`}></iframe>
+                            src={`https://www.youtube.com/embed/${songList[1].id}?start=${player2TimeStamp[0]}&end=${player2TimeStamp[1]}`}></iframe>
                         </div>
                         <button disabled={myVote===2 ? true : false} onClick={()=>vote(2)} className="button">Vote for this player</button>
                     </div>
