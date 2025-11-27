@@ -22,12 +22,12 @@
 }
 
 /*These are for different timer color based on phase*/
-.Prompt{border-color: rgba(255, 194, 159, 1);}
-.Picking{border-color: rgba(243, 251, 16, 1);}
-.Viewing1{border-color: rgba(1, 242, 74, 1);}
-.Viewing2{border-color: rgba(0, 191, 255, 1)}
-.Voting{border-color: rgba(118, 0, 244, 1)}
-.Winner{border-color: rgba(228, 0, 11, 1);}
+.Prompt{border-color: rgba(232, 39, 17, 1);}
+.Picking{border-color: rgba(250, 191, 128, 1);}
+.Viewing1{border-color: rgba(233, 229, 8, 1);}
+.Viewing2{border-color: rgba(6, 239, 26, 1)}
+.Voting{border-color: rgba(36, 65, 255, 1)}
+.Winner{border-color: rgba(187, 0, 255, 1);}
 
 .prompt-box{
     margin-top: 2em;
@@ -88,4 +88,29 @@
     padding-top: 0em;
     display: flex;
     justify-content: space-between;
+}
+
+.win-screen{
+    display: flex;
+    justify-content: space-between;
+    justify-self: center;
+    width: 80%;
+    height: 60vh;
+    border: 3px black solid;
+    background-image: linear-gradient(#ffffffff, #ffffffff);
+    background-size: 3px 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.winner{
+    background: linear-gradient(rgba(0, 122, 253, .8), rgba(23, 57, 93, 1));
+    height: 100%;
+    width: 49.9%;
+}
+
+.loser{ 
+    background: linear-gradient(rgba(222, 22, 22, 0.8), rgba(119, 24, 24, 1));
+    height: 100%;
+    width: 49.9%;
 }

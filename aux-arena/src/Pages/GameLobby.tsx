@@ -40,9 +40,10 @@ export default function GameLobby({user, loggedIn}: information) {
         else
             alert("Max players exceeded")
     }
+
     useEffect(()=>{
         updatePlayers(player)
-    }, [])//FOR TESTING PURPOSES, REMOVE LATER
+    }, [])//Sets the current player onto the list, edit the player info above to be accurate
 
     function addPlayer(){ //For testing 
         const newPlayer:UserSession = {userID: 1, sessionID: 1, displayName: "newUser",
@@ -91,9 +92,9 @@ export default function GameLobby({user, loggedIn}: information) {
     return (
         <div>
             <div className="lobbyStatus">
-                <div>Players: {playerCount} / {maxPlayer} </div>
+                <div style={{paddingLeft: "1rem"}}>Players: {playerCount} / {maxPlayer} </div>
                 <div>Lobby ID: {lobby}</div>
-                <Link to={"/aux-arena"} className="button" >Start</Link>
+                <Link to={"/aux-arena"} className="button" state={user}>Start</Link>
             </div>
             <button onClick={addPlayer} className="button">Debug</button>
             <div className="playerbox">

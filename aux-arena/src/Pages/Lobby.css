@@ -30,13 +30,19 @@
   flex: 2;
   position: absolute;
   background: rgba(4, 10, 57, 1);
-  display:flex;
+  
 }
 
 .chat{
-  display:flex;
-  justify-content: flex-start;
+  text-align:left;
   padding-left: 1em;
+  padding-right: 1em;
+  text-align: left;
+  white-space: normal;
+  flex-direction: row;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .send-box{

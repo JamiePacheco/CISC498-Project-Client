@@ -71,7 +71,7 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
 
             <div className='input'>
                 <label form="private" >Private Lobby?</label>
-                <input type='radio' id='private' name='private' onClick={privateHelper}/>
+                <input type='checkbox' id='private' name='private' onClick={privateHelper}/>
             </div>
             
             {lobbyPrivate&& <div className='input'>
