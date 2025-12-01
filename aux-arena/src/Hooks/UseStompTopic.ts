@@ -47,6 +47,8 @@ export function useStompTopic<T extends SequencedEvent>(
             console.log(`1: ${lastSequence.current > 0}`)
             console.log(`2: ${seq > lastSequence.current + 1}`)
 
+            console.log(`${parsed}`)
+
             if (lastSequence.current >= 0 && seq > lastSequence.current + 1) {
                 lastSequence.current = seq - 1;
                 console.log(`${topic} reset to ${lastSequence.current}`)
