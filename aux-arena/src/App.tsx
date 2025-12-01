@@ -27,38 +27,6 @@ function App() {
     localStorage.setItem("loggedIn", truthy);
 };
 
-  const lobbyConnectConfig: RxStompConfig = {
-    webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
-    debug: (msg) => {
-    console.log(msg);
-  },
-    heartbeatIncoming: 0,
-    heartbeatOutgoing: 20000,
-    reconnectDelay: 200,
-  }
-
-  const lobbyConnect = new RxStomp();
-  lobbyConnect.configure(lobbyConnectConfig);
-  lobbyConnect.activate();
-
-
-  lobbyConnect.watch('/topic/game-lobby').subscribe(msg => {
-      console.log(msg.body);
-  });
-
-  lobbyConnect.publish(
-    {
-      destination: '/topic/game-lobby',
-      body: 'User has connected!'
-    });
-
-    
-    lobbyConnect.deactivate();
-
-
-
-
-
 
   const handleLogout = () => {
     localStorage.clear();

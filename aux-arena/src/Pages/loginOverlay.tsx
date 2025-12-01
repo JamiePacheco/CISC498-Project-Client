@@ -25,11 +25,11 @@ export default function LoginOverlay({username, setUsername, setLoggingIn, setLo
     }
 
     function loggingIn(){
-        if(authenticateUser(username, password))//Change to use the real authenticateUser later on
-        {
-            setLoggedIn("true")
-            setLoggingIn(false)
-        }
+        // if(authenticateUser(username, password)//Change to use the real authenticateUser later on
+        // {
+        //     setLoggedIn("true")
+        //     setLoggingIn(false)
+        // }
     }
 
     /*function compare(){//Compare values, be it password or code

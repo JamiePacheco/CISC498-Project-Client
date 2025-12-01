@@ -7,4 +7,17 @@ const api = axios.create(
     }
 )
 
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                    window.location.href = '/'
+            }
+        }
+    }
+)
+
+
 export default api

@@ -1,4 +1,6 @@
 import { GameLobby } from "../Interfaces/GameLobby";
+import { LobbySession } from "../Interfaces/LobbySession";
+import { LobbyUser } from "../Interfaces/LobbyUser";
 import { Response } from "../Interfaces/Response";
 import api from "./AxiosInstance";
 
@@ -12,12 +14,13 @@ export async function createNewGameLobby(gameLobby : GameLobby) {
     return res;
 }
 
-export async function getGameLobby(gameLobbyCode : string) {
+export async function getGameLobby(gameLobbyCode : string, password : string) {
     const res = await api.get<Response<GameLobby>>(
         GAME_LOBBY_URL,
         {
             params : {
-                gameLobbyCode
+                "lobby-id" : gameLobbyCode,
+                "password" : password
             }
         }
     )

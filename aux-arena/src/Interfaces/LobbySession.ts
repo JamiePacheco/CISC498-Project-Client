@@ -15,4 +15,6 @@ export interface LobbySession {
     // author : LobbyUser; TODO add this when user login is more developed
     lastUpdated : string;
     activeUsers : UserSession[];
+    host: UserSession;
+    active : boolean;
 }

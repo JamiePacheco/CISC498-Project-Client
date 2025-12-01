@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import '../App.css';
 import './overlay.css'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createNewGameLobby } from '../service/GameLobbyService';
 import { GameLobby } from '../Interfaces/GameLobby';
+import { LobbyUserRole } from '../Interfaces/LobbyUser';
+import { GameLobbyPageState } from './GameLobby';
 
 export interface userStatus{
     user: string;
@@ -20,6 +22,8 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
     const [numPlayers, setNum] = useState<number>(3);
     const [password, setPassword] = useState<string>("");
     
+    const nav = useNavigate()
+
     function changeName(event:any){
         setUser(event.target.value);
     }
@@ -67,6 +71,37 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
 
         createNewGameLobby(newGameLobby).then(res => {
             console.log(res)
+            const gameLobby = res.data.responseContent;
+            if (gameLobby && gameLobby.lobbyCode !== undefined && gameLobby.password !== undefined && gameLobby.id !== undefined) {
+
+                const role : LobbyUserRole = "GUEST"
+                
+                const lobbyUser = {
+                    nickname : user,
+                    isSpectator : false,
+                    gameLobby : gameLobby,
+                    role : role
+                }
+                
+                const lobbyState : GameLobbyPageState = {
+                    id : gameLobby.id,
+                    lobbyCode : gameLobby.lobbyCode,
+                    password : ""
+                }
+                nav("/game-lobby", {state : {lobby : lobbyState, user : lobbyUser}})
+
+
+                   
+
+                // createGuestUser(user, gameLobby.lobbyCode, true).then(res => {
+                //     console.log(res);
+                //     const user = res.data.responseContent;
+                //     // console.log(user);
+                //     nav("/game-lobby", {state : {lobby : gameLobby, user : user}})
+                // }
+                // )
+
+            }
         })
     }
 
