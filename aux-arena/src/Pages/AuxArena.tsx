@@ -62,6 +62,7 @@ export default function AuxArena(){
     //Sent vote to server, could change this to hold player name, but currently don't have that info
     const [gameResult, setGameResults] = useState<player[]>([playerList[0], playerList[1]])
     //Server tallies up votes and tells us whose winner, only need to know the player numbers of winner and loser and their score
+    const [isEditing, setEditing] = useState<boolean>(false);
 
     function updateInput(event:any){
         setInput(event.target.value)
@@ -100,6 +101,8 @@ export default function AuxArena(){
                 else{
                     alert("NO SONGS SELECTED(click search bar and press enter)")
                 }
+                if(isEditing)
+                    setEditing(false);
                 break
             case "Viewing1":
                 setPhase("Viewing2")
@@ -117,7 +120,7 @@ export default function AuxArena(){
                 else
                     setList([""])
                 setPhase("Winner")
-                if(promptList[0])
+                if(promptList[0]==="")
                     setPhase("Prompt")//Looping for now, maybe change?
                 else
                     setPhase("Picking")
@@ -189,7 +192,7 @@ export default function AuxArena(){
                         <br></br>
                         <div className="game-display">
                             Results: {selectedSong.title}
-                            {resultList[0] && <Results timeStamp={myTimeStamp} setTimeStamp={setTimeStamp} songs={resultList} 
+                            {resultList[0] && <Results isEditing={isEditing} setEditing={setEditing} timeStamp={myTimeStamp} setTimeStamp={setTimeStamp} songs={resultList} 
                             setSelected={setSelection} selected={selectedSong}></Results>}
                         </div>
                     </div>}
