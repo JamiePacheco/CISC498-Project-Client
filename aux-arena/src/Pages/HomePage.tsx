@@ -13,9 +13,10 @@ export interface information{
   handleLogOut: ()=>void;
 }
 
+type interaction = "Idle" | "Joining" | "Creating";
+
 export default function HomePage({username, setUsername, loggedIn, setLoggedIn, handleLogOut}: information) {
-    const [joining, setJoining] = useState<boolean>(false) // To show lobby overlay after clicking "Join Lobby"
-    const [creating, setCreating] = useState<boolean>(false) // To show overlay for creating lobby
+    const [interaction, setInteraction] = useState<interaction>("Idle")
     const [loggingIn, setLoggingIn] = useState<boolean>(false) // To show overlay for log in
     return (
      <div className='main'>
@@ -26,11 +27,11 @@ export default function HomePage({username, setUsername, loggedIn, setLoggedIn, 
             {loggedIn && <button onClick={handleLogOut}>LogOut</button>}
          </div>
           <div className='main1'>
-            {joining && <LobbyOverlay user={username} setUser={setUsername} loggedIn={loggedIn} setJoining={setJoining}/>}
-            {creating && <CreateLobby user={username} setUser={setUsername} loggedIn={loggedIn} setCreating={setCreating}></CreateLobby>}
-            <button className="button" onClick={()=>setCreating(!creating)}>Create Lobby</button>
+            {interaction==="Joining" && <LobbyOverlay user={username} setUser={setUsername} loggedIn={loggedIn} setJoining={setInteraction}/>}
+            {interaction==="Creating" && <CreateLobby user={username} setUser={setUsername} loggedIn={loggedIn} setCreating={setInteraction}/>}
+            <button className="button" onClick={()=>setInteraction("Creating")}>Create Lobby</button>
             <div>
-              <button className='join-button' onClick={()=>setJoining(!joining)}> Join Lobby</button>
+              <button className='join-button' onClick={()=>setInteraction("Joining")}> Join Lobby</button>
             </div>
         </div>
     </div>

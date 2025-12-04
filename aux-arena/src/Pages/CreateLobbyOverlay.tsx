@@ -7,12 +7,14 @@ export interface userStatus{
     user: string;
     setUser: (name: string)=>void;
     loggedIn: string;
-    setCreating: (isCreating:boolean)=>void;
+    setCreating: (isCreating:interaction)=>void;
 }
+
+type interaction = "Idle" | "Joining" | "Creating";
 
 export default function CreateLobby({user, setUser, loggedIn, setCreating}: userStatus){
     const [lobby, setLobby] = useState<string>(
-        (Math.floor(Math.random() * 9999)).toString()
+        (Math.floor(Math.random() * 9999)).toString().padStart(4, "000")
     );
     const [lobbyPrivate, setPrivate] = useState<boolean>(false);
     const [numPlayers, setNum] = useState<number>(3);
@@ -52,7 +54,7 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
 
     return(
         <div className="overlay">
-            <div className="exit" onClick={()=>setCreating(false)}>x</div>
+            <div className="exit" onClick={()=>setCreating("Idle")}>x</div>
             Create Lobby
             <div className="input">
                 Username:

@@ -7,8 +7,10 @@ export interface userStatus{
     user: string;
     setUser: (name: string)=>void;
     loggedIn: string;
-    setJoining: (isJoining:boolean)=>void;
+    setJoining: (isJoining:interaction)=>void;
 }
+
+type interaction = "Idle" | "Joining" | "Creating";
 
 export default function LobbyOverlay({user, setUser, loggedIn, setJoining}: userStatus) {
     const [lobby, setLobby] = useState<string>("");
@@ -23,7 +25,7 @@ export default function LobbyOverlay({user, setUser, loggedIn, setJoining}: user
 
     return(
         <div className="overlay">
-            <div className="exit" onClick={()=>setJoining(false)}>x</div>
+            <div className="exit" onClick={()=>setJoining("Idle")}>x</div>
             Join Lobby
             <div className="input">
                 Username:

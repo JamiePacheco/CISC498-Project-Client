@@ -20,17 +20,23 @@
   text-align: left;
 }
 
-.chatbox{
+.chat-bar{
   height: 88%;
   width: 30%;
   top: 11%;
   right: 0;
-  border: 3px rgba(113, 210, 232, 1) solid;
-  border-radius: 3rem;
   flex: 2;
   position: absolute;
+  border: 3px rgba(113, 210, 232, 1) solid;
+  border-radius: 3rem;
   background: rgba(4, 10, 57, 1);
-  
+}
+
+.chatbox{
+  height: 88%;
+  border-radius: 3rem;
+  flex: 2;
+  overflow: scroll;
 }
 
 .chat{

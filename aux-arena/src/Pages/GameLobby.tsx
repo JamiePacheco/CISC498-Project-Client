@@ -45,12 +45,6 @@ export default function GameLobby({user, loggedIn}: information) {
         updatePlayers(player)
     }, [])//Sets the current player onto the list, edit the player info above to be accurate
 
-    function addPlayer(){ //For testing 
-        const newPlayer:UserSession = {userID: 1, sessionID: 1, displayName: "newUser",
-         lobbyID:lobby, lastPingTime:"9:38AM", active:true, isSpectator:false}
-         updatePlayers(newPlayer)
-    }
-
     /*useEffect(()=> {//Use to update playercount when new players join
         function updatePlayers(newPlayer:string){
             updatePlayerList([...playerList, newPlayer])
@@ -96,7 +90,6 @@ export default function GameLobby({user, loggedIn}: information) {
                 <div>Lobby ID: {lobby}</div>
                 <Link to={"/aux-arena"} className="button" state={user}>Start</Link>
             </div>
-            <button onClick={addPlayer} className="button">Debug</button>
             <div className="playerbox">
                 {playerList.map((player, index)=>(
                     <div key={index} className="players">
@@ -104,15 +97,16 @@ export default function GameLobby({user, loggedIn}: information) {
                     </div>
                 ))}
             </div>
-            <div className="chatbox">
-                <div style={{paddingTop:"1em"}}>
-                    {chatLog.map((chat, index)=>(
-                        <div key={index} className="chat">
-                            {chat.name} : {chat.message} 
-                        </div>
-                    ))}
+            <div className="chat-bar">
+                <div className="chatbox">
+                    <div style={{paddingTop:"1em"}}>
+                        {chatLog.map((chat, index)=>(
+                            <div key={index} className="chat">
+                                {chat.name} : {chat.message} 
+                            </div>
+                        ))}
+                    </div>
                 </div>
-
                 <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
                 <button className="send-button" onClick={()=>newChat(input, user)}>Send</button>
             </div>

@@ -49,7 +49,7 @@ export default function AuxArena(){
     // Input can be different things depending on turn,
     // Prompt in prompt phase, search query in picking phase 
     const [currPhase, setPhase] = useState<phases>("Prompt")
-    const [timer, setTimer] = useState<number>(90) 
+    const [timer, setTimer] = useState<number>(30) 
     //Timer for each phase, pulled from server instead of local time
     //Check type on serverside and setType if spectator
     const [resultList, setResults] = useState<items[]>([])
@@ -235,7 +235,7 @@ export default function AuxArena(){
                      playerList[0].playerScore > playerList[1].playerScore ? <div>{playerList[0].name} WINS </div>:
                     <div>TIE</div>}
                     <div className="win-screen">
-                        <div className={playerList[0].playerScore <= playerList[1].playerScore? "loser" : "winner"}>
+                        <div className={playerList[0].playerScore <= playerList[1].playerScore? "loser left" : "winner left"}>
                             {playerList[0].name}
                             <div>
                                 <img src={playerList[0].song.thumbnail} alt="thumbnail"></img>
@@ -244,7 +244,7 @@ export default function AuxArena(){
                                 Votes: {playerList[0].playerScore}
                             </div>
                         </div>
-                        <div className={playerList[1].playerScore <= playerList[0].playerScore? "loser" : "winner"}>
+                        <div className={playerList[1].playerScore <= playerList[0].playerScore? "loser right" : "winner right"}>
                             {playerList[1].name}
                             <div>
                                 <img src={playerList[1].song.thumbnail} alt="thumbnail"></img>

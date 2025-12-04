@@ -121,7 +121,3 @@
 .join-button:hover{
   background-position: right center;
 }
-
-button:hover {
-  background: linear-gradient(to_bottom_left, #03a881, #003a90);
-}

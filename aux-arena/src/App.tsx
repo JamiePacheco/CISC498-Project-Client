@@ -36,13 +36,17 @@ function App() {
     <Router>
     <div className="App">
       <header className="App-header">
-        <header className='Header'>
-          <Link to="/" className="link">
+        <header className='Header' style={{display:"flex"}}>
+          <Link to="/" className="link" style={{position:"absolute"}}>
             <img src={logo} className="App-logo" alt="logo"/>
           </Link>
+          <h3 style={{flex:"1", paddingLeft:"12%"}}>
+            Aux Arena
+          </h3>
         </header>
         <Routes>
-          <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn}handleLogOut={handleLogout}/>}></Route>
+          <Route path='/' element={<Home username={username} setUsername={handleUser} 
+            loggedIn={loggedIn} setLoggedIn={handleLoggedIn}handleLogOut={handleLogout}/>}/>
           <Route path='/game-lobby' element={<GameLobby user={username} loggedIn={loggedIn} />}/>
           <Route path="/aux-arena" element={<AuxArena/>}></Route>
         </Routes>

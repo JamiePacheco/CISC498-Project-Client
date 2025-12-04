@@ -96,7 +96,6 @@
     justify-self: center;
     width: 80%;
     height: 60vh;
-    border: 3px black solid;
     background-image: linear-gradient(#ffffffff, #ffffffff);
     background-size: 3px 100%;
     background-repeat: no-repeat;
@@ -104,13 +103,27 @@
 }
 
 .winner{
+    border: rgba(0, 122, 253, 1) 2px groove;
     background: linear-gradient(rgba(0, 122, 253, .8), rgba(23, 57, 93, 1));
     height: 100%;
     width: 49.9%;
 }
 
 .loser{ 
-    background: linear-gradient(rgba(222, 22, 22, 0.8), rgba(119, 24, 24, 1));
+    border: rgba(254, 61, 61, 1) 2px groove;
+    background: linear-gradient(rgba(254, 61, 61, 0.8), rgba(218, 14, 14, 1));
     height: 100%;
     width: 49.9%;
+}
+
+.left{
+    border-top-left-radius: 2em;
+    border-bottom-left-radius: 2em;
+    border-right-style: none;
+}
+
+.right{
+    border-top-right-radius: 2em;
+    border-bottom-right-radius: 2em;
+    border-left-style: none;
 }
