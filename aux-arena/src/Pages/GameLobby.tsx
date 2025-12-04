@@ -1,4 +1,4 @@
-import { useEffect, /*useMemo,*/ useState } from "react";
+import { useEffect, useRef, /*useMemo,*/ useState } from "react";
 import "./Lobby.css"
 import { Link, useLocation } from "react-router-dom";
 
@@ -68,12 +68,14 @@ export default function GameLobby({user, loggedIn}: information) {
     }
 
     function newChat(chat:string, username:string){
-        if(input){
-            updateChat([...chatLog, {message:chat, name:username}])
-            if(chatLog.length > 50)
-                updateChat(chatLog.splice(1))
-            setInput("")
-        }
+        if(!chat.trim()) return; // ignore empty messages){
+        let newChat = chatLog
+        if(chatLog.length < 50)
+            updateChat([...newChat, {message:chat, name:username}])
+        if(chatLog.length >= 50)
+            newChat.shift()
+            updateChat([...newChat, {message:chat, name:username}])
+        setInput("")
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -81,6 +83,30 @@ export default function GameLobby({user, loggedIn}: information) {
         newChat(input, user);
         }
     };
+
+    //Auto scroll chat
+    const messagesRef = useRef<HTMLDivElement | null>(null)
+    const bottomRef = useRef<HTMLDivElement | null>(null)
+
+
+    function chatScroll(){
+        bottomRef.current?.scrollIntoView({behavior: "smooth"})
+    }
+
+    function checkChatScroll():boolean{
+        const chatbox = messagesRef.current;
+        if(!chatbox)
+            return false;
+        const threshold = 100; //pixels from bottom of chatbox
+        const position = chatbox.scrollTop + chatbox.clientHeight;
+        const height = chatbox.scrollHeight;
+        return position >= height - threshold;
+    }
+
+    useEffect(()=>{
+        if(checkChatScroll())
+            chatScroll();
+    }, [chatLog])
 
 
     return (
@@ -98,13 +124,14 @@ export default function GameLobby({user, loggedIn}: information) {
                 ))}
             </div>
             <div className="chat-bar">
-                <div className="chatbox">
-                    <div style={{paddingTop:"1em"}}>
+                <div className="chatbox" ref={messagesRef}>
+                    <div>
                         {chatLog.map((chat, index)=>(
                             <div key={index} className="chat">
                                 {chat.name} : {chat.message} 
                             </div>
                         ))}
+                        <div ref={bottomRef}></div>
                     </div>
                 </div>
                 <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>

@@ -37,12 +37,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <header className='Header' style={{display:"flex"}}>
-          <Link to="/" className="link" style={{position:"absolute"}}>
+          <Link to="/" className="link">
             <img src={logo} className="App-logo" alt="logo"/>
           </Link>
-          <h3 style={{flex:"1", paddingLeft:"12%"}}>
-            Aux Arena
-          </h3>
         </header>
         <Routes>
           <Route path='/' element={<Home username={username} setUsername={handleUser} 
