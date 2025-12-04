@@ -109,7 +109,10 @@
 .join-button{
   min-height: 3vh;
   min-width: 7rem;
-  background-image: linear-gradient(to bottom left, rgba(4, 20, 68, 1) 0%, rgba(8, 35, 191, 1) 51%, rgba(5, 165, 154, 1) 100%);
+  background: linear-gradient(to bottom left, rgba(255, 89, 0, 1) 0%, rgba(45, 0, 136, 1) 100%);
+  background-size: 300% 300%;
+  animation: backgroundAnim infinite;
+  animation-duration: 5s;
   color: white;
   border: 2px solid blue;
   transition: 1s;
@@ -119,5 +122,11 @@
 }
 
 .join-button:hover{
-  background-position: right center;
+  animation-duration: 2s;
+}
+
+@keyframes backgroundAnim{
+  0%  {background-position: 0% 0%;}
+  50% {background-position: 100% 100%;}
+  100% {background-position:0% 0%;}
 }
