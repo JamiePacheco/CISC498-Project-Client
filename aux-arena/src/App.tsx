@@ -36,10 +36,13 @@ function App() {
     <Router>
     <div className="App">
       <header className="App-header">
-        <header className='Header'>
-          <Link to="/" className="link">
+        <header className='Header' style={{display:"flex"}}>
+          <Link to="/" className="link" style={{position:"absolute", paddingTop:"0.5%"}}>
             <img src={logo} className="App-logo" alt="logo"/>
           </Link>
+          <h3 style={{paddingLeft: "11%", flex:"1"}}>
+            Aux Arena
+          </h3>
         </header>
         <Routes>
           <Route path='/' element={<Home username={username} setUsername={handleUser} loggedIn={loggedIn} setLoggedIn={handleLoggedIn}handleLogOut={handleLogout}/>}></Route>
