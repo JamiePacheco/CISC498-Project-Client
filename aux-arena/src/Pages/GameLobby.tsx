@@ -1,5 +1,6 @@
 import { useEffect, useRef, /*useMemo,*/ useState } from "react";
 import "./Lobby.css"
+import "./Css/PixelCorners.css"
 import { Link, useLocation } from "react-router-dom";
 
 export interface information{
@@ -39,6 +40,11 @@ export default function GameLobby({user, loggedIn}: information) {
             updatePlayerList([...playerList, newPlayer])
         else
             alert("Max players exceeded")
+    }
+
+    function debug(){
+        updatePlayerList([...playerList, {userID: 1, sessionID: 1, displayName: "Username",
+         lobbyID:lobby, lastPingTime:"9:38AM", active:true, isSpectator:false}])
     }
 
     useEffect(()=>{
@@ -116,15 +122,16 @@ export default function GameLobby({user, loggedIn}: information) {
                 <div>Lobby ID: {lobby}</div>
                 <Link to={"/aux-arena"} className="button" state={user}>Start</Link>
             </div>
-            <div className="playerbox">
+            <button className="button" onClick={debug}>Add Players</button>
+            <div className="playerbox pixel-corner">
                 {playerList.map((player, index)=>(
                     <div key={index} className="players">
                         {player.displayName} 
                     </div>
                 ))}
             </div>
-            <div className="chat-bar">
-                <div className="chatbox" ref={messagesRef}>
+            <div className="chat-bar pixel-corners">
+                <div className="chatbox " ref={messagesRef}>
                     <div>
                         {chatLog.map((chat, index)=>(
                             <div key={index} className="chat">

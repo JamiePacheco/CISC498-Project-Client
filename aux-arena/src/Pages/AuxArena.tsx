@@ -164,7 +164,7 @@ export default function AuxArena(){
 
     return (
         <div className="game-screen">
-            <div className={`${currPhase} timer`}>{timer}</div>
+            <div className={"timer"}>{timer}</div>
             <button onClick={phaseChange} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
             Phase: {currPhase}
             <div className={"prompt-box"}>
@@ -241,7 +241,7 @@ export default function AuxArena(){
                                 <img src={playerList[0].song.thumbnail} alt="thumbnail"></img>
                                 <div>{playerList[0].song.title}</div>
                                 <br></br>
-                                Votes: {playerList[0].playerScore}
+                                <div className="votes">Votes: {playerList[0].playerScore}</div>
                             </div>
                         </div>
                         <div className={playerList[1].playerScore <= playerList[0].playerScore? "loser right" : "winner right"}>
@@ -250,7 +250,7 @@ export default function AuxArena(){
                                 <img src={playerList[1].song.thumbnail} alt="thumbnail"></img>
                                 <div>{playerList[1].song.title}</div>
                                 <br></br>
-                                Votes: {playerList[1].playerScore}
+                                <div className="votes">Votes: {playerList[1].playerScore}</div>
                             </div>
                         </div>
                     </div>

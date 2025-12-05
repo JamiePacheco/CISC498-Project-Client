@@ -2,8 +2,8 @@ import { useState } from "react";
 import LobbyOverlay from "./JoinLobbyOverlay";
 import CreateLobby from "./CreateLobbyOverlay";
 import LoginOverlay from "./loginOverlay";
-import "../App.css";
 import "./Lobby.css"
+import "./Css/PixelCorners.css"
 
 export interface information{
   username: string;

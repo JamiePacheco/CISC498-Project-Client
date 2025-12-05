@@ -15,19 +15,9 @@
     position: absolute;
     font-size: 2em;
     left: 2rem;
-    border: 5px solid;
-    border-radius: 20rem;
     min-width: 20px;
     min-height: 20px;
 }
-
-/*These are for different timer color based on phase*/
-.Prompt{border-color: rgba(232, 39, 17, 1);}
-.Picking{border-color: rgba(250, 191, 128, 1);}
-.Viewing1{border-color: rgba(233, 229, 8, 1);}
-.Viewing2{border-color: rgba(6, 239, 26, 1)}
-.Voting{border-color: rgba(36, 65, 255, 1)}
-.Winner{border-color: rgba(187, 0, 255, 1);}
 
 .prompt-box{
     margin-top: 2em;
@@ -94,36 +84,39 @@
     display: flex;
     justify-content: space-between;
     justify-self: center;
-    width: 80%;
+    width: 90%;
     height: 60vh;
-    background-image: linear-gradient(#ffffffff, #ffffffff);
     background-size: 3px 100%;
+    padding-bottom: 0.15em;
     background-repeat: no-repeat;
     background-position: center center;
 }
 
 .winner{
+    padding-top: 1em;
     border: rgba(0, 122, 253, 1) 2px groove;
-    background: linear-gradient(rgba(0, 122, 253, .8), rgba(23, 57, 93, 1));
-    height: 100%;
-    width: 49.9%;
+    height: 95%;
+    width: 48%;
+}
+
+.votes{
+    position: absolute;
+    bottom: 5%;
+    padding-left:4%;
 }
 
 .loser{ 
+    padding-top: 1em;
     border: rgba(254, 61, 61, 1) 2px groove;
-    background: linear-gradient(rgba(254, 61, 61, 0.8), rgba(218, 14, 14, 1));
-    height: 100%;
-    width: 49.9%;
+    height: 95%;
+    width: 48%;
 }
 
 .left{
-    border-top-left-radius: 2em;
-    border-bottom-left-radius: 2em;
-    border-right-style: none;
+    border-radius: 1em;
 }
 
 .right{
-    border-top-right-radius: 2em;
-    border-bottom-right-radius: 2em;
-    border-left-style: none;
+    border-radius: 1em;
 }
+

@@ -2,29 +2,31 @@
   margin-top: 2em;
   margin-left: 1em;
   flex: 1;
-  min-height: 67vh;
+  height: 67vh;
   background-color: rgba(113, 210, 232, 1);
   border-radius: 0.5em;
-  max-width: 64%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
+  max-width: 61%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+  align-content: start;
+  column-gap: 1em;
   padding-left: 1em;
-
+  overflow-y: scroll;
 }
 
 .players{
-  padding-top: 0.5em;
-  min-width: 32%;
+  padding-top: 1em;
+  padding-left: 1.5em;
+  padding-bottom: 1em;
   text-align: left;
 }
 
 .chat-bar{
-  height: 88vh;
+  height: 85vh;
   width: 30%;
   top: 11%;
-  right: 0;
+  right: 1%;
   flex: 2;
   position: absolute;
   display: flex;
@@ -35,10 +37,9 @@
 }
 
 .chatbox{
-  border-radius: 3rem;
   flex: 1;
   margin-top: 2rem;
-  margin-bottom: 5rem;
+  margin-bottom: 6rem;
   overflow-y: scroll;
 }
 
@@ -84,3 +85,4 @@
   display: flex;
   gap: 11.9%;
 }
+

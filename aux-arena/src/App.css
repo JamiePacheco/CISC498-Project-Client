@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: minecraft;
 }
 
 .App-logo {
@@ -16,7 +17,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-image: linear-gradient(rgba(0, 14, 84, 1), rgba(0, 14, 84, 1), rgba(230, 0, 255, 1));
   min-height: 100vh;
   align-items: center;
   justify-content: center;
@@ -46,22 +47,23 @@
 }
 
 .Header {
-  background-color: #1f2127ff;
+  background-image: linear-gradient(rgba(0, 3, 19, 1), rgba(0, 14, 84, 1));
   min-height: 10%;
   min-width: 100%;
   position: fixed;
   top: 0%;
-  border: #14161aff solid 2px;
+  border:  rgba(1, 15, 86, 1) solid 2px;
   display: flex;
   z-index: 10;
 }
 
 .Sidebar {
+  padding-top: 1rem;
   min-height: 100vh;
   width: 20vh;
-  border: 2rem;
-  background-color: #1f2127ff;
-  border-right: 2px solid #14161aff;
+  border-right: 1rem;
+  background-image: linear-gradient(rgba(0, 14, 84, 1), rgba(0, 14, 84, 1), rgba(230, 0, 255, 1));
+  border-image: linear-gradient(rgba(0, 9, 56, 1), rgba(0, 10, 61, 1), rgba(93, 1, 103, 1));
   flex-shrink: 0; /* prevent sidebar from shrinking */
 }
 
@@ -69,6 +71,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  background-image: linear-gradient(rgba(0, 14, 84, 1), rgba(0, 14, 84, 1), rgba(230, 0, 255, 1));
 }
 
 .main1 {
@@ -80,9 +83,10 @@
 .button {
   min-height: 5px;
   min-width: 10px;
-  background-image: linear-gradient(to bottom left, rgba(4, 20, 68, 1) 0%, rgba(8, 35, 191, 1) 51%, rgba(5, 165, 154, 1) 100%);
+  background: linear-gradient(to bottom left, rgba(45, 0, 136, 1) 0%, rgba(255, 89, 0, 1) 100%);
+  background-size: 100% 400%;
   color: white;
-  border: 2px solid blue;
+  border: 2px solid rgba(223, 26, 0, 1);
   transition: 1s;
   padding: 1vh;
   padding-left: 3vh;
@@ -91,15 +95,11 @@
   text-decoration: none;
   font-size: 0.5em;
   cursor:pointer;
+  font-family: minecraft;
 }
 
 .button:hover{
-  background-position: right center;
-}
-
-.button:disabled{
-  border: 2px inset red;
-  background-image: linear-gradient(to bottom left, rgba(223, 224, 228, 1) 0%, rgba(242, 165, 163, 1) 51%, rgba(255, 47, 0, 1) 100%);
+  animation: backgroundAnim 3s linear infinite;
 }
 
 .button.login{
@@ -110,23 +110,27 @@
   min-height: 3vh;
   min-width: 7rem;
   background: linear-gradient(to bottom left, rgba(255, 89, 0, 1) 0%, rgba(45, 0, 136, 1) 100%);
-  background-size: 300% 300%;
-  animation: backgroundAnim infinite;
-  animation-duration: 5s;
+  background-size: 400%;
   color: white;
-  border: 2px solid blue;
+  border: 2px solid rgba(223, 26, 0, 1);
   transition: 1s;
   padding: 1vh;
   background-size: 200% auto;
   cursor:pointer;
+  font-family: minecraft;
 }
 
 .join-button:hover{
-  animation-duration: 2s;
+  animation: backgroundAnim linear infinite;
+  animation-duration: 3s;
 }
 
 @keyframes backgroundAnim{
-  0%  {background-position: 0% 0%;}
-  50% {background-position: 100% 100%;}
-  100% {background-position:0% 0%;}
+  from  {background-position: 200% 0%;}
+  to {background-position: 100% 0%;}
+}
+
+@font-face {
+  font-family: minecraft;
+  src: url("./Images/Minecraft.ttf");
 }
