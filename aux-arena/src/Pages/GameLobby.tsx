@@ -10,6 +10,7 @@ import { Message } from "../Interfaces/socket/Message";
 import { LobbySession } from "../Interfaces/LobbySession";
 import { GameLobbyEvent, MessageEvent } from "../Interfaces/socket/GameLobbyEvent";
 import { connectToGameLobby } from "../service/LobbySessionService";
+import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
 
 export interface information{
   user: string;
@@ -175,6 +176,24 @@ export default function GameLobbyPage({loggedIn}: information) {
             }
     });
 
+    useStompTopic<GameLobbyEvent<GameLobbyMessage>>(`/topic/game-lobby/message${location.state.lobby.id}`, (event) => {
+        const message : GameLobbyEvent<GameLobbyMessage> = event;
+
+        // should abstract the case logic to functions
+        switch (message?.type) { 
+            case MessageEvent.NEW_MESSAGE:
+                const newMessage : GameLobbyMessage = message.payload
+                        updateChat(prev => {
+                        return [...prev, {
+                            name : newMessage.author,
+                            message : newMessage.textMessage
+                        }]
+                    })
+                               
+                break;
+        }
+    });
+
     useStompTopic<Message<any>>(`/user/queue/errors`, (event) => {
         console.log(event);
     })
@@ -264,10 +283,14 @@ export default function GameLobbyPage({loggedIn}: information) {
 
     function newChat(chat:string, username:string){
         if(input){
-            updateChat([...chatLog, {message:chat, name:username}])
-            if(chatLog.length > 50)
-                updateChat(chatLog.splice(1))
-            setInput("")
+            if (userSession?.displayName !== undefined) {
+                const newMessage : GameLobbyMessage = {
+                    author : userSession?.displayName,
+                    textMessage : input
+                }
+
+                sendMessage(`/app/game-lobby/send-message/${lobby?.id}`, newMessage)
+            }
         }
     }
 
@@ -319,7 +342,7 @@ export default function GameLobbyPage({loggedIn}: information) {
                     ))}
                 </div>
 
-                <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
+                <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={(e) => {setInput(e.target.value)}}></input>
                 <button className="send-button" onClick={()=>newChat(input, user.nickname)}>Send</button>
             </div>
         </div>
