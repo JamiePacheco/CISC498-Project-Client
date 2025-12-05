@@ -5,6 +5,7 @@ export enum MessageEvent {
     USER_CLEANUP = 'USER_CLEANUP',
     LOBBY_UPDATED = 'LOBBY_UPDATED',
     NEW_HOST = 'NEW_HOST',
+    NEW_MESSAGE = 'NEW_MESSAGE'
     // GAME_STARTED,
     // GAME_ENDED,
     // SCORE_UPDATES,
