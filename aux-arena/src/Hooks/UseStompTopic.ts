@@ -62,35 +62,6 @@ export function useStompTopic<T extends SequencedEvent>(
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // a react hook that can be used for any STOMP topic
 // export function useStompTopic<T = any>(topic : string) {
 //     const [messages, setMessages] = useState<T[]>([]);

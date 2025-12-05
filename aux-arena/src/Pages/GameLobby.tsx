@@ -85,7 +85,7 @@ export default function GameLobbyPage({loggedIn}: information) {
 
                     // set the inital player list to the entire set of active players
                     updatePlayerList(prev => {
-                            const newPlayerList = [...prev, ...Object.values(connectedLobby.activeUsers)]
+                            const newPlayerList = [...prev, ...Object.values(connectedLobby.activeUsers).filter(u => u.active)]
                             console.log(newPlayerList)
                             return newPlayerList;
                         }
@@ -153,6 +153,7 @@ export default function GameLobbyPage({loggedIn}: information) {
             })
         }
     });
+
 
     useStompTopic<Message<any>>(`/user/queue/game-lobby/${location.state.lobby.id}`, (event) => {
             const userMessage : Message<any> = event;
