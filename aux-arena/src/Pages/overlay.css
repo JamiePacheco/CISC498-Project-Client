@@ -1,8 +1,7 @@
 
 
 .overlay{
-  background-color: rgba(39, 41, 53, 1);
-  border: 3px solid rgba(74, 237, 252, 1);
+  background: linear-gradient(to top, rgba(45, 0, 136, 1) 0%, rgba(255, 89, 0, 1) 100%);
   position:absolute;
   border-radius: 1em;
   width: 40vh;
@@ -22,7 +21,7 @@
 
 .text-box{
   background-color: #1f2127ff;
-  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border: 0.1em solid  rgba(89, 0, 254, 1);
   border-radius: 0.4em;
   min-height: 10%;
   min-width: 30%;
@@ -37,7 +36,7 @@
 
 .small-text-box{
   background-color: #1f2127ff;
-  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border: 0.1em solid  rgba(89, 0, 254, 1);
   border-radius: 0.4em;
   font-size: 0.8em;
   text-align: center;
@@ -47,16 +46,15 @@
 
 .exit{
   position: absolute;
-  top: 1%;
-  right: 5%;
+  top: 5%;
+  right: 10%;
   color: red;
   cursor: pointer;
 }
 
 /* For enter buttons use "enter lobby-button"*/
 .lobby-button{
-  background-color: #1f2127ff;
-  border: 0.1em solid  rgba(74, 237, 252, 1);
+  background-color: #ff6a00ff;
   min-height: 10%;
   min-width: 40%;
   font-size: 0.8em;
@@ -69,7 +67,6 @@
 
 .lobby-button:hover{
   color:  #1f2127ff;
-  background-color:white;
 }
 
 /* For both create and join lobby */

@@ -126,8 +126,8 @@
 }
 
 @keyframes backgroundAnim{
-  from  {background-position: 200% 0%;}
-  to {background-position: 100% 0%;}
+  from  {background-position: 200% 200%;}
+  to {background-position: 0% 0%;}
 }
 
 @font-face {

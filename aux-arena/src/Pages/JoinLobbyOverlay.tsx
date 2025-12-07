@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../App.css"
 import './overlay.css'
+import "./Css/PixelCorners.css"
 import { Link } from "react-router-dom";
 
 export interface userStatus{
@@ -24,7 +25,7 @@ export default function LobbyOverlay({user, setUser, loggedIn, setJoining}: user
     }
 
     return(
-        <div className="overlay">
+        <div className="overlay pixel-corner">
             <div className="exit" onClick={()=>setJoining("Idle")}>x</div>
             Join Lobby
             <div className="input">

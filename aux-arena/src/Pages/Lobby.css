@@ -31,7 +31,6 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  border: 3px rgba(113, 210, 232, 1) solid;
   border-radius: 3rem;
   background: rgba(4, 10, 57, 1);
 }
