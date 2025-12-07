@@ -199,3 +199,124 @@
 .pixel-corners::after {
   margin: -10px;
 }
+
+.purple-pixels,
+.purple-pixels--wrapper {
+ width: fit-content;
+ height: fit-content;
+}
+.purple-pixels--wrapper .purple-pixels {
+ display: block;
+ clip-path: polygon(10px 50px,
+   20px 50px,
+   20px 30px,
+   30px 30px,
+   30px 20px,
+   50px 20px,
+   50px 10px,
+   calc(100% - 50px) 10px,
+   calc(100% - 50px) 20px,
+   calc(100% - 30px) 20px,
+   calc(100% - 30px) 30px,
+   calc(100% - 20px) 30px,
+   calc(100% - 20px) 50px,
+   calc(100% - 10px) 50px,
+   calc(100% - 10px) calc(100% - 50px),
+   calc(100% - 20px) calc(100% - 50px),
+   calc(100% - 20px) calc(100% - 30px),
+   calc(100% - 30px) calc(100% - 30px),
+   calc(100% - 30px) calc(100% - 20px),
+   calc(100% - 50px) calc(100% - 20px),
+   calc(100% - 50px) calc(100% - 10px),
+   50px calc(100% - 10px),
+   50px calc(100% - 20px),
+   30px calc(100% - 20px),
+   30px calc(100% - 30px),
+   20px calc(100% - 30px),
+   20px calc(100% - 50px),
+   10px calc(100% - 50px));
+}
+.purple-pixels::after,
+.purple-pixels--wrapper::after {
+ content: "";
+ position: absolute;
+ clip-path: polygon(0px calc(100% - 50px),
+   10px calc(100% - 50px),
+   10px calc(100% - 30px),
+   20px calc(100% - 30px),
+   20px calc(100% - 20px),
+   30px calc(100% - 20px),
+   30px calc(100% - 10px),
+   50px calc(100% - 10px),
+   50px 100%,
+   calc(100% - 50px) 100%,
+   calc(100% - 50px) calc(100% - 10px),
+   calc(100% - 30px) calc(100% - 10px),
+   calc(100% - 30px) calc(100% - 20px),
+   calc(100% - 20px) calc(100% - 20px),
+   calc(100% - 20px) calc(100% - 30px),
+   calc(100% - 10px) calc(100% - 30px),
+   calc(100% - 10px) calc(100% - 50px),
+   100% calc(100% - 50px),
+   100% 50px,
+   calc(100% - 10px) 50px,
+   calc(100% - 10px) 30px,
+   calc(100% - 20px) 30px,
+   calc(100% - 20px) 20px,
+   calc(100% - 30px) 20px,
+   calc(100% - 30px) 10px,
+   calc(100% - 50px) 10px,
+   calc(100% - 50px) 0px,
+   50px 0px,
+   50px 10px,
+   30px 10px,
+   30px 20px,
+   20px 20px,
+   20px 30px,
+   10px 30px,
+   10px 50px,
+   0px 50px,
+   0px 50%,
+   10px 50%,
+   10px 50px,
+   20px 50px,
+   20px 30px,
+   30px 30px,
+   30px 20px,
+   50px 20px,
+   50px 10px,
+   calc(100% - 50px) 10px,
+   calc(100% - 50px) 20px,
+   calc(100% - 30px) 20px,
+   calc(100% - 30px) 30px,
+   calc(100% - 20px) 30px,
+   calc(100% - 20px) 50px,
+   calc(100% - 10px) 50px,
+   calc(100% - 10px) calc(100% - 50px),
+   calc(100% - 20px) calc(100% - 50px),
+   calc(100% - 20px) calc(100% - 30px),
+   calc(100% - 30px) calc(100% - 30px),
+   calc(100% - 30px) calc(100% - 20px),
+   calc(100% - 50px) calc(100% - 20px),
+   calc(100% - 50px) calc(100% - 10px),
+   50px calc(100% - 10px),
+   50px calc(100% - 20px),
+   30px calc(100% - 20px),
+   30px calc(100% - 30px),
+   20px calc(100% - 30px),
+   20px calc(100% - 50px),
+   10px calc(100% - 50px),
+   10px 50%,
+   0px 50%);
+ top: 0;
+ bottom: 0;
+ left: 0;
+ right: 0;
+ background-image: linear-gradient(to bottom, rgba(2, 20, 109, 1),rgba(3, 27, 150, 1), rgba(237, 0, 222, 1));
+ display: block;
+ pointer-events: none;
+}
+.purple-pixels::after {
+ margin: -10px;
+}
+

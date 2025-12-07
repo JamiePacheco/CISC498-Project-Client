@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./overlay.css"
+import "./Css/PixelCorners.css"
 
 type items = {
     title:string;
@@ -72,7 +73,7 @@ export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: so
     }, [timeStamp])
 
     return(
-        <div className="songEdit">
+        <div className="songEdit purple-pixels">
             <div className="exit" onClick={() => setEditing(false)}>X</div>
             Select a 15-30 second section:
             <iframe id="ytplayer" width="640" height="360" title={song.title}
