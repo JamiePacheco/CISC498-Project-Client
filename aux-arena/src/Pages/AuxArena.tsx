@@ -168,7 +168,7 @@ export default function AuxArena(){
             <button onClick={phaseChange} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
             Phase: {currPhase}
             <div className={"prompt-box"}>
-                {`${promptList[0]}`? `Prompt: ${promptList[0]}` : "Choosing Prompt"}
+                {`${promptList[0]}`? `Prompt: ${promptList[0]}` : "No Prompts Currently"}
             </div>
             <div className="game-display">
                 {currPhase==="Prompt" && <div>

@@ -141,7 +141,7 @@ export default function GameLobby({user, loggedIn}: information) {
                         <div ref={bottomRef}></div>
                     </div>
                 </div>
-                <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
+                <input id="Chat" type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
                 <button className="send-button" onClick={()=>newChat(input, user)}>Send</button>
             </div>
         </div>
