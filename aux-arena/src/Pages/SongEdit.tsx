@@ -5,7 +5,7 @@ import "./Css/PixelCorners.css"
 type items = {
     title:string;
     thumbnail:string;
-    id:string;
+    url:string;
 }
 
 type options = "start" | "end";
@@ -77,7 +77,7 @@ export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: so
             <div className="exit" onClick={() => setEditing(false)}>X</div>
             Select a 15-30 second section:
             <iframe id="ytplayer" width="640" height="360" title={song.title}
-                src={`https://www.youtube.com/embed/${song.id}?start=${timeStamp[0]}&end=${timeStamp[1]}`}/>    
+                src={`https://www.youtube.com/embed/${song.url}?start=${timeStamp[0]}&end=${timeStamp[1]}`}/>    
             <div className="timeStamp">
                 <div>
                     Start:

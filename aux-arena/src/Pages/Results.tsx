@@ -4,7 +4,9 @@ import SongEdit from "./SongEdit";
 type items = {
     title:string;
     thumbnail:string;
-    id: string;
+    url: string;
+    startTimeStamp: number;
+    endTimeStamp: number;
 }
 
 export interface results{

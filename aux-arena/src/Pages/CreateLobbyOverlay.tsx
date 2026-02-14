@@ -3,27 +3,22 @@ import '../App.css';
 import './overlay.css'
 import "./Css/PixelCorners.css"
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { RootState } from './Store/store';
 
 export interface userStatus{
-    user: string;
-    setUser: (name: string)=>void;
-    loggedIn: string;
     setCreating: (isCreating:interaction)=>void;
 }
 
 type interaction = "Idle" | "Joining" | "Creating";
 
-export default function CreateLobby({user, setUser, loggedIn, setCreating}: userStatus){
-    const [lobby, setLobby] = useState<string>(
-        (Math.floor(Math.random() * 9999)).toString().padStart(4, "000")
-    );
+export default function CreateLobby({setCreating}: userStatus){
+    const user = useSelector((state:RootState) => state.user);
+
+    // Remove this later, only used for testing purpose to make fake lobby code
     const [lobbyPrivate, setPrivate] = useState<boolean>(false);
     const [numPlayers, setNum] = useState<number>(3);
     const [password, setPassword] = useState<string>("");
-    
-    function changeName(event:any){
-        setUser(event.target.value);
-    }
 
     function privateHelper(){
         setPrivate(!lobbyPrivate)
@@ -50,7 +45,7 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
     }
 
     function sendPacket(){
-        const packet:Packet = {name:user, maxPlayer:numPlayers, lobbyPrivacy:lobbyPrivate, password:password}
+        const packet:Packet = {name:user.userInfo.displayName, maxPlayer:numPlayers, lobbyPrivacy:lobbyPrivate, password:password}
     }
 
     return(
@@ -60,7 +55,7 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
             <div className="input">
                 Username:
                 <div>
-                    <input disabled={loggedIn? true: false} className="text-box" placeholder={user} type="text" onChange={changeName}></input>
+                    <input disabled className="text-box" placeholder={user.userInfo.displayName} type="text"></input>
                 </div>
             </div>
 
@@ -82,7 +77,7 @@ export default function CreateLobby({user, setUser, loggedIn, setCreating}: user
                 <input type='text' className='text-box' placeholder={"optional"} onChange={passwordHelper}></input>
             </div>}
             <div className='input'>
-                <Link to="/game-lobby" className="enter lobby-button" state={{lobby:lobby}}>Create</Link>
+                <Link to="/game-lobby" className="enter lobby-button">Create</Link>
             </div>
         </div>
     )

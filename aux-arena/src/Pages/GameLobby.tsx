@@ -1,92 +1,64 @@
 import { useEffect, useRef, /*useMemo,*/ useState } from "react";
 import "./Lobby.css"
 import "./Css/PixelCorners.css"
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { User } from "./Types/User"
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "./Store/store";
+import { addUser, newMessage, removeUser } from "./Store/lobbySlices";
 
-export interface information{
-  user: string;
-  loggedIn: string;
-}
 
-type UserSession = {
+type messages = {//Might not be needed anymore
     userID: number;
-    sessionID: number;
-    displayName: string;
-    lobbyID: number;
-    lastPingTime: string; //Java type instant, *should* be sent as an iso string
-    active: boolean;
-    isSpectator: boolean;
-}
-
-type messages = {
     message: string;
-    name: string;
 }
 
-export default function GameLobby({user, loggedIn}: information) {
-    const [maxPlayer] = useState<number>(20) // Not letting change in lobby
-    const location = useLocation()
-    const {lobby} = location.state 
-    const [playerList, updatePlayerList] = useState<UserSession[]>([])
-    const playerCount = playerList.length
-    const [chatLog, updateChat] = useState<messages[]>([{message:"Hello!", name:"System"}, {message:"Testing", name:"System"}]) // Should pair with user who sent it 
+export default function GameLobby() {
+    const user = useSelector((state:RootState) => state.user);
+    const lobby = useSelector((state:RootState) => state.lobby);
+    const dispatch = useDispatch<AppDispatch>();
     const [input, setInput] = useState<string>("")// Helps with sending messages to chat
+    
+    useEffect(()=>{
+        if (!lobby.userList[0]) {
+            dispatch(addUser(user.userInfo));
+        }
+    }, [])
 
-    const player:UserSession = {userID: 1, sessionID: 1, displayName: user,
-         lobbyID:lobby, lastPingTime:"9:38AM", active:true, isSpectator:false}
+    const player:User = {userID: 2, displayName: "Testing", isReady: false, isSpectator: false, score: 0};
 
-    function updatePlayers(newPlayer:UserSession){
-        if(playerCount < 20)
-            updatePlayerList([...playerList, newPlayer])
+    function updatePlayers(newPlayer:User){
+        if(lobby.numPlayer < lobby.playerCap)
+            dispatch(addUser(newPlayer));
         else
             alert("Max players exceeded")
     }
 
-    function debug(){
-        updatePlayerList([...playerList, {userID: 1, sessionID: 1, displayName: "Username",
-         lobbyID:lobby, lastPingTime:"9:38AM", active:true, isSpectator:false}])
+    
+
+    function debugAdd(){
+        updatePlayers(player);
+        if(lobby.usersByID[player.userID]){
+            alert("A user with this userID is already in this lobby")
+        }
     }
 
-    useEffect(()=>{
-        updatePlayers(player)
-    }, [])//Sets the current player onto the list, edit the player info above to be accurate
-
-    /*useEffect(()=> {//Use to update playercount when new players join
-        function updatePlayers(newPlayer:string){
-            updatePlayerList([...playerList, newPlayer])
-            updateCount(playerList.length)
-        }
-
-        socket.on("Update", (data:any)=>{
-            if(data.type == MessageEvent.USERJOINED){
-                updatePlayers(data.payload);
-            }   
-        })
-
-        return ()=>{
-            socket.off("updates")
-        };
-
-    }, [playerList])*/
+    function debugRemove(){
+        dispatch(removeUser(player));
+    }
 
     function updateInput(event:any){
         setInput(event.target.value)
     }
 
-    function newChat(chat:string, username:string){
-        if(!chat.trim()) return; // ignore empty messages){
-        let newChat = chatLog
-        if(chatLog.length < 50)
-            updateChat([...newChat, {message:chat, name:username}])
-        if(chatLog.length >= 50)
-            newChat.shift()
-            updateChat([...newChat, {message:chat, name:username}])
-        setInput("")
+    function sendMessage(){
+        dispatch(newMessage({message: input, userID: user.userInfo.userID}));
+        setInput("");
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
-        newChat(input, user);
+        sendMessage();
         }
     };
 
@@ -112,37 +84,41 @@ export default function GameLobby({user, loggedIn}: information) {
     useEffect(()=>{
         if(checkChatScroll())
             chatScroll();
-    }, [chatLog])
+    }, [lobby.chatLog])
 
 
     return (
         <div>
             <div className="lobbyStatus">
-                <div style={{paddingLeft: "1rem"}}>Players: {playerCount} / {maxPlayer} </div>
-                <div>Lobby ID: {lobby}</div>
-                <Link to={"/aux-arena"} className="button" state={user}>Start</Link>
+                <div style={{paddingLeft: "1rem", height:"2.5rem"}}>Players: {lobby.numPlayer} / {lobby.playerCap} </div>
+                <div>Lobby ID: {lobby.lobbyID}</div>
+                {lobby.numPlayer > 1 && <Link to={"/aux-arena"} className="button">Start</Link>}
             </div>
-            <button className="button" onClick={debug}>Add Players</button>
+            <button className="button" onClick={debugAdd}>Add Player</button>
+            <button className="button" onClick={debugRemove}>Remove Player</button>
             <div className="playerbox pixel-corner">
-                {playerList.map((player, index)=>(
-                    <div key={index} className="players">
-                        {player.displayName} 
+                {lobby.userList.map((player)=>{
+                    if(!player.displayName) return null;
+                    return <div className="players">
+                        {player.displayName}
                     </div>
-                ))}
+                })}
             </div>
             <div className="chat-bar pixel-corners">
                 <div className="chatbox " ref={messagesRef}>
                     <div>
-                        {chatLog.map((chat, index)=>(
-                            <div key={index} className="chat">
-                                {chat.name} : {chat.message} 
+                        {lobby.chatLog[0] && lobby.chatLog.map((chat)=>{
+                            if(!chat) return;
+                            if(chat.userID === -1) return <div>{"System"} : {chat.message}</div>
+                            return <div className="chat">
+                                {lobby.usersByID[chat.userID].displayName} : {chat.message} 
                             </div>
-                        ))}
+                        })}
                         <div ref={bottomRef}></div>
                     </div>
                 </div>
                 <input id="Chat" type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
-                <button className="send-button" onClick={()=>newChat(input, user)}>Send</button>
+                <button className="send-button" onClick={sendMessage}>Send</button>
             </div>
         </div>
     )

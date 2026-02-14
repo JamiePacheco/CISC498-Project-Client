@@ -3,25 +3,21 @@ import "../App.css"
 import './overlay.css'
 import "./Css/PixelCorners.css"
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "./Store/store";
+import { link } from "node:fs";
 
 export interface userStatus{
-    user: string;
-    setUser: (name: string)=>void;
-    loggedIn: string;
     setJoining: (isJoining:interaction)=>void;
 }
 
 type interaction = "Idle" | "Joining" | "Creating";
 
-export default function LobbyOverlay({user, setUser, loggedIn, setJoining}: userStatus) {
-    const [lobby, setLobby] = useState<string>("");
-
-    function changeName(event:any){
-        setUser(event.target.value);
-    }
+export default function LobbyOverlay({setJoining}: userStatus) {
+    const user = useSelector((state:RootState)=> state.user);
 
     function lobbyHelper(event:any){
-        setLobby(event.target.value)
+        
     }
 
     return(
@@ -31,7 +27,7 @@ export default function LobbyOverlay({user, setUser, loggedIn, setJoining}: user
             <div className="input">
                 Username:
                 <div>
-                    <input disabled={loggedIn? true: false} className="text-box" placeholder={user} type="text" onChange={changeName}></input>
+                    <input disabled className="text-box" placeholder={user.userInfo.displayName} type="text"></input>
                 </div>
             </div>
             <div className="input">
@@ -45,7 +41,7 @@ export default function LobbyOverlay({user, setUser, loggedIn, setJoining}: user
                 <input type="checkbox"></input>
             </div>
             <div className="input">
-                <Link to="/game-lobby" className="enter lobby-button" state={{lobby:lobby}}>Join</Link>
+                <Link to="/game-lobby" className="enter lobby-button">Join</Link>
             </div>
         </div>
     )

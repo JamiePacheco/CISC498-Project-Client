@@ -6,32 +6,13 @@ import GameLobby from "./Pages/GameLobby";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import AuxArena from "./Pages/AuxArena";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "./Pages/Store/store";
 
 function App() {
-  const [username, setUsername] = useState<string>(() => {
-    return localStorage.getItem("username") || "";
-  })
 
-  const handleUser = (name: string) => { //Change to store user data when accounts are made
-    setUsername(name);
-    localStorage.setItem("username", name);
-};
-
-  const [loggedIn, setLoggedIn] = useState<string>(() => {
-    return localStorage.getItem("loggedIn") || ""; //Empty string for false, anything else for true
-  })
-
-  const handleLoggedIn = (truthy: string) => {
-    setLoggedIn(truthy);
-    localStorage.setItem("loggedIn", truthy);
-};
-
-  const handleLogout = () => {
-    localStorage.clear();
-    setUsername(""); 
-    setLoggedIn(""); 
-};
-
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.user);
   return (
     <Router>
     <div className="App">
@@ -42,9 +23,8 @@ function App() {
           </Link>
         </header>
         <Routes>
-          <Route path='/' element={<Home username={username} setUsername={handleUser} 
-            loggedIn={loggedIn} setLoggedIn={handleLoggedIn}handleLogOut={handleLogout}/>}/>
-          <Route path='/game-lobby' element={<GameLobby user={username} loggedIn={loggedIn} />}/>
+          <Route path='/' element={<Home/>}/>
+          <Route path='/game-lobby' element={<GameLobby/>}/>
           <Route path="/aux-arena" element={<AuxArena/>}></Route>
         </Routes>
       </header>
