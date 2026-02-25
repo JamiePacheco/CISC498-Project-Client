@@ -48,7 +48,7 @@ const lobbySlice = createSlice({
                 state.userList.push(action.payload);
                 state.numPlayer++;
                 state.chatLog = updateChat(state.chatLog, {userID: -1,
-                    message:`Player: ${action.payload.displayName} has joined the lobby`
+                    message:`Player: "${action.payload.displayName}" has joined the lobby`
                 });
                 console.log("added player")
             }

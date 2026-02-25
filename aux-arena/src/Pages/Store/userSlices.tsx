@@ -26,7 +26,6 @@ const userSlice = createSlice({
             state.loggedIn = true;
         },
         enterLobby: (state, action: PayloadAction<lobbyPayload>) => {
-            state.sessionID = action.payload.sessionID;
             state.lobbyID = action.payload.lobbyID;
         },
         logout: () => createMainUser()

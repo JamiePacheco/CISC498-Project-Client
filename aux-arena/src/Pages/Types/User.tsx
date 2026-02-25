@@ -20,7 +20,7 @@ export function createUser(options: Partial<User> = {}): User {
 }
 
 /**Object for your userdata
- * Check out defaultMainUser for simpler initialization
+ * - Check out defaultMainUser for simpler initialization
 */
 export type MainUser = {
   userInfo: User;

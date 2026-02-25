@@ -23,6 +23,8 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  position: fixed;
+  min-width: 100%;
 }
 
 .App-link {
@@ -49,7 +51,8 @@
 .Header {
   background-image: linear-gradient(rgba(0, 3, 19, 1), rgba(0, 14, 84, 1));
   min-height: 10%;
-  min-width: 100%;
+  min-width: 101%;
+  left: -1%;
   position: fixed;
   top: 0%;
   border:  rgba(1, 15, 86, 1) solid 2px;
@@ -72,6 +75,8 @@
   align-items: center;
   justify-content: flex-start;
   background-image: linear-gradient(rgba(0, 14, 84, 1), rgba(0, 14, 84, 1), rgba(230, 0, 255, 1));
+  min-height: 100%;
+  min-width: 100%;
 }
 
 .main1 {
