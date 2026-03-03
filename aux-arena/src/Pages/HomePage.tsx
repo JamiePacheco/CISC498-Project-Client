@@ -1,36 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LobbyOverlay from "./JoinLobbyOverlay";
 import CreateLobby from "./CreateLobbyOverlay";
 import LoginOverlay from "./loginOverlay";
-import "../App.css";
 import "./Lobby.css"
+import "./Css/PixelCorners.css"
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "./Store/store";
+import { logout } from "./Store/userSlices";
+import { addUser, leaveLobby } from "./Store/lobbySlices";
 
-export interface information{
-  username: string;
-  setUsername: (name:string)=>void;
-  loggedIn: string;
-  setLoggedIn: (isLoggedIn:string)=>void;
-  handleLogOut: ()=>void;
-}
+type interaction = "Idle" | "Joining" | "Creating";
 
-export default function HomePage({username, setUsername, loggedIn, setLoggedIn, handleLogOut}: information) {
-    const [joining, setJoining] = useState<boolean>(false) // To show lobby overlay after clicking "Join Lobby"
-    const [creating, setCreating] = useState<boolean>(false) // To show overlay for creating lobby
+export default function HomePage() {
+    const user = useSelector((state: RootState) => state.user);
+    const lobby = useSelector((state:RootState)=>state.lobby);
+    const dispatch = useDispatch<AppDispatch>();
+    useEffect(()=>{
+      dispatch(leaveLobby());
+    })
+    const [interaction, setInteraction] = useState<interaction>("Idle")
     const [loggingIn, setLoggingIn] = useState<boolean>(false) // To show overlay for log in
     return (
      <div className='main'>
           <div className='Sidebar'>
-            {!loggedIn && <button className="button login" onClick={()=>setLoggingIn(!loggingIn)}>Login/Register</button>}
-            {loggingIn && <LoginOverlay username={username} setUsername={setUsername} setLoggedIn={setLoggedIn} setLoggingIn={setLoggingIn}/>}
-            {loggedIn && <div className="lobbyText">Hi {username}</div>}
-            {loggedIn && <button onClick={handleLogOut}>LogOut</button>}
+            {!user.loggedIn && <button className="button login" onClick={()=>setLoggingIn(!loggingIn)}>Login/Register</button>}
+            {loggingIn && <LoginOverlay setLoggingIn={setLoggingIn}/>}
+            {user.loggedIn && <div className="lobbyText">Hi {user.userInfo.displayName}</div>}
+            {user.loggedIn && <button onClick={()=>{dispatch(logout()); setInteraction("Idle")}}>LogOut</button>}
          </div>
           <div className='main1'>
-            {joining && <LobbyOverlay user={username} setUser={setUsername} loggedIn={loggedIn} setJoining={setJoining}/>}
-            {creating && <CreateLobby user={username} setUser={setUsername} loggedIn={loggedIn} setCreating={setCreating}></CreateLobby>}
-            <button className="button" onClick={()=>setCreating(!creating)}>Create Lobby</button>
+            {interaction==="Joining" && <LobbyOverlay setJoining={setInteraction}/>}
+            {interaction==="Creating" && <CreateLobby setCreating={setInteraction}/>}
+            {!user.loggedIn && <div style={{paddingBottom:"-20px"}}>Log in to Join or Create a lobby!</div>}
+            <button disabled={!user.loggedIn?true : false} className="button" onClick={()=>setInteraction("Creating")}>Create Lobby</button>
             <div>
-              <button className='join-button' onClick={()=>setJoining(!joining)}> Join Lobby</button>
+              <button disabled={!user.loggedIn?true : false} className='join-button' onClick={()=>setInteraction("Joining")}> Join Lobby</button>
             </div>
         </div>
     </div>

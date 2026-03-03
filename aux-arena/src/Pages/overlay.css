@@ -1,8 +1,7 @@
 
 
 .overlay{
-  background-color: rgba(39, 41, 53, 1);
-  border: 3px solid rgba(74, 237, 252, 1);
+  background: linear-gradient(to top left, rgba(32, 1, 94, 1) 0%, rgba(64, 0, 147, 1) 100%);
   position:absolute;
   border-radius: 1em;
   width: 40vh;
@@ -22,7 +21,7 @@
 
 .text-box{
   background-color: #1f2127ff;
-  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border: 0.1em solid  rgba(161, 0, 254, 1);
   border-radius: 0.4em;
   min-height: 10%;
   min-width: 30%;
@@ -37,39 +36,37 @@
 
 .small-text-box{
   background-color: #1f2127ff;
-  border: 0.1em solid  rgba(74, 237, 252, 1);
+  border: 0.1em solid  rgba(161, 0, 254, 1);
   border-radius: 0.4em;
   font-size: 0.8em;
   text-align: center;
   color: white;
-  min-width: 10%;
+  width: 20%;
 }
 
 .exit{
   position: absolute;
-  top: 1%;
-  left: 90%;
+  top: 5%;
+  right: 10%;
   color: red;
   cursor: pointer;
 }
 
 /* For enter buttons use "enter lobby-button"*/
 .lobby-button{
-  background-color: #1f2127ff;
-  border: 0.1em solid  rgba(74, 237, 252, 1);
+  background-color: rgba(161, 0, 254, 1);
   min-height: 10%;
   min-width: 40%;
   font-size: 0.8em;
   text-align: center;
   color: white;
   text-decoration: none;
-  transition: 2s;
+  transition: 1s;
   cursor: pointer;
 }
 
 .lobby-button:hover{
-  color:  #1f2127ff;
-  background-color:white;
+  background-color: rgba(31, 33, 39, 0);
 }
 
 /* For both create and join lobby */
