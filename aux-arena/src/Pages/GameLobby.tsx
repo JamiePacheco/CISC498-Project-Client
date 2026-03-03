@@ -109,7 +109,7 @@ export default function GameLobby() {
                     <div>
                         {lobby.chatLog[0] && lobby.chatLog.map((chat)=>{
                             if(!chat) return;
-                            if(chat.userID === -1) return <div>{"System"} : {chat.message}</div>
+                            if(chat.userID === -1) return <div className="chat">{"System"} : {chat.message}</div>
                             return <div className="chat">
                                 {lobby.usersByID[chat.userID].displayName} : {chat.message} 
                             </div>
