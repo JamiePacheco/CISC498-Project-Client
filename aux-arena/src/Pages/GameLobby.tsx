@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
 import "./Lobby.css"
+import "./Css/PixelCorners.css"
+
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { UserSession } from "../Interfaces/UserSession";
 import { useGameLobbyEvents } from "../Hooks/topics/useGameLobbyEvents";
@@ -11,6 +13,11 @@ import { LobbySession } from "../Interfaces/LobbySession";
 import { GameLobbyEvent, MessageEvent } from "../Interfaces/socket/GameLobbyEvent";
 import { connectToGameLobby } from "../service/LobbySessionService";
 import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
+
+import { User } from "./Types/User"
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "./Store/store";
+import { addUser, newMessage, removeUser } from "./Store/lobbySlices";
 
 export interface information{
   user: string;
@@ -26,6 +33,12 @@ export interface GameLobbyPageState {
 export interface IMessage {
     message : string,
     name : string;
+}
+
+
+type messages = {//Might not be needed anymore
+    userID: number;
+    message: string;
 }
 
 export default function GameLobbyPage({loggedIn}: information) {
@@ -49,6 +62,10 @@ export default function GameLobbyPage({loggedIn}: information) {
     const playerCount = playerList.length
     const [chatLog, updateChat] = useState<IMessage[]>([]) // Should pair with user who sent it 
     const [input, setInput] = useState<string>("")// Helps with sending messages to chat
+
+    //Auto scroll chat
+    const messagesRef = useRef<HTMLDivElement | null>(null)
+    const bottomRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
         // only runs a single time per component lifecycle (fixes double render caused by strict mode)
@@ -284,6 +301,9 @@ export default function GameLobbyPage({loggedIn}: information) {
 
     function newChat(chat:string, username:string){
         if(input){
+
+            // TODO add dispatch to global state to store new message.
+
             if (userSession?.displayName !== undefined) {
                 const newMessage : GameLobbyMessage = {
                     author : userSession?.displayName,
@@ -297,15 +317,28 @@ export default function GameLobbyPage({loggedIn}: information) {
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
-        newChat(input, user.nickname);
+            newChat(input, user.nickname);
         }
     };
 
-    // console.log(gameLobbyEvents)
-    // console.log(errorEvents)
-    // console.log(userEvents)
-    console.log(playerList)
-    // console.log(userSession)
+    function chatScroll(){
+        bottomRef.current?.scrollIntoView({behavior: "smooth"})
+    }
+
+    function checkChatScroll():boolean{
+        const chatbox = messagesRef.current;
+        if(!chatbox)
+            return false;
+        const threshold = 100; //pixels from bottom of chatbox
+        const position = chatbox.scrollTop + chatbox.clientHeight;
+        const height = chatbox.scrollHeight;
+        return position >= height - threshold;
+    }
+
+    useEffect(()=>{
+        if(checkChatScroll())
+            chatScroll();
+    }, [])
 
     return (
         <div>
@@ -316,32 +349,38 @@ export default function GameLobbyPage({loggedIn}: information) {
             </div>
             {/* <button onClick={addPlayer} className="button">Debug</button> */}
             <div className="playerbox">
-                {playerList.map((user : UserSession, index) => (
-                    <div key = {index} className="players">
-                       {user.tempId === userSession?.tempId && <span>*</span>}  {user.displayName} {user.host && <span> (host)</span>} {!user.active && <span>Disconnected</span>} 
-                    </div>
-                ))
+                {
+                
+                    playerList.map((user : UserSession, index) => (
+                        <div key = {index} className="players">
+                        {user.tempId === userSession?.tempId && <span>*</span>}  {user.displayName} {user.host && <span> (host)</span>} {!user.active && <span>Disconnected</span>} 
+                        </div>
+                    ))
                     
-
-                /* {playerList.map((player, index)=>(
-                    <div key={index} className="players">
-                        {player.displayName} 
-                    </div>
-                ))} */
-
                 } 
                
-                
-
             </div>
-            <div className="chatbox">
-                <div style={{paddingTop:"1em"}}>
-                    {chatLog.map((chat, index)=>(
-                        <div key={index} className="chat">
-                            {chat.name} : {chat.message} 
-                        </div>
-                    ))}
+            <div className="chat-bar pixel-corners">
+                <div className="chatbox " ref={messagesRef}>
+                    <div>   
+                        {
+                        // TODO need to extract chat state to provided (which )
+                        
+                        /* {   lobby !== null && <>
+                                {lobby.chatLog[0] && lobby.chatLog.map((chat)=>{
+                                    if(!chat) return;
+                                    if(chat.userID === -1) return <div>{"System"} : {chat.message}</div>
+                                    return <div className="chat">
+                                        {lobby.usersByID[chat.userID].displayName} : {chat.message} 
+                                    </div>
+                                })}
+                                <div ref={bottomRef}></div>
+                            </>
+                        } */}
+                    </div>
                 </div>
+                <input id="Chat" type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
+                <button className="send-button" onClick={() => sendMessage}>Send</button>
 
                 <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={(e) => {setInput(e.target.value)}}></input>
                 <button className="send-button" onClick={()=>newChat(input, user.nickname)}>Send</button>
