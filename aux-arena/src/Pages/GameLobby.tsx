@@ -1,11 +1,39 @@
-import { useEffect, useRef, /*useMemo,*/ useState } from "react";
 import "./Lobby.css"
 import "./Css/PixelCorners.css"
-import { Link } from "react-router-dom";
+
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { UserSession } from "../Interfaces/UserSession";
+import { useGameLobbyEvents } from "../Hooks/topics/useGameLobbyEvents";
+import { sendMessage } from "../sockets/SocketMessageService";
+import { LobbyUser } from "../Interfaces/LobbyUser";
+import { useStompTopic } from "../Hooks/UseStompTopic";
+import { Message } from "../Interfaces/socket/Message";
+import { LobbySession } from "../Interfaces/LobbySession";
+import { GameLobbyEvent, MessageEvent } from "../Interfaces/socket/GameLobbyEvent";
+import { connectToGameLobby } from "../service/LobbySessionService";
+import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
+
 import { User } from "./Types/User"
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./Store/store";
 import { addUser, newMessage, removeUser } from "./Store/lobbySlices";
+
+export interface information{
+  user: string;
+  loggedIn: string;
+}
+
+export interface GameLobbyPageState {
+    id : number,
+    lobbyCode : string,
+    password : string,
+}
+
+export interface IMessage {
+    message : string,
+    name : string;
+}
 
 
 type messages = {//Might not be needed anymore
@@ -13,59 +41,285 @@ type messages = {//Might not be needed anymore
     message: string;
 }
 
-export default function GameLobby() {
-    const user = useSelector((state:RootState) => state.user);
-    const lobby = useSelector((state:RootState) => state.lobby);
-    const dispatch = useDispatch<AppDispatch>();
+export default function GameLobbyPage({loggedIn}: information) {
+
+    // this is purely for debugging because strict mode keeps on rerendering the components
+    const initalized = useRef(false);
+    
+    // this is to access location state variables
+    const location = useLocation();
+
+    const [maxPlayer, setMaxPlayers] = useState<number>(20) // Not letting change in lobby
+    const [lobby, setLobby] = useState<LobbySession | null>(null)
+
+    // this should be changed to be using state manager
+    const [user, setUser] = useState<LobbyUser>(location.state.user)
+
+    const [userSession, setUserSession] = useState<UserSession | null>(null);
+
+    // const {lobby} = location.state 
+    const [playerList, updatePlayerList] = useState<UserSession[]>([])
+    const playerCount = playerList.length
+    const [chatLog, updateChat] = useState<IMessage[]>([]) // Should pair with user who sent it 
     const [input, setInput] = useState<string>("")// Helps with sending messages to chat
-    
-    useEffect(()=>{
-        if (!lobby.userList[0]) {
-            dispatch(addUser(user.userInfo));
-        }
-    }, [])
-
-    const player:User = {userID: 2, displayName: "Testing", isReady: false, isSpectator: false, score: 0};
-
-    function updatePlayers(newPlayer:User){
-        if(lobby.numPlayer < lobby.playerCap)
-            dispatch(addUser(newPlayer));
-        else
-            alert("Max players exceeded")
-    }
-
-    
-
-    function debugAdd(){
-        updatePlayers(player);
-        if(lobby.usersByID[player.userID]){
-            alert("A user with this userID is already in this lobby")
-        }
-    }
-
-    function debugRemove(){
-        dispatch(removeUser(player));
-    }
-
-    function updateInput(event:any){
-        setInput(event.target.value)
-    }
-
-    function sendMessage(){
-        dispatch(newMessage({message: input, userID: user.userInfo.userID}));
-        setInput("");
-    }
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-        sendMessage();
-        }
-    };
 
     //Auto scroll chat
     const messagesRef = useRef<HTMLDivElement | null>(null)
     const bottomRef = useRef<HTMLDivElement | null>(null)
 
+    useEffect(() => {
+        // only runs a single time per component lifecycle (fixes double render caused by strict mode)
+        if (!initalized.current) {
+            console.log(user)
+
+            initalized.current = true;
+
+            const newTempId = String(crypto.randomUUID());
+
+            // connect to the game lobby in order to retrieve the current in-memory lobbySession object
+            connectToGameLobby(location.state.lobby.lobbyCode, location.state.lobby.password, newTempId, user).then(res => {
+                const connectedLobby = res.data.responseContent;
+                console.log(connectedLobby)
+                if (connectedLobby !== null) {
+                    setLobby(connectedLobby);
+
+                    // create a new user session
+                    const newUserSession : UserSession = {
+                        tempId: newTempId,
+                        sessionId: "",
+                        displayName: user.nickname,
+                        lobbyId: 0,
+                        lobbyCode: location.state.lobby.lobbyCode,
+                        lastPingTime: "",
+                        active: false,
+                        isSpectator: false,
+                        host: false
+                    }
+
+                    // set the user session so the nickname and id is accessible
+                    setUserSession(newUserSession)
+                    // send a message to the lobby socket so other players know user has joined
+                    sendMessage(`/app/game-lobby/join/${connectedLobby.id}`, newUserSession)
+
+                    // set the inital player list to the entire set of active players
+                    updatePlayerList(prev => {
+                            const newPlayerList = [...prev, ...Object.values(connectedLobby.activeUsers).filter(u => u.active)]
+                            console.log(newPlayerList)
+                            return newPlayerList;
+                        }
+                    )
+
+                    updateChat(prev => {
+                        return [{
+                            name : "System",
+                            message : `Welcome to ${connectedLobby.name}`
+                        },...prev]
+                    })
+                }
+            })
+        }
+    }, [location.state.lobby, user])
+
+    // subscribe to the socket endpoints
+    useGameLobbyEvents<any>(`${location.state.lobby.id}`, (event) => {
+        const message : GameLobbyEvent<any> = event;
+
+        // should abstract the case logic to functions
+        switch (message?.type) { 
+            case MessageEvent.USER_JOINED:
+                const joinedUser : UserSession = message.payload
+
+                if (joinedUser.tempId !== userSession?.tempId) {
+                    updatePlayerList(prev => [...prev, joinedUser])
+                }                
+                break;
+            case MessageEvent.USER_LEFT:
+                const disconnectedUser : UserSession = message.payload
+                updatePlayerList(prev => {
+                    return prev.filter((u) => u.tempId !== disconnectedUser.tempId)
+                });
+                break;
+            case MessageEvent.NEW_HOST:
+                const newHost : UserSession = message.payload
+                updatePlayerList(prev => {
+                    return prev.map(u => {
+                        if (u.host && u.tempId !== newHost.tempId) u.host = false;
+                        if (u.tempId === newHost.tempId) u.host = true;
+                        return u;
+                    })
+                }
+                )
+                break;
+            case MessageEvent.USER_CLEANUP:
+                const removedUsers : UserSession[] = message.payload;
+                console.log("removed users")
+                console.log(removedUsers);
+                updatePlayerList(prev => {
+                    return prev.filter(u => !removedUsers.includes(u));
+                })
+                break; 
+        }
+
+        if (message?.message !== undefined){
+            updateChat(prev => {
+                return [...prev, 
+                    {
+                        name : "System",
+                        message : message.message
+                    }
+                ]
+            })
+        }
+    });
+
+
+    useStompTopic<Message<any>>(`/user/queue/game-lobby/${location.state.lobby.id}`, (event) => {
+            const userMessage : Message<any> = event;
+            console.log(`processing message: ${JSON.stringify(userMessage)}`)
+            switch(userMessage?.messageType) {
+                case "USER_UPDATE":
+                    // TODO add basic error handling
+                    setUserSession(prevSession => {
+                        const newUser : UserSession= userMessage.messageContent
+                        console.log(newUser);
+                        updatePlayerList(prev => {
+                            const newPlayerList = [newUser, ...prev.filter(u => u.tempId !== newUser.tempId)];
+                            console.log(`New Player List ${JSON.stringify(newPlayerList)}`)
+                            return newPlayerList;
+                        })
+                        return newUser;
+                    });
+
+                    break;
+            }
+    });
+
+    useStompTopic<GameLobbyEvent<GameLobbyMessage>>(`/topic/game-lobby/message${location.state.lobby.id}`, (event) => {
+        const message : GameLobbyEvent<GameLobbyMessage> = event;
+
+        // should abstract the case logic to functions
+        switch (message?.type) { 
+            case MessageEvent.NEW_MESSAGE:
+                const newMessage : GameLobbyMessage = message.payload
+                        updateChat(prev => {
+                        return [...prev, {
+                            name : newMessage.author,
+                            message : newMessage.textMessage
+                        }]
+                    })
+                               
+                break;
+        }
+    });
+
+    useStompTopic<Message<any>>(`/user/queue/errors`, (event) => {
+        console.log(event);
+    })
+
+    // const gameLobbyEvents = useGameLobbyEvents(`${location.state.lobby.id}`); 
+    // const userEvents : Message<any>[] = useStompTopic()
+    // const errorEvents = useStompTopic(`/user/queue/errors`)
+
+    // useEffect(() => {
+    //     if (userEvents.length !== 0) {
+    //         const userMessage : Message<any> = userEvents[userEvents.length - 1];
+    //         // console.log(`processing message: ${JSON.stringify(userMessage)}`)
+    //         switch(userMessage?.messageType) {
+    //             case "USER_UPDATE":
+    //                 // TODO add basic error handling
+    //                 setUserSession(prevSession => {
+    //                     const newUser : UserSession= userMessage.messageContent
+    //                     console.log(newUser);
+    //                     updatePlayerList(prev => {
+    //                         const newPlayerList = [newUser, ...prev.filter(u => u.tempId !== newUser.tempId)];
+    //                         console.log(`New Player List ${JSON.stringify(newPlayerList)}`)
+    //                         return newPlayerList;
+    //                     })
+    //                     return newUser;
+    //                 });
+
+    //                 break;
+    //         }
+    //     }
+    // }, [userEvents])
+
+
+    // useEffect(() => {
+    //     const message : GameLobbyEvent<any> = gameLobbyEvents[gameLobbyEvents.length-1];
+    //     // console.log(`new message: ${message?.message} ${message?.type}`)
+
+    //     // should abstract the case logic to functions
+    //     switch (message?.type) { 
+    //         case MessageEvent.USER_JOINED:
+    //             const joinedUser : UserSession = message.payload
+
+    //             if (joinedUser.tempId !== userSession?.tempId) {
+    //                 updatePlayerList(prev => [...prev, joinedUser])
+    //             }                
+    //             break;
+    //         case MessageEvent.USER_LEFT:
+    //             const disconnectedUser : UserSession = message.payload
+    //             updatePlayerList(prev => {
+    //                 return prev.filter((u) => u.tempId !== disconnectedUser.tempId)
+    //             });
+    //             break;
+    //         case MessageEvent.NEW_HOST:
+    //             const newHost : UserSession = message.payload
+    //             updatePlayerList(prev => {
+    //                 return prev.map(u => {
+    //                     if (u.host && u.tempId !== newHost.tempId) u.host = false;
+    //                     if (u.tempId === newHost.tempId) u.host = true;
+    //                     return u;
+    //                 })
+    //             }
+    //             )
+    //             break;
+    //         case MessageEvent.USER_CLEANUP:
+    //             const removedUsers : UserSession[] = message.payload;
+    //             updatePlayerList(prev => {
+    //                 return prev.filter(u => !removedUsers.includes(u));
+    //             })
+    //             break; 
+    //     }
+
+    //     if (message?.message !== undefined){
+    //         updateChat(prev => {
+    //             return [...prev, 
+    //                 {
+    //                     name : "System",
+    //                     message : message.message
+    //                 }
+    //             ]
+    //         })
+    //     }
+
+    // }, [gameLobbyEvents, userSession?.tempId])
+
+    function updateInput(event:any){
+        setInput(event.target.value)
+    }
+
+    function newChat(chat:string, username:string){
+        if(input){
+
+            // TODO add dispatch to global state to store new message.
+
+            if (userSession?.displayName !== undefined) {
+                const newMessage : GameLobbyMessage = {
+                    author : userSession?.displayName,
+                    textMessage : input
+                }
+
+                sendMessage(`/app/game-lobby/send-message/${lobby?.id}`, newMessage)
+            }
+        }
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            newChat(input, user.nickname);
+        }
+    };
 
     function chatScroll(){
         bottomRef.current?.scrollIntoView({behavior: "smooth"})
@@ -84,41 +338,52 @@ export default function GameLobby() {
     useEffect(()=>{
         if(checkChatScroll())
             chatScroll();
-    }, [lobby.chatLog])
-
+    }, [])
 
     return (
         <div>
             <div className="lobbyStatus">
-                <div style={{paddingLeft: "1rem", height:"2.5rem"}}>Players: {lobby.numPlayer} / {lobby.playerCap} </div>
-                <div>Lobby ID: {lobby.lobbyID}</div>
-                {lobby.numPlayer > 1 && <Link to={"/aux-arena"} className="button">Start</Link>}
+                <div>Players: {playerCount} / {maxPlayer} </div>
+                <div> Lobby ID: {lobby && lobby.lobbyCode}</div>
+                <Link to={"/aux-arena"} className="button" >Start</Link>
             </div>
-            <button className="button" onClick={debugAdd}>Add Player</button>
-            <button className="button" onClick={debugRemove}>Remove Player</button>
-            <div className="playerbox pixel-corner">
-                {lobby.userList.map((player)=>{
-                    if(!player.displayName) return null;
-                    return <div className="players">
-                        {player.displayName}
-                    </div>
-                })}
+            {/* <button onClick={addPlayer} className="button">Debug</button> */}
+            <div className="playerbox">
+                {
+                
+                    playerList.map((user : UserSession, index) => (
+                        <div key = {index} className="players">
+                        {user.tempId === userSession?.tempId && <span>*</span>}  {user.displayName} {user.host && <span> (host)</span>} {!user.active && <span>Disconnected</span>} 
+                        </div>
+                    ))
+                    
+                } 
+               
             </div>
             <div className="chat-bar pixel-corners">
                 <div className="chatbox " ref={messagesRef}>
-                    <div>
-                        {lobby.chatLog[0] && lobby.chatLog.map((chat)=>{
-                            if(!chat) return;
-                            if(chat.userID === -1) return <div className="chat">{"System"} : {chat.message}</div>
-                            return <div className="chat">
-                                {lobby.usersByID[chat.userID].displayName} : {chat.message} 
-                            </div>
-                        })}
-                        <div ref={bottomRef}></div>
+                    <div>   
+                        {
+                        // TODO need to extract chat state to provided (which )
+                        
+                        /* {   lobby !== null && <>
+                                {lobby.chatLog[0] && lobby.chatLog.map((chat)=>{
+                                    if(!chat) return;
+                                    if(chat.userID === -1) return <div className="chat">{"System"} : {chat.message}</div>
+                                    return <div className="chat">
+                                        {lobby.usersByID[chat.userID].displayName} : {chat.message} 
+                                    </div>
+                                })}
+                                <div ref={bottomRef}></div>
+                            </>
+                        } */}
                     </div>
                 </div>
                 <input id="Chat" type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={updateInput}></input>
-                <button className="send-button" onClick={sendMessage}>Send</button>
+                <button className="send-button" onClick={() => sendMessage}>Send</button>
+
+                <input type="text" className="send-box" value={input} onKeyDown={handleKeyDown} onChange={(e) => {setInput(e.target.value)}}></input>
+                <button className="send-button" onClick={()=>newChat(input, user.nickname)}>Send</button>
             </div>
         </div>
     )

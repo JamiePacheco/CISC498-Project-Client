@@ -1,0 +1,32 @@
+import { RxStomp, RxStompConfig } from "@stomp/rx-stomp";
+
+
+const rxStompConfig: RxStompConfig = {
+    brokerURL: 'ws://localhost:3000/ws',
+    connectHeaders: {
+    login: 'guest',
+    passcode: 'guest',
+  },
+  heartbeatIncoming: 0,
+  heartbeatOutgoing: 20000,
+  reconnectDelay: 200,
+};
+
+const rxStomp = new RxStomp();
+rxStomp.configure(rxStompConfig);
+rxStomp.activate();
+
+
+rxStomp.watch('/topic/game-lobby').subscribe(msg => {
+    console.log(msg.body);
+    
+});
+
+rxStomp.publish(
+  {
+    destination: '/topic/game-lobby',
+    body: 'User has connected!'
+  });
+
+
+

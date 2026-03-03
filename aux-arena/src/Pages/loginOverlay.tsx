@@ -28,16 +28,14 @@ export default function LoginOverlay({setLoggingIn}: login){
     }
 
     function loggingIn(){
-        if(authenticateUser(nameInput, password))//Change to use the real authenticateUser later on
-        {
-            dispatch(login({
-                userInfo: {userID: 1, displayName: nameInput, isReady: false, isSpectator: false, score: 0},
-                sessionID: 1,
-                lastPingTime: new Date(),
-                lobbyID: 1}
-            ));
-            setLoggingIn(false);
-        }
+        // Add proper authentication
+        dispatch(login({
+            userInfo: {userID: 1, displayName: nameInput, isReady: false, isSpectator: false, score: 0},
+            sessionID: 1,
+            lastPingTime: new Date(),
+            lobbyID: 1}
+        ));
+        setLoggingIn(false)
     }
     
     /*

@@ -5,14 +5,13 @@ import logo from "./Images/logo.svg"
 import GameLobby from "./Pages/GameLobby";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { RxStomp, RxStompConfig } from "@stomp/rx-stomp";
+import SockJS from 'sockjs-client'
 import AuxArena from "./Pages/AuxArena";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "./Pages/Store/store";
 
 function App() {
-
-  const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector((state: RootState) => state.user);
   return (
     <Router>
     <div className="App">
