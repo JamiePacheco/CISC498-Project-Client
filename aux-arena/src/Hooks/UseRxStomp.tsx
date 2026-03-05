@@ -1,3 +1,3 @@
-import { rxStomp } from "../sockets/RxStompInstance";
+import { rxStomp } from "../sockets/RxStompClient";
 
 export const useRxStomp = () => rxStomp;

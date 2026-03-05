@@ -1,4 +1,4 @@
-import { rxStomp } from "./RxStompInstance";
+import { rxStomp } from "./RxStompClient";
 
 // body should eventually have an explicit type of the list of all possible socket bodies but this shall wait...
 export function sendMessage(destination : string, body : any) {

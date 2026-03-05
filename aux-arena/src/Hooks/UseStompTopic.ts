@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { rxStomp } from "../sockets/RxStompInstance";
+import { rxStomp } from "../sockets/RxStompClient";
 import { rxStompConfig } from "../Config/RxStompConfig";
 import { last } from "rxjs";
 
