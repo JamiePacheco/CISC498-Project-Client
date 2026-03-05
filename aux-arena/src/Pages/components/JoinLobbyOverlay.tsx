@@ -1,11 +1,9 @@
-import { useState } from "react";
-import "../App.css"
-import './overlay.css'
-import "./Css/PixelCorners.css"
+import "../../App.css"
+import '../Css/overlay.css'
+import "../Css/PixelCorners.css"
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "./Store/store";
-import { link } from "node:fs";
+import { RootState } from "../Store/store";
 
 export interface userStatus{
     setJoining: (isJoining:interaction)=>void;

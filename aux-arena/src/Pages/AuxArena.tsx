@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import "./AuxArena.css"
-import "./Lobby.css"
+import "./Css/AuxArena.css"
+import "./Css/Lobby.css"
 import testCase from "../testCaseTOBEREMOVED/aux_arena_bird_brain_test_data.json"
-import Results from "./Results";
+import Results from "./components/Results";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./Store/store";
 import { assignVotes, changePhase, endGame, selectSong, setPlayer, setPrompt } from "./Store/gameSlices";
@@ -13,7 +13,6 @@ import { assignVotes, changePhase, endGame, selectSong, setPlayer, setPrompt } f
 //      Spectators start here watching players in two previous phases
 //Voting Phase: Picking the song you like most/fits the theme best
 //Winner Phase: Show winner
-type pType = "Player" | "Spectator";
 
 type songInfo = {
     title: string;
@@ -21,13 +20,6 @@ type songInfo = {
     url: string;
     startTimeStamp: number;
     endTimeStamp: number;
-}
-
-type player = {
-    name: string;
-    playerType: pType;
-    song: songInfo;
-    playerScore: number;
 }
 
 const phaseTranslation: Record<number, string> = {
@@ -71,12 +63,12 @@ export default function AuxArena(){
     //To reset game state if I tab out of it
     useEffect(()=>{
         dispatch(endGame());
-    }, [user])
+    }, [user, dispatch])
 
     useEffect(()=>{//Only for testing purposes, server will tell you players
         dispatch(setPlayer({playerInfo: user.userInfo, playerNumber:1}));
         dispatch(setPlayer({playerNumber: 2, playerInfo:lobby.userList[1]}));
-    }, [game]);
+    }, [game, dispatch, lobby.userList, user.userInfo]);
 
     useEffect(()=>{
         const updatedSong = {
@@ -85,7 +77,7 @@ export default function AuxArena(){
             endTimeStamp: myTimeStamp[1]
         };
         dispatch((selectSong({playerNumber: 1, songInfo: updatedSong})));
-    }, [myTimeStamp])
+    }, [myTimeStamp, dispatch, selectedSong])
 
     useEffect(()=>{
         if(game.player1.userInfo.userID === user.userInfo.userID || game.player2.userInfo.userID === user.userInfo.userID){
@@ -95,7 +87,7 @@ export default function AuxArena(){
             setPlayerStatus(false);
             console.log("Player status changed");
         }
-    })
+    }, [game.player1.userInfo.userID, game.player2.userInfo.userID, user.userInfo.userID])
 
 
 
@@ -123,7 +115,7 @@ export default function AuxArena(){
 
     useEffect(()=> {  
         dispatch(selectSong({playerNumber: 1, songInfo: selectedSong}))
-    }, [selectedSong]) //Updates player1 song list automatically, FOR TESTING, YOU COULD REMOVE THIS
+    }, [selectedSong, dispatch]) //Updates player1 song list automatically, FOR TESTING, YOU COULD REMOVE THIS
     // JUST REMEMBER TO UPDATE THE PLAYER'S INFO THROUGH THE SERVER or adjust the player number to be the current player
 
     function vote(playerNum: number){
@@ -155,7 +147,7 @@ export default function AuxArena(){
             <button onClick={nextPhase} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
             Phase: {phaseTranslation[game.gameInfo.gamePhase]}
             <div className={"prompt-box"}>
-                {`${game.gameInfo.prompt != ""}`? `Prompt: ${game.gameInfo.prompt}` : "No Prompts Currently"}
+                {`${game.gameInfo.prompt !== ""}`? `Prompt: ${game.gameInfo.prompt}` : "No Prompts Currently"}
             </div>
             <div className="game-display">
                 {game.gameInfo.gamePhase===0 && <div>

@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
-import LobbyOverlay from "./JoinLobbyOverlay";
-import CreateLobby from "./CreateLobbyOverlay";
-import LoginOverlay from "./loginOverlay";
-import "./Lobby.css"
+import LobbyOverlay from "./components/JoinLobbyOverlay";
+import CreateLobby from "./components/CreateLobbyOverlay";
+import LoginOverlay from "./components/loginOverlay";
+import "./Css/Lobby.css"
 import "./Css/PixelCorners.css"
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./Store/store";
 import { logout } from "./Store/userSlices";
-import { addUser, leaveLobby } from "./Store/lobbySlices";
+import { leaveLobby } from "./Store/lobbySlices";
 
 type interaction = "Idle" | "Joining" | "Creating";
 
 export default function HomePage() {
     const user = useSelector((state: RootState) => state.user);
-    const lobby = useSelector((state:RootState)=>state.lobby);
     const dispatch = useDispatch<AppDispatch>();
     useEffect(()=>{
       dispatch(leaveLobby());
