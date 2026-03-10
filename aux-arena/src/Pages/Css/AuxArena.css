@@ -119,3 +119,29 @@
     border-radius: 1em;
 }
 
+.chatDisplay{
+    display: flex;
+    position: fixed;
+    bottom: 0%;
+    right: 0%;
+    height: 100vh;
+    width: 100vw;
+    z-index: -1;
+}
+
+.chatButton{
+    position: relative;
+    top: 95%;
+    left: 90%;
+    height: 5%;
+    width: 10%;
+    font-size: 60%;
+    font-family: minecraft;
+    color: white;
+    background-image: radial-gradient(circle at 100%, rgba(0, 14, 84, 1) , rgba(230, 0, 255, 1) 70%,  rgba(0, 14, 84, 1) 75%);
+}
+
+.activeChat{
+    left: 57%;
+    background-image: radial-gradient(circle at 100%, rgba(0, 14, 84, 1));
+}

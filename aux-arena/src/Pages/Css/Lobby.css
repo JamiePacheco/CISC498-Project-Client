@@ -25,7 +25,7 @@
 .chat-bar{
   height: 85vh;
   width: 30%;
-  top: 11%;
+  top: 10%;
   right: 1%;
   flex: 2;
   position: absolute;
@@ -40,6 +40,7 @@
   margin-top: 2rem;
   margin-bottom: 6rem;
   overflow-y: scroll;
+  z-index: 10;
 }
 
 .chat{

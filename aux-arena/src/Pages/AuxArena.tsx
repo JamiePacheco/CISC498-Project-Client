@@ -6,6 +6,7 @@ import Results from "./components/Results";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./Store/store";
 import { assignVotes, changePhase, endGame, selectSong, setPlayer, setPrompt } from "./Store/gameSlices";
+import ChatBox from "./components/Chat";
 
 //Prompt Phase: Players creates a prompt
 //Picking Phase: Choosing a song (Only for participating players)
@@ -55,6 +56,12 @@ export default function AuxArena(){
     const [isEditing, setEditing] = useState<boolean>(false);
     const [isPlayer, setPlayerStatus] = useState<boolean>(false);
     //Helper to check if user is an active player or not^
+
+    const [showChat, setChat] = useState<Boolean>(false);
+
+    function toggleChat(){
+        setChat(!showChat);
+    }
 
     function updateInput(event:any){
         setInput(event.target.value)
@@ -234,6 +241,10 @@ export default function AuxArena(){
                         </div>
                     </div>
                 </div>}
+                <div className="chatDisplay">
+                    <button className={`chatButton ${showChat && "activeChat"}`} onClick={toggleChat} >Show Chat</button>
+                    {showChat && <ChatBox/>}
+                </div>
             </div>
         </div>
     )
