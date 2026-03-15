@@ -17,20 +17,23 @@ export interface userStatus{
 }
 
 type interaction = "Idle" | "Joining" | "Creating";
-    const [spectator, setSpectator] = useState<boolean>(false); // link this state with the spectator input field
-    const nav = useNavigate()
-
 
 export default function LobbyOverlay({setJoining}: userStatus) {
+
+    const [lobbyCode, setLobbyCode] = useState<string>("");
+
     const user = useSelector((state:RootState)=> state.user);
 
+    const nav = useNavigate()
+
+    const [spectator, setSpectator] = useState<boolean>(false); // link this state with the spectator input field
+
     function lobbyHelper(event:any){
-        // Update Global State
     }
 
     const joinLobbyAction = () => {
 
-        getGameLobby(lobby, "").then(res => {
+        getGameLobby(lobbyCode, "").then(res => {
             const gameLobby : GameLobby = res.data.responseContent; 
             const role : LobbyUserRole = "GUEST"
             

@@ -1,3 +1,4 @@
+import { LobbySession } from "../Interfaces/LobbySession";
 import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
 import { UserSession } from "../Interfaces/UserSession";
 import { rxStomp } from "./RxStompClient";
@@ -17,8 +18,8 @@ export function sendChatMessage(lobbyId : number, newMessage : GameLobbyMessage)
 }
 
 // send new user information to some specified lobby
-export function sendUserSessionMessage(lobbyId : number, newUserSession : UserSession) {
-    sendMessage(`/app/game-lobby/join/${lobbyId}`, newUserSession);
+export function sendUserSessionMessage({gameLobby, userSessionDetails} : {gameLobby : LobbySession, userSessionDetails : UserSession}) {
+    sendMessage(`/app/game-lobby/join/${gameLobby.id}`, userSessionDetails);
 }
 
 export const socketCommandMap : Record<string, Function> = {

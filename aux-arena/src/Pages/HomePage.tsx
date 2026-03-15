@@ -32,9 +32,9 @@ export default function HomePage() {
             {interaction==="Joining" && <LobbyOverlay setJoining={setInteraction}/>}
             {interaction==="Creating" && <CreateLobby setCreating={setInteraction}/>}
             {!user.loggedIn && <div style={{paddingBottom:"-20px"}}>Log in to Join or Create a lobby!</div>}
-            <button disabled={!user.loggedIn?true : false} className="button" onClick={()=>setInteraction("Creating")}>Create Lobby</button>
+            <button className="button" onClick={()=>setInteraction("Creating")}>Create Lobby</button>
             <div>
-              <button disabled={!user.loggedIn?true : false} className='join-button' onClick={()=>setInteraction("Joining")}> Join Lobby</button>
+              <button className='join-button' onClick={()=>setInteraction("Joining")}> Join Lobby</button>
             </div>
         </div>
     </div>

@@ -24,6 +24,10 @@ export default function CreateLobby({setCreating}: userStatus){
     const [numPlayers, setNum] = useState<number>(3);
     const [password, setPassword] = useState<string>("");
 
+    const [userName, setUserName] = useState(""); 
+
+    const nav = useNavigate();
+
     function privateHelper(){
         setPrivate(!lobbyPrivate)
         setPassword("")
@@ -48,17 +52,18 @@ export default function CreateLobby({setCreating}: userStatus){
         password?:string
     }
 
-    function sendPacket(){
-        const packet:Packet = {name:user.userInfo.displayName, maxPlayer:numPlayers, lobbyPrivacy:lobbyPrivate, password:password}
-    }
+    // function sendPacket(){
+    //     const packet:Packet = {name:user.userInfo.displayName, maxPlayer:numPlayers, lobbyPrivacy:lobbyPrivate, password:password}
+    // }
 
     const createGameLobby = () => {
 
+        // TODO have to sure owner is added here 
         const newGameLobby : GameLobby = {
             maxPlayers : numPlayers,
             privateStatus : lobbyPrivate,
             password : password,
-            name : `${user}'s lobby`
+            name : `${userName}'s lobby`
         }
 
         /* 
@@ -68,7 +73,6 @@ export default function CreateLobby({setCreating}: userStatus){
             - If they do not have an account we create the temp account and associate it with the game lobby
         
         */
-
         createNewGameLobby(newGameLobby).then(res => {
             console.log(res)
             const gameLobby = res.data.responseContent;
@@ -77,7 +81,7 @@ export default function CreateLobby({setCreating}: userStatus){
                 const role : LobbyUserRole = "GUEST"
                 
                 const lobbyUser = {
-                    nickname : user,
+                    nickname : userName,
                     isSpectator : false,
                     gameLobby : gameLobby,
                     role : role
@@ -113,7 +117,7 @@ export default function CreateLobby({setCreating}: userStatus){
             <div className="input">
                 Username:
                 <div>
-                    <input disabled className="text-box" placeholder={user.userInfo.displayName} type="text"></input>
+                    <input onChange={(e) => setUserName(e.target.value)} className="text-box" placeholder={user.userInfo.displayName} type="text"></input>
                 </div>
             </div>
 

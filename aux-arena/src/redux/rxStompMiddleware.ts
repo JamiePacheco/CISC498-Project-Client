@@ -1,61 +1,34 @@
-import { Middleware } from "@reduxjs/toolkit";
+import { Middleware, PayloadAction, UnknownAction } from "@reduxjs/toolkit";
+import { activeRxStomp } from "../sockets/RxStompClient";
 import { socketCommandMap } from "../sockets/SocketMessageService";
-import { activeRxStomp, rxStomp } from "../sockets/RxStompClient";
-import { LobbyConnectionState } from "./slices/lobbySlice";
-import { serverEventMap, serverMessageMap } from "../sockets/SocketEvents";
-import { Message } from "../Interfaces/socket/Message";
+import { subscribeLobby, subscribeMessages, subscribeUser } from "../sockets/SocketSubscriptions";
 
-export const rxStompMiddleware : Middleware = (store) => {
+function isReduxAction(action: unknown): action is UnknownAction {
+  return typeof action === "object" && action !== null && "type" in action;
+}
 
-    let lobbySubscribed = false;
-    let userSubscribed = false;
-    let messageSubscribed = false;
+export const rxStompMiddleware : Middleware = store => next => action => {
 
-    return next => action  => {
+
+    if (isReduxAction(action)) {
+        const result = next(action);
+
+        const state = store.getState().lobby;
+
+        activeRxStomp();
+
         const handler = socketCommandMap[action.type];
+
         if (handler) {
-            activeRxStomp()
+            console.log(action.payload)
             handler(action.payload);
         }
-
-        const state : LobbyConnectionState = store.getState();
-
-        if (!lobbySubscribed && state.lobbySession) {
-            rxStomp
-                .watch(`/topic/game-lobby/${state.lobbySession.id}`)
-                .subscribe(msg => {
-                    const event = JSON.parse(msg.body);
-                    const serverHandler = serverEventMap[event.type];
-                    if (serverHandler) serverHandler(store, event);
-                });
-            lobbySubscribed = true;
+        if (state.lobbySession && state.lobbySession.id) {
+            console.log("we are subscribing")
+            subscribeLobby(store, state.lobbySession.id);
+            subscribeMessages(store, state.lobbySession.id);
+            subscribeUser(store, state.lobbySession.id);
         }
-
-        if (!userSubscribed && state.userSession) {
-            rxStomp
-                .watch(`/queue/${state.userSession.userId}`)
-                .subscribe(msg => {
-                    const message : Message<any> = JSON.parse(msg.body);
-                    const userHandler = serverMessageMap[message.messageType]
-                    if (userHandler) userHandler(store, message);
-                })
-            userSubscribed = true;
-        }
-
-        if (!messageSubscribed && state.lobbySession) {
-            rxStomp
-                .watch(`/topic/game-lobby/message/${state.lobbySession.id}`)
-                .subscribe(msg => {
-                    const message = JSON.parse(msg.body);
-                    const handler = serverEventMap["LOBBY_MESSAGE"];
-                    if (handler) handler(store, message);
-                });
-
-            messageSubscribed = true;
-        }
-        
-
-        return next(action);
+        return result;
     }
-
 }

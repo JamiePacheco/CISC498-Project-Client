@@ -1,8 +1,6 @@
 import { GameLobbyEvent } from "../../Interfaces/socket/GameLobbyEvent"
 import { UserSession } from "../../Interfaces/UserSession"
 
-type CallBack<T> = (event : T) => void;
-
 export enum LobbyAction {
     "JOIN_LOBBY",
     "LEAVE_LOBBY",

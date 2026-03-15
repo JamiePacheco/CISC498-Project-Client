@@ -69,14 +69,14 @@ export default function AuxArena(){
     }
     
     //To reset game state if I tab out of it
-    useEffect(()=>{
-        dispatch(endGame());
-    }, [user])
+    // useEffect(()=>{
+    //     dispatch(endGame());
+    // }, [user])
 
-    useEffect(()=>{//Only for testing purposes, server will tell you players
-        dispatch(setPlayer({playerInfo: user.userInfo, playerNumber:1}));
-        dispatch(setPlayer({playerNumber: 2, playerInfo:lobby.userList[1]}));
-    }, [game]);
+    // useEffect(()=>{//Only for testing purposes, server will tell you players
+    //     dispatch(setPlayer({playerInfo: user.userInfo, playerNumber:1}));
+    //     dispatch(setPlayer({playerNumber: 2, playerInfo:lobby.users[1]}));
+    // }, [game]);
 
     useEffect(()=>{
         const updatedSong = {
@@ -149,100 +149,102 @@ export default function AuxArena(){
         }else dispatch(changePhase());
     }
 
-    return (
-        <div className="game-screen">
-            <div className={"timer"}>{game.gameInfo.countDown/**Change this to end time - curr time */}</div>
-            <button onClick={nextPhase} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
-            Phase: {phaseTranslation[game.gameInfo.gamePhase]}
-            <div className={"prompt-box"}>
-                {`${game.gameInfo.prompt != ""}`? `Prompt: ${game.gameInfo.prompt}` : "No Prompts Currently"}
-            </div>
-            <div className="game-display">
-                {game.gameInfo.gamePhase===0 && <div>
-                    {isPlayer && <div>
-                        Type a prompt: <div className="prompt-sfx">{input}</div>
-                        <input type="text" placeholder="Press Enter to submit" onKeyDown={handleKeyDown}
-                            value={input} onChange={updateInput} className="text-box">
-                        </input>
-                    </div>}
-                    {!isPlayer && <div>
-                        {game.player1.userInfo.displayName} and {game.player2.userInfo.displayName} are currently thinking of Prompts
-                    </div>}
-                </div>}
-                {game.gameInfo.gamePhase===1 && <div>
-                    {isPlayer && <div> 
-                        Search a song: 
-                        <br></br>
-                        <input type="text" placeholder="Press Enter to send" onKeyDown={handleKeyDown}
-                            value={input} onChange={updateInput} className="text-box">
-                        </input>
-                        <br></br>
-                        <div className="game-display">
-                            Results: {selectedSong.title}
-                            {resultList[0] && <Results isEditing={isEditing} setEditing={setEditing} timeStamp={myTimeStamp} setTimeStamp={setTimeStamp} songs={resultList} 
-                            setSelected={setSelection} selected={selectedSong}></Results>}
-                        </div>
-                    </div>}
-                    {!isPlayer && <div>
-                        {game.player1.userInfo.displayName} and {game.player2.userInfo.displayName} are choosing songs, get ready to vote!
-                    </div>}
-                </div>}
-                {game.gameInfo.gamePhase === 2 && <div>
-                    <div> Player 1: {game.player1.userInfo.displayName}<div>
-                        <iframe id="ytplayer" width="640" height="360" title={game.player1.chosenSong.title}
-                            src={`https://www.youtube.com/embed/${game.player1.chosenSong.url}?autoplay=1&start=${game.player1.chosenSong.startTimeStamp}&end=${game.player1.chosenSong.endTimeStamp}`}></iframe>
-                        </div>
-                        You'll get a chance to rewatch when voting
-                    </div>
-                </div>}
-                {game.gameInfo.gamePhase === 3 && <div>
-                    <div> Player 2: {game.player2.userInfo.displayName}<div>
-                        <iframe id="ytplayer" width="640" height="360" title={game.player2.chosenSong.title}
-                            src={`https://www.youtube.com/embed/${game.player2.chosenSong.url}?autoplay=1&start=${game.player2.chosenSong.startTimeStamp}&end=${game.player2.chosenSong.endTimeStamp}`}></iframe>
-                        </div>
-                        You'll get a chance to rewatch when voting
-                    </div>
-                </div>}
-                {game.gameInfo.gamePhase === 4 && <div className="viewing"/*Actually the voting phase */>
-                    <div> Player 1: {game.player1.userInfo.displayName}<div>
-                        <iframe id="ytplayer" width="640" height="360" title={game.player1.chosenSong.title}
-                            src={`https://www.youtube.com/embed/${game.player1.chosenSong.url}?autoplay=1&start=${game.player1.chosenSong.startTimeStamp}&end=${game.player1.chosenSong.endTimeStamp}`}></iframe>
-                        </div>
-                        <button disabled={myVote===1 ? true : false} onClick={()=>vote(1)} className="button">Vote for this player</button>
-                    </div>
-                    <div> Player 2: {game.player2.userInfo.displayName}<div>
-                        <iframe id="ytplayer" width="640" height="360" title={game.player2.chosenSong.title}
-                            src={`https://www.youtube.com/embed/${game.player2.chosenSong.url}?autoplay=1&start=${game.player2.chosenSong.startTimeStamp}&end=${game.player2.chosenSong.endTimeStamp}`}></iframe>
-                        </div>
-                        <button disabled={myVote===2 ? true : false} onClick={()=>vote(2)} className="button">Vote for this player</button>
-                    </div>
-                </div>}
-                {game.gameInfo.gamePhase === 5 && <div>
-                    {game.player1.votes < game.player2.votes ? <div>{game.player2.userInfo.displayName} WINS</div> :
-                     game.player1.votes > game.player2.votes ? <div>{game.player1.userInfo.displayName} WINS </div>:
-                    <div>TIE</div>}
-                    <div className="win-screen">
-                        <div className={game.player1.votes <= game.player2.votes? "loser left" : "winner left"}>
-                            {game.player1.userInfo.displayName}
-                            <div>
-                                <img src={game.player1.chosenSong.thumbnail} alt="thumbnail"></img>
-                                <div>{game.player1.chosenSong.title}</div>
-                                <br></br>
-                                <div className="votes">Votes: {game.player1.votes}</div>
-                            </div>
-                        </div>
-                        <div className={game.player2.votes <= game.player1.votes? "loser right" : "winner right"}>
-                            {game.player2.userInfo.displayName}
-                            <div>
-                                <img src={game.player2.chosenSong.thumbnail} alt="thumbnail"></img>
-                                <div>{game.player2.chosenSong.title}</div>
-                                <br></br>
-                                <div className="votes">Votes: {game.player2.votes}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>}
-            </div>
-        </div>
-    )
+    return <div> TESTING </div>
+
+    // return (
+    //     <div className="game-screen">
+    //         <div className={"timer"}>{game.gameInfo.countDown/**Change this to end time - curr time */}</div>
+    //         <button onClick={nextPhase} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
+    //         Phase: {phaseTranslation[game.gameInfo.gamePhase]}
+    //         <div className={"prompt-box"}>
+    //             {`${game.gameInfo.prompt != ""}`? `Prompt: ${game.gameInfo.prompt}` : "No Prompts Currently"}
+    //         </div>
+    //         <div className="game-display">
+    //             {game.gameInfo.gamePhase===0 && <div>
+    //                 {isPlayer && <div>
+    //                     Type a prompt: <div className="prompt-sfx">{input}</div>
+    //                     <input type="text" placeholder="Press Enter to submit" onKeyDown={handleKeyDown}
+    //                         value={input} onChange={updateInput} className="text-box">
+    //                     </input>
+    //                 </div>}
+    //                 {!isPlayer && <div>
+    //                     {game.player1.userInfo.displayName} and {game.player2.userInfo.displayName} are currently thinking of Prompts
+    //                 </div>}
+    //             </div>}
+    //             {game.gameInfo.gamePhase===1 && <div>
+    //                 {isPlayer && <div> 
+    //                     Search a song: 
+    //                     <br></br>
+    //                     <input type="text" placeholder="Press Enter to send" onKeyDown={handleKeyDown}
+    //                         value={input} onChange={updateInput} className="text-box">
+    //                     </input>
+    //                     <br></br>
+    //                     <div className="game-display">
+    //                         Results: {selectedSong.title}
+    //                         {resultList[0] && <Results isEditing={isEditing} setEditing={setEditing} timeStamp={myTimeStamp} setTimeStamp={setTimeStamp} songs={resultList} 
+    //                         setSelected={setSelection} selected={selectedSong}></Results>}
+    //                     </div>
+    //                 </div>}
+    //                 {!isPlayer && <div>
+    //                     {game.player1.userInfo.displayName} and {game.player2.userInfo.displayName} are choosing songs, get ready to vote!
+    //                 </div>}
+    //             </div>}
+    //             {game.gameInfo.gamePhase === 2 && <div>
+    //                 <div> Player 1: {game.player1.userInfo.displayName}<div>
+    //                     <iframe id="ytplayer" width="640" height="360" title={game.player1.chosenSong.title}
+    //                         src={`https://www.youtube.com/embed/${game.player1.chosenSong.url}?autoplay=1&start=${game.player1.chosenSong.startTimeStamp}&end=${game.player1.chosenSong.endTimeStamp}`}></iframe>
+    //                     </div>
+    //                     You'll get a chance to rewatch when voting
+    //                 </div>
+    //             </div>}
+    //             {game.gameInfo.gamePhase === 3 && <div>
+    //                 <div> Player 2: {game.player2.userInfo.displayName}<div>
+    //                     <iframe id="ytplayer" width="640" height="360" title={game.player2.chosenSong.title}
+    //                         src={`https://www.youtube.com/embed/${game.player2.chosenSong.url}?autoplay=1&start=${game.player2.chosenSong.startTimeStamp}&end=${game.player2.chosenSong.endTimeStamp}`}></iframe>
+    //                     </div>
+    //                     You'll get a chance to rewatch when voting
+    //                 </div>
+    //             </div>}
+    //             {game.gameInfo.gamePhase === 4 && <div className="viewing"/*Actually the voting phase */>
+    //                 <div> Player 1: {game.player1.userInfo.displayName}<div>
+    //                     <iframe id="ytplayer" width="640" height="360" title={game.player1.chosenSong.title}
+    //                         src={`https://www.youtube.com/embed/${game.player1.chosenSong.url}?autoplay=1&start=${game.player1.chosenSong.startTimeStamp}&end=${game.player1.chosenSong.endTimeStamp}`}></iframe>
+    //                     </div>
+    //                     <button disabled={myVote===1 ? true : false} onClick={()=>vote(1)} className="button">Vote for this player</button>
+    //                 </div>
+    //                 <div> Player 2: {game.player2.userInfo.displayName}<div>
+    //                     <iframe id="ytplayer" width="640" height="360" title={game.player2.chosenSong.title}
+    //                         src={`https://www.youtube.com/embed/${game.player2.chosenSong.url}?autoplay=1&start=${game.player2.chosenSong.startTimeStamp}&end=${game.player2.chosenSong.endTimeStamp}`}></iframe>
+    //                     </div>
+    //                     <button disabled={myVote===2 ? true : false} onClick={()=>vote(2)} className="button">Vote for this player</button>
+    //                 </div>
+    //             </div>}
+    //             {game.gameInfo.gamePhase === 5 && <div>
+    //                 {game.player1.votes < game.player2.votes ? <div>{game.player2.userInfo.displayName} WINS</div> :
+    //                  game.player1.votes > game.player2.votes ? <div>{game.player1.userInfo.displayName} WINS </div>:
+    //                 <div>TIE</div>}
+    //                 <div className="win-screen">
+    //                     <div className={game.player1.votes <= game.player2.votes? "loser left" : "winner left"}>
+    //                         {game.player1.userInfo.displayName}
+    //                         <div>
+    //                             <img src={game.player1.chosenSong.thumbnail} alt="thumbnail"></img>
+    //                             <div>{game.player1.chosenSong.title}</div>
+    //                             <br></br>
+    //                             <div className="votes">Votes: {game.player1.votes}</div>
+    //                         </div>
+    //                     </div>
+    //                     <div className={game.player2.votes <= game.player1.votes? "loser right" : "winner right"}>
+    //                         {game.player2.userInfo.displayName}
+    //                         <div>
+    //                             <img src={game.player2.chosenSong.thumbnail} alt="thumbnail"></img>
+    //                             <div>{game.player2.chosenSong.title}</div>
+    //                             <br></br>
+    //                             <div className="votes">Votes: {game.player2.votes}</div>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             </div>}
+    //         </div>
+    //     </div>
+    // )
 }
