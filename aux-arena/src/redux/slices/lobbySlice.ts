@@ -33,11 +33,12 @@ const lobbySlice = createSlice({
             // the game lobby is fetched using a normal HTTP request during user join
            
             state.lobbySession = action.payload.gameLobby;
-       
+            state.users = Object.values(action.payload.gameLobby.activeUsers);
+            state.chat = action.payload.gameLobby.messages
         },
 
         // UI intent
-        sendMessage(state, action: PayloadAction<string>) {
+        sendMessage(state, action: PayloadAction<{lobbyId : number, gameLobbyMessage : GameLobbyMessage}>) {
             // middleware sends socket message
         },
 
@@ -48,14 +49,20 @@ const lobbySlice = createSlice({
             state.lastSequence = event.sequence;
             console.log("lobby event parsing")
             switch (event.type) {
-
                 case MessageEvent.USER_JOINED:
-                    state.users.push(event.payload);
+                    console.log(event)
+                    if (state.userSession && state.userSession.tempId !== event.payload.tempId) {
+                        state.users.push(event.payload);
+                    }
                     break;
 
                 case MessageEvent.NEW_HOST:
                     if (state.lobbySession) {
                         state.lobbySession.host = event.payload;
+                        state.lobbySession.activeUsers[event.payload.tempId].host = true;
+
+                        const newHostIndex = state.users.findIndex((u : UserSession) => u.tempId === event.payload.tempId);
+                        state.users[newHostIndex].host = true;
                     }
                     break;
 
@@ -90,9 +97,29 @@ const lobbySlice = createSlice({
 
             switch (message.messageType) {
                 case "USER_UPDATE":
+                    // make sure all instances of Java instance are converted to string
+                    
+                    const userSession : UserSession = message.messageContent;
+                    
                     console.log("Updating user state")
-                    state.userSession = message.messageContent;
-                    console.log(state.userSession)
+
+                    // update user session state
+                    state.userSession = userSession;   
+
+                    // update the embeded user record in lobby session state
+                    if (state.lobbySession) {
+                        state.lobbySession.activeUsers[userSession.tempId] = userSession;
+                    }
+
+                    // update the user list state
+
+                    const userIndex = state.users.findIndex(u => {
+                        return u.tempId === userSession.tempId;
+                    })
+                    console.log(userIndex)
+                    
+                    if (userIndex === -1) state.users.push(userSession);
+                    else state.users[userIndex] = userSession
                     break;
             }
         }

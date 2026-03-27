@@ -32,7 +32,7 @@ export default function LoginOverlay({setLoggingIn}: login){
         dispatch(login({
             userInfo: {userID: 1, displayName: nameInput, isReady: false, isSpectator: false, score: 0},
             sessionID: 1,
-            lastPingTime: new Date(),
+            lastPingTime: "",
             lobbyID: 1}
         ));
         setLoggingIn(false)

@@ -26,7 +26,7 @@ export type MainUser = {
   userInfo: User;
   sessionID: number;
   lobbyID: number;
-  lastPingTime: Date;//Json will send as string, convert it to Date
+  lastPingTime: String;//Json will send as string, convert it to Date
   loggedIn: boolean;
 }
 /**Default version of MainUser
@@ -35,7 +35,7 @@ export type MainUser = {
  * lobbyID: 0,
  * lastPingTime: new Date (time of creation)
  */
-export const defaultMainUser: MainUser = {userInfo: defaultUser, sessionID: 0, lobbyID: 0, lastPingTime: new Date(), loggedIn: false};
+export const defaultMainUser: MainUser = {userInfo: defaultUser, sessionID: 0, lobbyID: 0, lastPingTime: "", loggedIn: false};
 
 /**Function for creating new instance of MainUser
  * 

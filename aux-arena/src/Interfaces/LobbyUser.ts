@@ -8,7 +8,6 @@ export interface LobbyUser {
     user? : User,
     guestIdentifier? : string,
     nickname : string,
-    joinedAt? : string,
     lastSocketConnectionId? : string,
     isSpectator : boolean,
     host? : boolean,

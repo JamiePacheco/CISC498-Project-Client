@@ -9,7 +9,7 @@ interface loginPayload {
     userInfo: User;
     sessionID: number;
     lobbyID: number;
-    lastPingTime: Date;
+    lastPingTime: string;
 }
 
 interface lobbyPayload {

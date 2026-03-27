@@ -13,8 +13,10 @@ function sendMessage(destination : string, body : any) {
 }
 
 // send new chat message to some specified lobby
-export function sendChatMessage(lobbyId : number, newMessage : GameLobbyMessage) {
-    sendMessage(`/app/game-lobby/send-message/${lobbyId}`, newMessage);
+export function sendChatMessage({lobbyId, gameLobbyMessage}: {lobbyId : number, gameLobbyMessage : GameLobbyMessage}) {
+    console.log("Chat Message")
+    console.log(gameLobbyMessage)
+    sendMessage(`/app/game-lobby/send-message/${lobbyId}`, gameLobbyMessage);
 }
 
 // send new user information to some specified lobby

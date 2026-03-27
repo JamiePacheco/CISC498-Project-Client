@@ -20,13 +20,15 @@ type interaction = "Idle" | "Joining" | "Creating";
 
 export default function LobbyOverlay({setJoining}: userStatus) {
 
-    const [lobbyCode, setLobbyCode] = useState<string>("");
-
     const user = useSelector((state:RootState)=> state.user);
-
     const nav = useNavigate()
 
+    const [lobbyCode, setLobbyCode] = useState<string>("");
+    
     const [spectator, setSpectator] = useState<boolean>(false); // link this state with the spectator input field
+
+    // default for logged in users should be username
+    const [username, setUsername] = useState<String>("") 
 
     function lobbyHelper(event:any){
     }
@@ -39,7 +41,7 @@ export default function LobbyOverlay({setJoining}: userStatus) {
             
             if (gameLobby.id !== undefined && gameLobby.lobbyCode !== undefined) {
                 const lobbyUser = {
-                    nickname : user,
+                    nickname : username,
                     isSpectator : false,
                     role : role
                 }
@@ -78,13 +80,13 @@ export default function LobbyOverlay({setJoining}: userStatus) {
             <div className="input">
                 Username:
                 <div>
-                    <input disabled className="text-box" placeholder={user.userInfo.displayName} type="text"></input>
+                    <input className="text-box" placeholder={user.userInfo.displayName} onChange={(event) => setUsername(event.target.value)} type="text"></input>
                 </div>
             </div>
             <div className="input">
                 Lobby Code:
                 <div>
-                    <input className="text-box" type="text" onChange={lobbyHelper}></input>
+                    <input className="text-box" type="text" onChange={(event) => setLobbyCode(event.target.value)}></input>
                 </div>
             </div>
             <div className="input">
