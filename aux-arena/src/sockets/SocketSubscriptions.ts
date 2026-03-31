@@ -52,10 +52,6 @@ export function subscribeUser(store:any, lobbyId:number) {
       console.log(`[/user/queue/game-lobby/${lobbyId}] Message:`)
       console.log(message)
 
-      Object.keys(message.messageContent).forEach((key) => {
-        console.log(`Field ${key} is of type ${Object.prototype.toString.call(message.messageContent[key])}`)
-      })
-
       store.dispatch({
         type:"lobby/userMessageReceived",
         payload: message

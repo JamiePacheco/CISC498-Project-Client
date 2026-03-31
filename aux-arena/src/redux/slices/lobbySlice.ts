@@ -35,13 +35,15 @@ const lobbySlice = createSlice({
             state.lobbySession = action.payload.gameLobby;
             state.users = Object.values(action.payload.gameLobby.activeUsers);
             state.chat = action.payload.gameLobby.messages
+
+            console.log("State after user joined")
+            console.log(state)
         },
 
         // UI intent
         sendMessage(state, action: PayloadAction<{lobbyId : number, gameLobbyMessage : GameLobbyMessage}>) {
             // middleware sends socket message
         },
-
         lobbyEventReceived(state, action: PayloadAction<GameLobbyEvent<any>>) {
             const event = action.payload;
 
@@ -49,9 +51,12 @@ const lobbySlice = createSlice({
             state.lastSequence = event.sequence;
             console.log("lobby event parsing")
             switch (event.type) {
-                case MessageEvent.USER_JOINED:
-                    console.log(event)
-                    if (state.userSession && state.userSession.tempId !== event.payload.tempId) {
+                case MessageEvent.USER_JOINED:    
+                    console.log("Updating user list to add new user")
+                    const userIndex = state.users.findIndex((u : UserSession) => u.tempId === event.payload.tempId);
+                    if (userIndex !== -1) {
+                        state.users[userIndex] = event.payload;
+                    } else if (state.userSession && state.userSession.tempId !== event.payload.tempId) {
                         state.users.push(event.payload);
                     }
                     break;
@@ -67,9 +72,10 @@ const lobbySlice = createSlice({
                     break;
 
                 case MessageEvent.USER_LEFT:
-                    state.users = state.users.filter(
-                        user => user.tempId !== event.payload.tempId
-                    );
+                    const disconnectedUser = event.payload;
+                    const disconnectedUserIndex = state.users.findIndex((u) => u.tempId === disconnectedUser.tempId);
+                    state.users[disconnectedUserIndex] = disconnectedUser; 
+
                     break;
 
                 case MessageEvent.USER_CLEANUP:
@@ -122,6 +128,13 @@ const lobbySlice = createSlice({
                     else state.users[userIndex] = userSession
                     break;
             }
+        },
+        resetConnection: () => {
+            // console.log("resetting to inital state")
+            // return initialState
+        },
+        closeConnection: () => {
+            return initialState;
         }
     }
 });
@@ -131,7 +144,9 @@ export const {
     sendMessage,
     lobbyEventReceived,
     lobbyMessageReceived,
-    userMessageReceived
+    userMessageReceived,
+    resetConnection,
+    closeConnection,
 } = lobbySlice.actions;
 
 export default lobbySlice.reducer;

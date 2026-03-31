@@ -17,7 +17,10 @@ import { User } from "./Types/User"
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./Store/store";
 import { addUser, newMessage, removeUser } from "./Store/lobbySlices";
-import { joinLobby, sendMessage } from "../redux/slices/lobbySlice";
+import { joinLobby, resetConnection, sendMessage } from "../redux/slices/lobbySlice";
+import { formatTimestampWithLocale } from "../utility/date";
+import { RxStomp } from "@stomp/rx-stomp";
+import { activeRxStomp, deactiveRxStomp, resetRxStomp, rxStomp } from "../sockets/RxStompClient";
 
 export interface information{
   user: string;
@@ -86,10 +89,15 @@ export default function GameLobbyPage() {
             connectToGameLobby(location.state.lobby.lobbyCode, location.state.lobby.password, newTempId, user).then(res => {
                 const connectedLobby = res.data.responseContent;
                 console.log("Retrived lobby data from endpoint:")
+                console.log("JWT " + document.cookie)
                 console.log(connectedLobby)
                 if (connectedLobby !== null) {
                     
-                
+                    // reset the socket connection to utilize the (potentially) newly stored 
+                    // dispatch(
+                    //     resetConnection()
+                    // )
+                    console.log("Reset Socket Connection")
                     // create a new user session
                     const newUserSession : UserSession = {
                         tempId: newTempId,
@@ -151,13 +159,22 @@ export default function GameLobbyPage() {
                 <div> Lobby ID: {gameLobbySession?.lobbyCode}</div>
                 <Link to={"/aux-arena"} className="button" >Start</Link>
             </div>
-            <div className="playerbox">
+            <div className="playerbox"            
+            >
                 {
-                    lobbyUsers.map((user : UserSession, index) => (
-                        <div key = {index} className="players">
-                        {user.tempId === userSession?.tempId && <span>*</span>}  {user.displayName} {user.host && <span> (host)</span>} {!user.active && <span>Disconnected</span>} 
+                    lobbyUsers.map((user : UserSession, index) => {
+                        
+                    const color = user.active ? "white" : "darkgrey"
+
+                    return (
+                        <div 
+                            key = {index} 
+                            className="players"
+                            style={{color: color}}    
+                        >
+                            {user.tempId === userSession?.tempId && <span>*</span>} <span> {user.displayName} </span> {user.host && <span> (host)</span>} 
                         </div>
-                    ))
+                    )})
                 } 
                
             </div>
@@ -166,7 +183,7 @@ export default function GameLobbyPage() {
                         {chat.map(u => {
                             return (
                                 <span className = "message">
-                                    <b>{u.author}: </b> {u.textMessage}
+                                    [{u.timestamp && formatTimestampWithLocale(u.timestamp)}]  <b>{u.author}: </b> {u.textMessage}
                                 </span>
                             )
                         })}

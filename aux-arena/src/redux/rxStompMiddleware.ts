@@ -1,5 +1,5 @@
 import { Middleware, PayloadAction, UnknownAction } from "@reduxjs/toolkit";
-import { activeRxStomp } from "../sockets/RxStompClient";
+import { activeRxStomp, deactiveRxStomp } from "../sockets/RxStompClient";
 import { socketCommandMap } from "../sockets/SocketMessageService";
 import { subscribeLobby, subscribeMessages, subscribeUser } from "../sockets/SocketSubscriptions";
 import { LobbyConnectionState } from "./slices/lobbySlice";
@@ -12,15 +12,29 @@ let subscribed = false;
 
 export const rxStompMiddleware : Middleware = store => next => action => {
 
-
-    if (isReduxAction(action)) {
+    console.log("Middleware Activating")
+    console.log(action)
+    if (isReduxAction(action) && action.type.startsWith('lobby/')) {
         const result = next(action);
 
         const state = store.getState().lobby;
 
         console.log("Store");
         console.log(state)
+
+        if (action.type === "lobby/closeConnection") {
+            subscribed = false;
+            deactiveRxStomp();
+            return result;
+        }
+
+        if (action.type === "lobby/resetConnection") {
+            subscribed = false;
+            deactiveRxStomp();
+        }
+
         if (!state.lobbySession) return;
+        
         activeRxStomp();
 
         const handler = socketCommandMap[action.type];

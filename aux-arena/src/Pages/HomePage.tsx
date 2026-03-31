@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./Store/store";
 import { logout } from "./Store/userSlices";
 import { addUser, leaveLobby } from "./Store/lobbySlices";
+import { closeConnection } from "../redux/slices/lobbySlice";
 
 type interaction = "Idle" | "Joining" | "Creating";
 
@@ -15,11 +16,16 @@ export default function HomePage() {
     const user = useSelector((state: RootState) => state.user);
     const lobby = useSelector((state:RootState)=>state.lobby);
     const dispatch = useDispatch<AppDispatch>();
-    useEffect(()=>{
-      dispatch(leaveLobby());
-    })
+ 
     const [interaction, setInteraction] = useState<interaction>("Idle")
     const [loggingIn, setLoggingIn] = useState<boolean>(false) // To show overlay for log in
+
+    useEffect(() => {
+      dispatch(
+        closeConnection()
+      )
+    }, [dispatch])
+
     return (
      <div className='main'>
           <div className='Sidebar'>

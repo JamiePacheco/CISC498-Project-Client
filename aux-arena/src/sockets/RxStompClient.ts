@@ -5,9 +5,21 @@ export const rxStomp = new RxStomp();
 rxStomp.configure(rxStompConfig);
 
 export const activeRxStomp = () => {
-    if (!rxStomp.active) rxStomp.activate();
+    if (!rxStomp.active) {
+        console.log(`Activating Socket Connection with JWT [${document.cookie}]`)
+        rxStomp.activate();
+    }
 }
 
 export const deactiveRxStomp = () => {
-    if (rxStomp.active) rxStomp.deactivate();
+    console.log("Deactivating RxStomp Socket Connection")
+    if (rxStomp.active) {
+        console.log("Socket Connection Closed")
+        rxStomp.deactivate();
+    }
+}
+
+export const resetRxStomp = () => {
+    deactiveRxStomp();
+    activeRxStomp();
 }
