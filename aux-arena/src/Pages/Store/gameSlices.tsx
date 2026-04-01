@@ -64,6 +64,7 @@ const gameSlice = createSlice({
             }
         },setPrompt: (state, action:PayloadAction<string>)=>{
             state.gameInfo.prompt = action.payload;
+            //CHANGE THIS FOR ACTUAL GAME
         },assignVotes: (state, action:PayloadAction<playerScoresPayload>)=>{
             state.player1.votes = action.payload.player1Votes;
             state.player2.votes = action.payload.player2Votes;

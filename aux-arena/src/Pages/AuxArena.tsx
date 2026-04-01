@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import "./Css/AuxArena.css"
 import "./Css/Lobby.css"
-import testCase from "../testCaseTOBEREMOVED/aux_arena_bird_brain_test_data.json"
 import Results from "./components/Results";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./Store/store";
-import { assignVotes, changePhase, endGame, selectSong, setPlayer, setPrompt } from "./Store/gameSlices";
+import { assignVotes, changePhase, endGame, selectSong, setPlayer } from "./Store/gameSlices";
 import ChatBox from "./components/Chat";
+import PromptPhase from "./AuxArenaParts/PromptPhase";
+import { song } from "./Types/Game";
+import PickingPhase from "./AuxArenaParts/PickingPhase";
 
 //Prompt Phase: Players creates a prompt
 //Picking Phase: Choosing a song (Only for participating players)
@@ -14,14 +16,6 @@ import ChatBox from "./components/Chat";
 //      Spectators start here watching players in two previous phases
 //Voting Phase: Picking the song you like most/fits the theme best
 //Winner Phase: Show winner
-
-type songInfo = {
-    title: string;
-    thumbnail: string;
-    url: string;
-    startTimeStamp: number;
-    endTimeStamp: number;
-}
 
 const phaseTranslation: Record<number, string> = {
     0: "Prompt",
@@ -39,21 +33,7 @@ export default function AuxArena(){
     const dispatch = useDispatch<AppDispatch>();
 
     // * Local States * //
-
-    /**Local State used for different purposes throughout multiple phase
-     *  * Prompt in prompt phase,
-     *  * Search query in picking phase,
-     * Remember to send input to server, and clear input after every use
-     */
-    const [input, setInput] = useState<string>("");
-    const [resultList, setResults] = useState<songInfo[]>([]);
-    //Pulled from server
-    const [selectedSong, setSelection] = useState<songInfo>({title:"", thumbnail:"", url:"", startTimeStamp: 0, endTimeStamp: 15});// Selected by clientside player
-    //Send this ^ to server, change this to songInfo type
-    const [myTimeStamp, setTimeStamp] = useState<number[]>([0, 15]); // Keeps track of start and end of clip, [0] = start [1] = end
-    //Send this ^ to server with selected song, add to above
     const [myVote, setVote] = useState<number>(0);
-    const [isEditing, setEditing] = useState<boolean>(false);
     const [isPlayer, setPlayerStatus] = useState<boolean>(false);
     //Helper to check if user is an active player or not^
 
@@ -61,10 +41,6 @@ export default function AuxArena(){
 
     function toggleChat(){
         setChat(!showChat);
-    }
-
-    function updateInput(event:any){
-        setInput(event.target.value)
     }
     
     //To reset game state if I tab out of it
@@ -78,15 +54,6 @@ export default function AuxArena(){
     }, [game, dispatch, lobby.userList, user.userInfo]);
 
     useEffect(()=>{
-        const updatedSong = {
-            ...selectedSong, 
-            startTimeStamp: myTimeStamp[0], 
-            endTimeStamp: myTimeStamp[1]
-        };
-        dispatch((selectSong({playerNumber: 1, songInfo: updatedSong})));
-    }, [myTimeStamp, dispatch, selectedSong])
-
-    useEffect(()=>{
         if(game.player1.userInfo.userID === user.userInfo.userID || game.player2.userInfo.userID === user.userInfo.userID){
             setPlayerStatus(true);
             console.log("Player status changed");
@@ -95,35 +62,6 @@ export default function AuxArena(){
             console.log("Player status changed");
         }
     }, [game.player1.userInfo.userID, game.player2.userInfo.userID, user.userInfo.userID])
-
-
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            if(game.gameInfo.gamePhase === 0){
-                dispatch(setPrompt(input))// CHANGE THIS TO SENDING PROMPT TO SERVER
-                setInput("")
-            }
-            if(game.gameInfo.gamePhase === 1){
-                //Send "input" to server, input is song name here
-                const list:songInfo[] = testCase.items.map(i => ({
-                    title: i.snippet.title,
-                    thumbnail:i.snippet.thumbnails.high.url,
-                    url: i.id.videoId,
-                    startTimeStamp: 0,
-                    endTimeStamp: 15
-                }));
-                setResults([...list]);
-                dispatch((selectSong({playerNumber:2, songInfo:list[1]})));
-                setInput("");
-            }
-        }
-    };
-
-    useEffect(()=> {  
-        dispatch(selectSong({playerNumber: 1, songInfo: selectedSong}))
-    }, [selectedSong, dispatch]) //Updates player1 song list automatically, FOR TESTING, YOU COULD REMOVE THIS
-    // JUST REMEMBER TO UPDATE THE PLAYER'S INFO THROUGH THE SERVER or adjust the player number to be the current player
 
     function vote(playerNum: number){
         setVote(playerNum);
@@ -137,14 +75,12 @@ export default function AuxArena(){
     }
 
     function nextPhase(){
-        if(game.gameInfo.gamePhase === 1 && isEditing){
-            setEditing(false);
-            setTimeStamp([0, 15]);
+        if(game.gameInfo.gamePhase === 1){
+            //setEditing(false);
+            //setTimeStamp([0, 15]);
         }
         if(game.gameInfo.gamePhase === 5){
             dispatch(endGame());
-            setResults([]);
-            setSelection({title:"", thumbnail:"", url:"", startTimeStamp: 0, endTimeStamp: 15});
         }else dispatch(changePhase());
     }
 
@@ -157,35 +93,11 @@ export default function AuxArena(){
                 {`${game.gameInfo.prompt !== ""}`? `Prompt: ${game.gameInfo.prompt}` : "No Prompts Currently"}
             </div>
             <div className="game-display">
-                {game.gameInfo.gamePhase===0 && <div>
-                    {isPlayer && <div>
-                        Type a prompt: <div className="prompt-sfx">{input}</div>
-                        <input type="text" placeholder="Press Enter to submit" onKeyDown={handleKeyDown}
-                            value={input} onChange={updateInput} className="text-box">
-                        </input>
-                    </div>}
-                    {!isPlayer && <div>
-                        {game.player1.userInfo.displayName} and {game.player2.userInfo.displayName} are currently thinking of Prompts
-                    </div>}
-                </div>}
-                {game.gameInfo.gamePhase===1 && <div>
-                    {isPlayer && <div> 
-                        Search a song: 
-                        <br></br>
-                        <input type="text" placeholder="Press Enter to send" onKeyDown={handleKeyDown}
-                            value={input} onChange={updateInput} className="text-box">
-                        </input>
-                        <br></br>
-                        <div className="game-display">
-                            Results: {selectedSong.title}
-                            {resultList[0] && <Results isEditing={isEditing} setEditing={setEditing} timeStamp={myTimeStamp} setTimeStamp={setTimeStamp} songs={resultList} 
-                            setSelected={setSelection} selected={selectedSong}></Results>}
-                        </div>
-                    </div>}
-                    {!isPlayer && <div>
-                        {game.player1.userInfo.displayName} and {game.player2.userInfo.displayName} are choosing songs, get ready to vote!
-                    </div>}
-                </div>}
+                {game.gameInfo.gamePhase===0 && 
+                    <PromptPhase isPlayer={isPlayer}/>
+                }
+                {game.gameInfo.gamePhase===1 && 
+                    <PickingPhase isPlayer={isPlayer}/>}
                 {game.gameInfo.gamePhase === 2 && <div>
                     <div> Player 1: {game.player1.userInfo.displayName}<div>
                         <iframe id="ytplayer" width="640" height="360" title={game.player1.chosenSong.title}
