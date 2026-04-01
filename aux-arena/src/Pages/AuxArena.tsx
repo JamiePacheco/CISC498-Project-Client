@@ -93,6 +93,8 @@ export default function AuxArena(){
                 {`${game.gameInfo.prompt !== ""}`? `Prompt: ${game.gameInfo.prompt}` : "No Prompts Currently"}
             </div>
             <div className="game-display">
+                <button className={`chatButton ${showChat && "activeChat"}`} onClick={toggleChat} >Show Chat</button>
+                {showChat && <ChatBox/>}
                 {game.gameInfo.gamePhase===0 && 
                     <PromptPhase isPlayer={isPlayer}/>
                 }
@@ -153,10 +155,6 @@ export default function AuxArena(){
                         </div>
                     </div>
                 </div>}
-                <div className="chatDisplay">
-                    <button className={`chatButton ${showChat && "activeChat"}`} onClick={toggleChat} >Show Chat</button>
-                    {showChat && <ChatBox/>}
-                </div>
             </div>
         </div>
     )

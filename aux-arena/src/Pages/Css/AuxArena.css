@@ -45,6 +45,7 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
+    margin-right: 1em;
 }
 
 .unselected{
@@ -123,18 +124,9 @@
     border-radius: 1em;
 }
 
-.chatDisplay{
-    display: flex;
-    position: fixed;
-    bottom: 0%;
-    right: 0%;
-    height: 100vh;
-    width: 100vw;
-    z-index: 1;
-}
-
 .chatButton{
-    position: absolute;
+    position: fixed;
+    z-index: 2;
     top: 98%;
     transition-duration: 1s;
     left: 0%;
