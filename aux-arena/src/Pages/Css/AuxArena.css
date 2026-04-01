@@ -133,7 +133,7 @@
     position: relative;
     top: 97.5%;
     transition-duration: 1s;
-    left: 57%;
+    left: 0%;
     height: 5%;
     width: 10%;
     font-size: 60%;
@@ -148,6 +148,5 @@
 }
 
 .activeChat{
-    left: 57%;
     background-image: radial-gradient(circle at 100%, rgba(0, 14, 84, 1));
 }
