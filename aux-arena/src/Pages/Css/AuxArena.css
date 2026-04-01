@@ -29,12 +29,16 @@
 }
 
 .results{
-    display: grid;
+    justify-self: center;
+    position:relative;
+    z-index: 1;
+    display: table;
     place-items: center;
+    width: 60vw;
 }
 
 .songResults{
-    width: 60%;
+    width: 60vw;
     height: 5em;
     margin-bottom: 1em;
     display: flex;
@@ -126,12 +130,12 @@
     right: 0%;
     height: 100vh;
     width: 100vw;
-    z-index: -1;
+    z-index: 1;
 }
 
 .chatButton{
-    position: relative;
-    top: 97.5%;
+    position: absolute;
+    top: 98%;
     transition-duration: 1s;
     left: 0%;
     height: 5%;
