@@ -139,6 +139,12 @@
   animation-duration: 3s;
 }
 
+.join-button:disabled{
+    background: linear-gradient(to bottom left, rgba(45, 0, 136, 1) 100%, rgba(255, 89, 0, 1) 0%);
+    border: 2px solid  rgba(45, 0, 136, 1);
+    animation: color-trans 1s;
+}
+
 @keyframes backgroundAnim{
   from  {background-position: 200% 200%;}
   to {background-position: 0% 0%;}

@@ -9,6 +9,9 @@ import ChatBox from "./components/Chat";
 import PromptPhase from "./AuxArenaParts/PromptPhase";
 import { song } from "./Types/Game";
 import PickingPhase from "./AuxArenaParts/PickingPhase";
+import ViewingPhase from "./AuxArenaParts/ViewingPhase";
+import VotingPhase from "./AuxArenaParts/VotingPhase";
+import WinnerPhase from "./AuxArenaParts/WinnerPhase";
 
 //Prompt Phase: Players creates a prompt
 //Picking Phase: Choosing a song (Only for participating players)
@@ -33,9 +36,9 @@ export default function AuxArena(){
     const dispatch = useDispatch<AppDispatch>();
 
     // * Local States * //
-    const [myVote, setVote] = useState<number>(0);
     const [isPlayer, setPlayerStatus] = useState<boolean>(false);
     //Helper to check if user is an active player or not^
+    //Probably not needed
 
     const [showChat, setChat] = useState<Boolean>(false);
 
@@ -63,17 +66,6 @@ export default function AuxArena(){
         }
     }, [game.player1.userInfo.userID, game.player2.userInfo.userID, user.userInfo.userID])
 
-    function vote(playerNum: number){
-        setVote(playerNum);
-        if(playerNum === 1){
-            dispatch(assignVotes({player1Votes: 1, player2Votes: 0}));
-        }
-        if(playerNum === 2){
-            dispatch(assignVotes({player1Votes: 0, player2Votes: 1}));
-        }//This should be changeds to sending player votes to server, and then receiving total votes later on to set both
-        // player's scores instead of how it is right now
-    }
-
     function nextPhase(){
         if(game.gameInfo.gamePhase === 1){
             //setEditing(false);
@@ -100,61 +92,12 @@ export default function AuxArena(){
                 }
                 {game.gameInfo.gamePhase===1 && 
                     <PickingPhase isPlayer={isPlayer}/>}
-                {game.gameInfo.gamePhase === 2 && <div>
-                    <div> Player 1: {game.player1.userInfo.displayName}<div>
-                        <iframe id="ytplayer" width="640" height="360" title={game.player1.chosenSong.title}
-                            src={`https://www.youtube.com/embed/${game.player1.chosenSong.url}?autoplay=1&start=${game.player1.chosenSong.startTimeStamp}&end=${game.player1.chosenSong.endTimeStamp}`}></iframe>
-                        </div>
-                        You'll get a chance to rewatch when voting
-                    </div>
-                </div>}
-                {game.gameInfo.gamePhase === 3 && <div>
-                    <div> Player 2: {game.player2.userInfo.displayName}<div>
-                        <iframe id="ytplayer" width="640" height="360" title={game.player2.chosenSong.title}
-                            src={`https://www.youtube.com/embed/${game.player2.chosenSong.url}?autoplay=1&start=${game.player2.chosenSong.startTimeStamp}&end=${game.player2.chosenSong.endTimeStamp}`}></iframe>
-                        </div>
-                        You'll get a chance to rewatch when voting
-                    </div>
-                </div>}
-                {game.gameInfo.gamePhase === 4 && <div className="viewing"/*Actually the voting phase */>
-                    <div> Player 1: {game.player1.userInfo.displayName}<div>
-                        <iframe id="ytplayer" width="640" height="360" title={game.player1.chosenSong.title}
-                            src={`https://www.youtube.com/embed/${game.player1.chosenSong.url}?autoplay=1&start=${game.player1.chosenSong.startTimeStamp}&end=${game.player1.chosenSong.endTimeStamp}`}></iframe>
-                        </div>
-                        <button disabled={myVote===1 ? true : false} onClick={()=>vote(1)} className="button">Vote for this player</button>
-                    </div>
-                    <div> Player 2: {game.player2.userInfo.displayName}<div>
-                        <iframe id="ytplayer" width="640" height="360" title={game.player2.chosenSong.title}
-                            src={`https://www.youtube.com/embed/${game.player2.chosenSong.url}?autoplay=1&start=${game.player2.chosenSong.startTimeStamp}&end=${game.player2.chosenSong.endTimeStamp}`}></iframe>
-                        </div>
-                        <button disabled={myVote===2 ? true : false} onClick={()=>vote(2)} className="button">Vote for this player</button>
-                    </div>
-                </div>}
-                {game.gameInfo.gamePhase === 5 && <div>
-                    {game.player1.votes < game.player2.votes ? <div>{game.player2.userInfo.displayName} WINS</div> :
-                     game.player1.votes > game.player2.votes ? <div>{game.player1.userInfo.displayName} WINS </div>:
-                    <div>TIE</div>}
-                    <div className="win-screen">
-                        <div className={game.player1.votes <= game.player2.votes? "loser left" : "winner left"}>
-                            {game.player1.userInfo.displayName}
-                            <div>
-                                <img src={game.player1.chosenSong.thumbnail} alt="thumbnail"></img>
-                                <div>{game.player1.chosenSong.title}</div>
-                                <br></br>
-                                <div className="votes">Votes: {game.player1.votes}</div>
-                            </div>
-                        </div>
-                        <div className={game.player2.votes <= game.player1.votes? "loser right" : "winner right"}>
-                            {game.player2.userInfo.displayName}
-                            <div>
-                                <img src={game.player2.chosenSong.thumbnail} alt="thumbnail"></img>
-                                <div>{game.player2.chosenSong.title}</div>
-                                <br></br>
-                                <div className="votes">Votes: {game.player2.votes}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>}
+                {(game.gameInfo.gamePhase === 2 || game.gameInfo.gamePhase === 3) && 
+                    <ViewingPhase/>}
+                {game.gameInfo.gamePhase === 4 && 
+                    <VotingPhase/>}
+                {game.gameInfo.gamePhase === 5 && 
+                    <WinnerPhase/>}
             </div>
         </div>
     )

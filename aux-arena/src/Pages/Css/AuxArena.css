@@ -81,7 +81,7 @@
 .viewing{
     padding-top: 0em;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .win-screen{
@@ -145,4 +145,17 @@
 
 .activeChat{
     background-image: radial-gradient(circle at 100%, rgba(0, 14, 84, 1));
+}
+
+.button:disabled{
+    background: linear-gradient(to bottom left, rgba(45, 0, 136, 1) 100%, rgba(255, 89, 0, 1) 0%);
+    border: 2px solid  rgba(45, 0, 136, 1);
+    animation: color-trans 1.5s linear;
+}
+
+@keyframes color-trans{
+    0% { background: linear-gradient(to right, rgba(45, 0, 136, 1) 0%, rgba(255, 89, 0, 1) 100%); }
+    50% { background: linear-gradient(to right, rgba(45, 0, 136, 1) 40%, rgba(255, 89, 0, 1) 60%); }
+    60% { background: linear-gradient(to right, rgba(45, 0, 136, 1) 80%, rgba(255, 89, 0, 1) 20%); }
+    100% { background: linear-gradient(to right, rgba(45, 0, 136, 1) 100%, rgba(255, 89, 0, 1) 0%); }
 }
