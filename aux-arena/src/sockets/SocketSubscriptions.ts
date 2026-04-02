@@ -1,4 +1,5 @@
 import { UserSession } from "../Interfaces/UserSession"
+import { lobbyEventReceived, lobbyMessageReceived, userMessageReceived } from "../redux/slices/lobbySlice"
 import { rxStomp } from "./RxStompClient"
 import { LOBBY_EVENT, serverEventMap } from "./SocketEvents"
 
@@ -15,10 +16,8 @@ export function subscribeLobby(store:any, lobbyId:number) {
       console.log("Got a message")
       const event = JSON.parse(msg.body)
       console.log(event)
-      const handler = serverEventMap["LOBBY_EVENT"]
-
-      if (handler) handler(store, event)
-
+      
+      store.dispatch(lobbyEventReceived(event));
     })
 }
 
@@ -31,11 +30,8 @@ export function subscribeMessages(store:any, lobbyId:number) {
 
       const message = JSON.parse(msg.body)
       console.log(message)
-      store.dispatch({
-        type:"lobby/lobbyMessageReceived",
-        payload:  message.payload
-      })
-
+      
+      store.dispatch(lobbyMessageReceived(message.payload))
     })
 
 }
@@ -52,11 +48,7 @@ export function subscribeUser(store:any, lobbyId:number) {
       console.log(`[/user/queue/game-lobby/${lobbyId}] Message:`)
       console.log(message)
 
-      store.dispatch({
-        type:"lobby/userMessageReceived",
-        payload: message
-      })
-
+      store.dispatch(userMessageReceived(message))
     })
 
 }

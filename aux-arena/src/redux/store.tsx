@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlices"
-import lobbyReducer from "../../redux/slices/lobbySlice"
-import gameReducer from "./gameSlices"
-import { rxStompMiddleware } from "../../redux/rxStompMiddleware";
+import userReducer from "./Store/userSlices"
+import lobbyReducer from "./slices/lobbySlice"
+import gameReducer from "./Store/gameSlices"
+import { rxStompMiddleware } from "./rxStompMiddleware";
 
 export const store = configureStore({
     reducer: {
