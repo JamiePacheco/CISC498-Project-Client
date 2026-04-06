@@ -1,7 +1,8 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { song } from "../Types/Game";
-import { createPlayer, Player, User } from "../Types/User";
+import { song } from "../../Pages/Types/Game";
+import { createPlayer, Player, User }  from "../../Pages/Types/User"
+;
 
 /**Game Phases:
  * - Prompt Phase: Players creates a prompt

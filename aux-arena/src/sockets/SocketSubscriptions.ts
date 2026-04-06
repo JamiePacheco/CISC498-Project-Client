@@ -1,7 +1,5 @@
-import { UserSession } from "../Interfaces/UserSession"
 import { lobbyEventReceived, lobbyMessageReceived, userMessageReceived } from "../redux/slices/lobbySlice"
 import { rxStomp } from "./RxStompClient"
-import { LOBBY_EVENT, serverEventMap } from "./SocketEvents"
 
 let lobbySubscription:any
 let messageSubscription:any

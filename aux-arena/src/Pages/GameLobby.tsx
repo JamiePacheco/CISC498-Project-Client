@@ -15,12 +15,9 @@ import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
 
 import { User } from "./Types/User"
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "./Store/store";
-import { addUser, newMessage, removeUser } from "./Store/lobbySlices";
+import { AppDispatch, RootState } from "../redux/store";
 import { joinLobby, resetConnection, sendMessage } from "../redux/slices/lobbySlice";
 import { formatTimestampWithLocale } from "../utility/date";
-import { RxStomp } from "@stomp/rx-stomp";
-import { activeRxStomp, deactiveRxStomp, resetRxStomp, rxStomp } from "../sockets/RxStompClient";
 
 export interface information{
   user: string;

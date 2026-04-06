@@ -5,9 +5,8 @@ import LoginOverlay from "./loginOverlay";
 import "./Lobby.css"
 import "./Css/PixelCorners.css"
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "./Store/store";
-import { logout } from "./Store/userSlices";
-import { addUser, leaveLobby } from "./Store/lobbySlices";
+import { AppDispatch, RootState } from "../redux/store";
+import { logout } from "../redux/Store/userSlices";
 import { closeConnection } from "../redux/slices/lobbySlice";
 
 type interaction = "Idle" | "Joining" | "Creating";

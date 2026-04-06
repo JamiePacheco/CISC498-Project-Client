@@ -9,7 +9,7 @@ import { GameLobbyPageState } from "./GameLobby";
 import { getGameLobby } from "../service/GameLobbyService";
 import { GameLobby } from "../Interfaces/GameLobby";
 import { useSelector } from "react-redux";
-import { RootState } from "./Store/store";
+import { RootState } from "../redux/store";
 import { link } from "node:fs";
 
 export interface userStatus{

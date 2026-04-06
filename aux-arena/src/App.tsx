@@ -9,7 +9,7 @@ import { RxStomp, RxStompConfig } from "@stomp/rx-stomp";
 import SockJS from 'sockjs-client'
 import AuxArena from "./Pages/AuxArena";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "./Pages/Store/store";
+import { RootState, AppDispatch } from "./redux/store";
 
 function App() {
   return (

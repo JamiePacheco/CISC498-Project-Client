@@ -4,8 +4,8 @@ import "./Lobby.css"
 import testCase from "../testCaseTOBEREMOVED/aux_arena_bird_brain_test_data.json"
 import Results from "./Results";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "./Store/store";
-import { assignVotes, changePhase, endGame, selectSong, setPlayer, setPrompt } from "./Store/gameSlices";
+import { AppDispatch, RootState } from "../redux/store";
+import { assignVotes, changePhase, endGame, selectSong, setPlayer, setPrompt } from "../redux/Store/gameSlices";
 
 //Prompt Phase: Players creates a prompt
 //Picking Phase: Choosing a song (Only for participating players)
