@@ -9,7 +9,7 @@ import { GameLobbyPageState } from "./GameLobby";
 import { getGameLobby } from "../service/GameLobbyService";
 import { GameLobby } from "../Interfaces/GameLobby";
 import { useSelector } from "react-redux";
-import { RootState } from "./Store/store";
+import { RootState } from "../redux/store";
 import { link } from "node:fs";
 
 export interface userStatus{
@@ -17,26 +17,31 @@ export interface userStatus{
 }
 
 type interaction = "Idle" | "Joining" | "Creating";
-    const [spectator, setSpectator] = useState<boolean>(false); // link this state with the spectator input field
-    const nav = useNavigate()
-
 
 export default function LobbyOverlay({setJoining}: userStatus) {
+
     const user = useSelector((state:RootState)=> state.user);
+    const nav = useNavigate()
+
+    const [lobbyCode, setLobbyCode] = useState<string>("");
+    
+    const [spectator, setSpectator] = useState<boolean>(false); // link this state with the spectator input field
+
+    // default for logged in users should be username
+    const [username, setUsername] = useState<String>("") 
 
     function lobbyHelper(event:any){
-        // Update Global State
     }
 
     const joinLobbyAction = () => {
 
-        getGameLobby(lobby, "").then(res => {
+        getGameLobby(lobbyCode, "").then(res => {
             const gameLobby : GameLobby = res.data.responseContent; 
             const role : LobbyUserRole = "GUEST"
             
             if (gameLobby.id !== undefined && gameLobby.lobbyCode !== undefined) {
                 const lobbyUser = {
-                    nickname : user,
+                    nickname : username,
                     isSpectator : false,
                     role : role
                 }
@@ -75,13 +80,13 @@ export default function LobbyOverlay({setJoining}: userStatus) {
             <div className="input">
                 Username:
                 <div>
-                    <input disabled className="text-box" placeholder={user.userInfo.displayName} type="text"></input>
+                    <input className="text-box" placeholder={user.userInfo.displayName} onChange={(event) => setUsername(event.target.value)} type="text"></input>
                 </div>
             </div>
             <div className="input">
                 Lobby Code:
                 <div>
-                    <input className="text-box" type="text" onChange={lobbyHelper}></input>
+                    <input className="text-box" type="text" onChange={(event) => setLobbyCode(event.target.value)}></input>
                 </div>
             </div>
             <div className="input">

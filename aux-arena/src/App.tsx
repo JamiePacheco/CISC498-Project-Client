@@ -9,7 +9,7 @@ import { RxStomp, RxStompConfig } from "@stomp/rx-stomp";
 import SockJS from 'sockjs-client'
 import AuxArena from "./Pages/AuxArena";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "./Pages/Store/store";
+import { RootState, AppDispatch } from "./redux/store";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/game-lobby' element={<GameLobby/>}/>
-          <Route path="/aux-arena" element={<AuxArena/>}></Route>
+          {/* <Route path="/aux-arena" element={<AuxArena/>}></Route> */}
         </Routes>
       </header>
     </div>

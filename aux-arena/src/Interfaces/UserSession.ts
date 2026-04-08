@@ -6,7 +6,6 @@ export interface UserSession {
     displayName : string;
     lobbyId : number;
     lobbyCode : string;
-    lastPingTime : string;
     active : boolean;
     isSpectator : boolean;
     host: boolean;

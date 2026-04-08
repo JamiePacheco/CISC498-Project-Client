@@ -2,8 +2,8 @@ import { useState } from 'react';
 import './overlay.css'
 import { authenticateUser } from '../service/AuthenticationService';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from './Store/store';
-import { login } from './Store/userSlices';
+import { AppDispatch, RootState } from '../redux/store';
+import { login } from '../redux/Store/userSlices';
 
 
 export interface login{
@@ -32,7 +32,7 @@ export default function LoginOverlay({setLoggingIn}: login){
         dispatch(login({
             userInfo: {userID: 1, displayName: nameInput, isReady: false, isSpectator: false, score: 0},
             sessionID: 1,
-            lastPingTime: new Date(),
+            lastPingTime: "",
             lobbyID: 1}
         ));
         setLoggingIn(false)

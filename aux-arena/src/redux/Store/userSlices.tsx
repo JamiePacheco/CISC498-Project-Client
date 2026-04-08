@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User, MainUser, createMainUser } from "../Types/User"
+import { User, MainUser, createMainUser } from "../../Pages/Types/User"
 
 type UserState = MainUser;
 
@@ -9,7 +9,7 @@ interface loginPayload {
     userInfo: User;
     sessionID: number;
     lobbyID: number;
-    lastPingTime: Date;
+    lastPingTime: string;
 }
 
 interface lobbyPayload {

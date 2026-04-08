@@ -1,12 +1,30 @@
-import { rxStomp } from "./RxStompInstance";
+import { LobbySession } from "../Interfaces/LobbySession";
+import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
+import { UserSession } from "../Interfaces/UserSession";
+import { rxStomp } from "./RxStompClient";
 
-// body should eventually have an explicit type of the list of all possible socket bodies but this shall wait...
-export function sendMessage(destination : string, body : any) {
-
+// generic send message function to specified socket endpoint
+function sendMessage(destination : string, body : any) {
     console.log(`Sending message: ${JSON.stringify(body)}`)
-
     rxStomp.publish({
         destination,
         body : JSON.stringify(body),
     });
+}
+
+// send new chat message to some specified lobby
+export function sendChatMessage({lobbyId, gameLobbyMessage}: {lobbyId : number, gameLobbyMessage : GameLobbyMessage}) {
+    console.log("Chat Message")
+    console.log(gameLobbyMessage)
+    sendMessage(`/app/game-lobby/send-message/${lobbyId}`, gameLobbyMessage);
+}
+
+// send new user information to some specified lobby
+export function sendUserSessionMessage({gameLobby, userSessionDetails} : {gameLobby : LobbySession, userSessionDetails : UserSession}) {
+    sendMessage(`/app/game-lobby/join/${gameLobby.id}`, userSessionDetails);
+}
+
+export const socketCommandMap : Record<string, Function> = {
+    "lobby/joinLobby" : sendUserSessionMessage,
+    "lobby/sendMessage" : sendChatMessage
 }

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../Types/User"
+import { User } from "../../Pages/Types/User"
 
 type Chat = {
     userID: number;

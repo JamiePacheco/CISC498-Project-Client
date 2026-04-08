@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlices"
-import lobbyReducer from "./lobbySlices"
-import gameReducer from "./gameSlices"
+import userReducer from "./Store/userSlices"
+import lobbyReducer from "./slices/lobbySlice"
+import gameReducer from "./Store/gameSlices"
+import { rxStompMiddleware } from "./rxStompMiddleware";
 
 export const store = configureStore({
     reducer: {
@@ -9,6 +10,8 @@ export const store = configureStore({
         lobby: lobbyReducer,
         game: gameReducer
     },
+    middleware : getDefaultMiddleware => 
+        getDefaultMiddleware().concat(rxStompMiddleware)
 });
 
 // helpful types for TypeScript

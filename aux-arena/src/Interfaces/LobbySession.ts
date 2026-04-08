@@ -1,3 +1,4 @@
+import { GameLobbyMessage } from "./socket/GameLobbyMessage";
 import { UserSession } from "./UserSession";
 
 export type GameLobbyStatus = "WAITING" | "GAME_IN_PROGRESS" | "INACTIVE" | "GAME_FINISHED"
@@ -14,7 +15,8 @@ export interface LobbySession {
     password : string;
     // author : LobbyUser; TODO add this when user login is more developed
     lastUpdated : string;
-    activeUsers : UserSession[];
+    activeUsers : Record<string, UserSession>;
     host: UserSession;
     active : boolean;
+    messages: GameLobbyMessage[]
 }
