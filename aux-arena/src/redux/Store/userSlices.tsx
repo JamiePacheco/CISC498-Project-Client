@@ -24,11 +24,14 @@ const userSlice = createSlice({
         login: (state, action: PayloadAction<loginPayload>) => {
             Object.assign(state, action.payload);
             state.loggedIn = true;
+            console.log("Logging in");
         },
         enterLobby: (state, action: PayloadAction<lobbyPayload>) => {
             state.lobbyID = action.payload.lobbyID;
         },
-        logout: () => createMainUser()
+        logout: () => {createMainUser();
+            console.log("Logging Out");
+        }
     }
 });
 

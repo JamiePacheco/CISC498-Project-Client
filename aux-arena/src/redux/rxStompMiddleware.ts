@@ -14,8 +14,9 @@ export const rxStompMiddleware : Middleware = store => next => action => {
 
     console.log("Middleware Activating")
     console.log(action)
+    const result = next(action);
     if (isReduxAction(action) && action.type.startsWith('lobby/')) {
-        const result = next(action);
+        console.log("Made it in");
 
         const state = store.getState().lobby;
 
@@ -51,6 +52,6 @@ export const rxStompMiddleware : Middleware = store => next => action => {
             subscribeUser(store, state.lobbySession.id);
             subscribed = true
         }
-        return result;
     }
+    return result;
 }
