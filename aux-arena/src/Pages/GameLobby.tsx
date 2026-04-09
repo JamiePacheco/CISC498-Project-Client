@@ -1,4 +1,4 @@
-import "./Lobby.css"
+import "./Css/Lobby.css"
 import "./Css/PixelCorners.css"
 
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { joinLobby, resetConnection, sendMessage } from "../redux/slices/lobbySlice";
 import { formatTimestampWithLocale } from "../utility/date";
+import ChatBox from "./components/Chat";
 
 export interface information{
   user: string;
@@ -173,40 +174,8 @@ export default function GameLobbyPage() {
                         </div>
                     )})
                 } 
-               
             </div>
-            <div className="chat-bar pixel-corners">
-                <div className="chatbox " ref={messagesRef}>
-                        {chat.map(u => {
-                            return (
-                                <span className = "message">
-                                    [{u.timestamp && formatTimestampWithLocale(u.timestamp)}]  <b>{u.author}: </b> {u.textMessage}
-                                </span>
-                            )
-                        })}
-                </div>
-                <input id="Chat" type="text" className="send-box" value={input} onKeyDown={() => {}} onChange={() => {}}></input>
-                <button className="send-button" onClick={() => {}}>Send</button>
-
-                <input type="text" className="send-box" value={input} onKeyDown={() => {}} onChange={(e) => {setInput(e.target.value)}}></input>
-                <button className="send-button" onClick={()=> {
-                    
-                    const newMessage : GameLobbyMessage = {
-                        textMessage : input,
-                        author : user.nickname
-                    }
-                    
-                    
-                    dispatch(
-                        sendMessage(
-                            {   
-                                lobbyId : gameLobbySession.id,
-                                gameLobbyMessage: newMessage
-                            }
-                        )
-                    );
-                }}>Send</button>
-            </div>
+            <ChatBox/>
         </div>
     )
 }

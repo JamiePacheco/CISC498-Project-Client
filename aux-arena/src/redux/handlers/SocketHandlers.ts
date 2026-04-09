@@ -5,8 +5,9 @@ import { UserSession } from "../../Interfaces/UserSession";
 import { GameLobbyMessage } from "../../Interfaces/socket/GameLobbyMessage";
 
 export const joinLobby = async (lobbyId : number, newUserSession : UserSession) => {
+    const dest = `/app/game-lobby/join/${lobbyId}`;
     rxStomp.publish({
-        destination: `/app/game-lobby/join/${lobbyId}`,
+        destination: dest,
         body: JSON.stringify(newUserSession)
 
     });

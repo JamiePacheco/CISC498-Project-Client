@@ -1,15 +1,15 @@
 import { useState } from "react";
-import "../App.css"
-import './overlay.css'
-import "./Css/PixelCorners.css"
+import "../../App.css"
+import '../Css/overlay.css'
+import "../Css/PixelCorners.css"
 import { Link, useNavigate } from "react-router-dom";
-import { LobbyUserRole } from "../Interfaces/LobbyUser";
-import { connectToGameLobby } from "../service/LobbySessionService";
-import { GameLobbyPageState } from "./GameLobby";
-import { getGameLobby } from "../service/GameLobbyService";
-import { GameLobby } from "../Interfaces/GameLobby";
+import { LobbyUserRole } from "../../Interfaces/LobbyUser";
+import { connectToGameLobby } from "../../service/LobbySessionService";
+import { GameLobbyPageState } from "../GameLobby";
+import { getGameLobby } from "../../service/GameLobbyService";
+import { GameLobby } from "../../Interfaces/GameLobby";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState } from "../../redux/store";
 import { link } from "node:fs";
 
 export interface userStatus{

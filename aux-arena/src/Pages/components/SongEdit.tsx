@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import "./overlay.css"
-import "./Css/PixelCorners.css"
+import "../Css/overlay.css"
+import "../Css/PixelCorners.css"
 
 type items = {
     title:string;
