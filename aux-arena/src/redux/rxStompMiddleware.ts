@@ -14,6 +14,7 @@ export const rxStompMiddleware : Middleware = store => next => action => {
 
     console.log("Middleware Activating")
     console.log(action)
+    
     if (isReduxAction(action) && action.type.startsWith('lobby/')) {
         const result = next(action);
 
