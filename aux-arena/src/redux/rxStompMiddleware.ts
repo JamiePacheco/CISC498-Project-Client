@@ -16,7 +16,6 @@ export const rxStompMiddleware : Middleware = store => next => action => {
     console.log(action)
     const result = next(action);
     if (isReduxAction(action) && action.type.startsWith('lobby/')) {
-        console.log("Made it in");
 
         const state = store.getState().lobby;
 
