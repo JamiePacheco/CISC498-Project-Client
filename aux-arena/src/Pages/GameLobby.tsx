@@ -19,6 +19,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { joinLobby, resetConnection, sendMessage } from "../redux/slices/lobbySlice";
 import { formatTimestampWithLocale } from "../utility/date";
 import ChatBox from "./components/Chat";
+import LobbySettings from "./components/LobbySettingOverlay";
 
 export interface information{
   user: string;
@@ -152,6 +153,7 @@ export default function GameLobbyPage() {
 
     return (
         <div>
+            <LobbySettings></LobbySettings>
             <div className="lobbyStatus">
                 <div>Players: {lobbyUsers.length} / {gameLobbySession?.maxPlayers} </div>
                 <div> Lobby ID: {gameLobbySession?.lobbyCode}</div>

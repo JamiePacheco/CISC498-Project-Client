@@ -85,7 +85,88 @@
 }
 
 .forgot-password{
-    cursor: pointer;
-    font-size: 0.5em;
-    color: rgba(77, 190, 255, 1);
+  cursor: pointer;
+  font-size: 0.5em;
+  color: rgba(77, 190, 255, 1);
+}
+
+.gear{
+  position:fixed;
+  height: 10%;
+  z-index:10;
+  cursor: pointer;
+  left: 94%;
+}
+
+.gear:hover{
+  animation: gear-spin infinite linear 2s;
+}
+
+@keyframes gear-spin{
+  from{
+    transform: rotate(0deg);
+  }
+  to{
+    transform: rotate(360deg);
+  }
+}
+
+.menu{
+  width: 40%;
+  left: 0%;
+  margin-left: 7em;
+  z-index: 11;
+  background: rgba(4, 10, 57, 1);
+  align-items: center;
+  justify-content: center;
+  display: grid;
+}
+
+.scroll{
+  width: 40%;
+  height: 50vh;
+  position: fixed;
+  overflow: scroll;
+}
+
+.slider{
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  height: 25px; /* Specified height */
+  background:rgb(21, 32, 118); 
+  border-radius: 2em;
+  width: 40%;
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+.switch {
+  position: absolute;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  z-index: 12;
+}
+
+.small-slider{
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 60%;
+  height: 25px;
+  background: rgb(21, 32, 118);
+  border-radius: 2em;
+  cursor: pointer;
+  transition: 0.2s;
+
+}
+.false{
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 60%;
+  height: 25px;
+  background: white;
+  border-radius: 2em;
+  cursor: pointer;
+  transition: 0.2s;
 }
