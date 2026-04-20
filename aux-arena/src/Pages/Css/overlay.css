@@ -90,6 +90,14 @@
   color: rgba(77, 190, 255, 1);
 }
 
+.Settings{
+  position:fixed;
+  height: 10%;
+  z-index:10;
+  left: 87%;
+  top: 3.5%;
+}
+
 .gear{
   position:fixed;
   height: 10%;

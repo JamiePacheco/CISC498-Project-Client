@@ -34,6 +34,7 @@ export default function LobbySettings(){
 
     return (
         <div>
+            <div className="Settings">Settings</div>
             <img alt="Setting Gear" src={gear} className="gear" onClick={()=>{openMenu(!menu)}}></img>
             {menu && <div className="overlay menu pixel-corners" style={{paddingTop: "5%"}}>
                 <div className="scroll">
