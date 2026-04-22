@@ -10,6 +10,7 @@ import ChatBox from "./components/Chat";
 import ViewingPhase from "./AuxArenaComponents/ViewingPhase";
 import VotingPhase from "./AuxArenaComponents/VotingPhase";
 import WinnerPhase from "./AuxArenaComponents/WinnerPhase";
+import Timer from "./AuxArenaComponents/Timer";
 
 //Prompt Phase: Players creates a prompt
 //Picking Phase: Choosing a song (Only for participating players)
@@ -18,14 +19,14 @@ import WinnerPhase from "./AuxArenaComponents/WinnerPhase";
 //Voting Phase: Picking the song you like most/fits the theme best
 //Winner Phase: Show winner
 
-const phaseTranslation: Record<number, string> = {
-    0: "Prompt",
-    1: "Picking",
-    2: "Viewing1",
-    3: "Viewing2",
-    4: "Voting",
-    5: "Winner"
-}
+const phaseTranslation = [
+    "Prompt",
+    "Picking",
+    "Viewing1",
+    "Viewing2",
+    "Voting",
+    "Winner"
+]
 
 export default function AuxArena(){
     const user = useSelector((state:RootState)=>state.user);
@@ -67,7 +68,7 @@ export default function AuxArena(){
 
     return (
          <div className="game-screen">
-            <div className={"timer"}>{game.gameInfo.countDown/**Change this to end time - curr time */}</div>
+            <Timer/>
             <button onClick={nextPhase} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
             Phase: {phaseTranslation[game.gameInfo.gamePhase]}
             <div className={"prompt-box"}>
