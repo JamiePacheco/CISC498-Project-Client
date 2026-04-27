@@ -7,7 +7,7 @@ import { rxStomp } from "./RxStompClient";
 function sendMessage(destination : string, body : any) {
     console.log(`Sending message: ${JSON.stringify(body)}`)
     rxStomp.publish({
-        destination,
+        destination: destination,
         body : JSON.stringify(body),
     });
 }

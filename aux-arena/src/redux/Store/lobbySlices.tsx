@@ -59,7 +59,7 @@ const lobbySlice = createSlice({
             state.userList.splice(num, 1);
             delete state.usersByID[action.payload.userID];
             state.chatLog = updateChat(state.chatLog, {userID: -1,
-                    message: `Player: ${leavingUser.displayName} has left the lobby`
+                    message: `Player: "${leavingUser.displayName}" has left the lobby`
             })
             state.numPlayer--;
         }, newMessage: (state, action: PayloadAction<Chat>) => {

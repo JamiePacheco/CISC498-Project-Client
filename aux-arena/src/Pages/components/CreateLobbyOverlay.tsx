@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import '../App.css';
-import './overlay.css'
-import "./Css/PixelCorners.css"
+import '../../App.css';
+import '../Css/overlay.css'
+import "../Css/PixelCorners.css"
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { createNewGameLobby } from '../service/GameLobbyService';
-import { GameLobby } from '../Interfaces/GameLobby';
-import { LobbyUserRole } from '../Interfaces/LobbyUser';
-import { GameLobbyPageState } from './GameLobby';
+import { RootState } from '../../redux/store';
+import { createNewGameLobby } from '../../service/GameLobbyService';
+import { GameLobby } from '../../Interfaces/GameLobby';
+import { LobbyUserRole } from '../../Interfaces/LobbyUser';
+import { GameLobbyPageState } from '../GameLobby';
 
 export interface userStatus{
     setCreating: (isCreating:interaction)=>void;
@@ -44,17 +44,6 @@ export default function CreateLobby({setCreating}: userStatus){
     function passwordHelper(event:any){
         setPassword(event.target.value)
     }
-
-    type Packet = { // Packet to send to server
-        name: string //Username
-        maxPlayer:number
-        lobbyPrivacy:boolean
-        password?:string
-    }
-
-    // function sendPacket(){
-    //     const packet:Packet = {name:user.userInfo.displayName, maxPlayer:numPlayers, lobbyPrivacy:lobbyPrivate, password:password}
-    // }
 
     const createGameLobby = () => {
 
