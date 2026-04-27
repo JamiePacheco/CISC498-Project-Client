@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Message } from "../Interfaces/socket/Message";
+import { UserEvent } from "../Interfaces/socket/UserEvent";
 import {Client, IMessage, StompSubscription } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 

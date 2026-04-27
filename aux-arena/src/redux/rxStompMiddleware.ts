@@ -53,4 +53,5 @@ export const rxStompMiddleware : Middleware = store => next => action => {
         }
     }
     return result;
+    return result;
 }
