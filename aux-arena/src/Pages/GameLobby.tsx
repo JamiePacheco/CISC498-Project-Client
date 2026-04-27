@@ -7,7 +7,6 @@ import { UserSession } from "../Interfaces/UserSession";
 import { useGameLobbyEvents } from "../Hooks/topics/useGameLobbyEvents";
 import { LobbyUser } from "../Interfaces/LobbyUser";
 import { useStompTopic } from "../Hooks/UseStompTopic";
-import { Message } from "../Interfaces/socket/Message";
 import { LobbySession } from "../Interfaces/LobbySession";
 import { GameLobbyEvent, MessageEvent } from "../Interfaces/socket/GameLobbyEvent";
 import { connectToGameLobby } from "../service/LobbySessionService";

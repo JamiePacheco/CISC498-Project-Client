@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { GameLobbyEvent, MessageEvent } from "../../Interfaces/socket/GameLobbyEvent";
 import { UserSession } from "../../Interfaces/UserSession";
-import { Message } from "../../Interfaces/socket/Message";
+import { UserEvent } from "../../Interfaces/socket/UserEvent";
 import { GameLobbyMessage } from "../../Interfaces/socket/GameLobbyMessage";
 import { LobbySession } from "../../Interfaces/LobbySession";
 
@@ -95,13 +95,13 @@ const lobbySlice = createSlice({
             state.chat.push(action.payload);
         },
 
-        userMessageReceived(state, action: PayloadAction<Message<any>>) {
+        userMessageReceived(state, action: PayloadAction<UserEvent<any>>) {
             console.log("user message received")
             const message = action.payload;
 
             if (message.messageStatus !== "SUCCESS") return;
 
-            switch (message.messageType) {
+            switch (message.userEventType) {
                 case "USER_UPDATE":
                     // make sure all instances of Java instance are converted to string
                     
