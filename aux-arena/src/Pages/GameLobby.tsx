@@ -20,26 +20,10 @@ import { formatTimestampWithLocale } from "../utility/date";
 import ChatBox from "./components/Chat";
 import LobbySettings from "./components/LobbySettingOverlay";
 
-export interface information{
-  user: string;
-  loggedIn: string;
-}
-
 export interface GameLobbyPageState {
     id : number,
     lobbyCode : string,
     password : string,
-}
-
-export interface IMessage {
-    message : string,
-    name : string;
-}
-
-
-type messages = {//Might not be needed anymore
-    userID: number;
-    message: string;
 }
 
 export default function GameLobbyPage() {
@@ -50,23 +34,9 @@ export default function GameLobbyPage() {
     // this is to access location state variables
     const location = useLocation();
 
-    const [maxPlayer, setMaxPlayers] = useState<number>(20) // Not letting change in lobby
-    const [lobby, setLobby] = useState<LobbySession | null>(null)
-
     // this should be changed to be using state manager
     const [user, setUser] = useState<LobbyUser>(location.state.user)
 
-    // const [userSession, setUserSession] = useState<UserSession | null>(null);
-
-    // const {lobby} = location.state 
-    const [playerList, updatePlayerList] = useState<UserSession[]>([])
-    const playerCount = playerList.length
-    const [chatLog, updateChat] = useState<IMessage[]>([]) // Should pair with user who sent it 
-    const [input, setInput] = useState<string>("")// Helps with sending messages to chat
-
-    //Auto scroll chat
-    const messagesRef = useRef<HTMLDivElement | null>(null)
-    const bottomRef = useRef<HTMLDivElement | null>(null)
 
     const dispatch = useDispatch();
     
@@ -120,24 +90,6 @@ export default function GameLobbyPage() {
         }
     }, [dispatch, gameLobbySession, location.state.lobby, user])
 
-    // function chatScroll(){
-    //     bottomRef.current?.scrollIntoView({behavior: "smooth"})
-    // }
-
-    // function checkChatScroll():boolean{
-    //     const chatbox = messagesRef.current;
-    //     if(!chatbox)
-    //         return false;
-    //     const threshold = 100; //pixels from bottom of chatbox
-    //     const position = chatbox.scrollTop + chatbox.clientHeight;
-    //     const height = chatbox.scrollHeight;
-    //     return position >= height - threshold;
-    // }
-
-    // useEffect(()=>{
-    //     if(checkChatScroll())
-    //         chatScroll();
-    // }, [])
 
     console.log("Current State")
     console.log(gameLobbySession)
