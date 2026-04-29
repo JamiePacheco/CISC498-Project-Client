@@ -1,3 +1,4 @@
+import { GameSettings } from "../Interfaces/GameSettings";
 import { LobbySession } from "../Interfaces/LobbySession";
 import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
 import { UserSession } from "../Interfaces/UserSession";
@@ -24,7 +25,14 @@ export function sendUserSessionMessage({gameLobby, userSessionDetails} : {gameLo
     sendMessage(`/app/game-lobby/join/${gameLobby.id}`, userSessionDetails);
 }
 
+export function startGameSession({gameLobby, gameSettings} : {gameLobby : LobbySession, gameSettings : GameSettings}) {
+    console.log("Starting Game Session")
+    sendMessage(`/app/game-lobby/start-game/${gameLobby.id}`, gameSettings)
+}
+
+
 export const socketCommandMap : Record<string, Function> = {
     "lobby/joinLobby" : sendUserSessionMessage,
-    "lobby/sendMessage" : sendChatMessage
+    "lobby/sendMessage" : sendChatMessage,
+    "lobby/startGameSession" : startGameSession 
 }

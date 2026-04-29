@@ -2,7 +2,7 @@ import "./Css/Lobby.css"
 import "./Css/PixelCorners.css"
 
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserSession } from "../Interfaces/UserSession";
 import { useGameLobbyEvents } from "../Hooks/topics/useGameLobbyEvents";
 import { LobbyUser } from "../Interfaces/LobbyUser";
@@ -15,16 +15,24 @@ import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
 import { User } from "./Types/User"
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { joinLobby, resetConnection, sendMessage } from "../redux/slices/lobbySlice";
+import { joinLobby, resetConnection, sendMessage, startGameSession } from "../redux/slices/lobbySlice";
 import { formatTimestampWithLocale } from "../utility/date";
 import ChatBox from "./components/Chat";
 import LobbySettings from "./components/LobbySettingOverlay";
+import { GameSettings } from "../Interfaces/GameSettings";
 
 export interface GameLobbyPageState {
     id : number,
     lobbyCode : string,
     password : string,
 }
+
+const defaultSettings : GameSettings = {
+    gameMode : "PROMPT_BATTLE", 
+    timed: true, 
+    maxDisplayTime : 30,
+    rounds : 1
+} 
 
 export default function GameLobbyPage() {
 
@@ -37,6 +45,7 @@ export default function GameLobbyPage() {
     // this should be changed to be using state manager
     const [user, setUser] = useState<LobbyUser>(location.state.user)
 
+    const [gameSettings, setGameSettings] = useState<GameSettings>(defaultSettings);
 
     const dispatch = useDispatch();
     
@@ -44,6 +53,12 @@ export default function GameLobbyPage() {
     const lobbyUsers = useSelector((state : RootState) => state.lobby.users);
     const userSession = useSelector((state : RootState) => state.lobby.userSession);
     const chat = useSelector((state : RootState) => state.lobby.chat);
+    const sockets = useSelector((state : RootState) => state.lobby.socketPackets);
+
+
+    const gameSession = useSelector((state : RootState) => state.lobby.gameSession);
+
+    const nav = useNavigate();
 
     useEffect(() => {
         // only runs a single time per component lifecycle (fixes double render caused by strict mode)
@@ -90,12 +105,29 @@ export default function GameLobbyPage() {
         }
     }, [dispatch, gameLobbySession, location.state.lobby, user])
 
+    useEffect(() => {
+        if (gameLobbySession?.status === "GAME_IN_PROGRESS") {
+            nav(`/game-session`)
+        }
+    }, [gameLobbySession?.status, nav]) 
+
+    const startGame = () => {
+        if (!gameLobbySession) return;
+
+        dispatch(
+            startGameSession({
+                "gameLobby" : gameLobbySession,
+                "gameSettings" : gameSettings
+            })
+        );
+    }
 
     console.log("Current State")
     console.log(gameLobbySession)
     console.log(userSession)
     console.log(lobbyUsers)
     console.log(chat)
+    console.log(gameSession)
 
     if (!gameLobbySession) {
         return <div> oops </div>
@@ -108,10 +140,11 @@ export default function GameLobbyPage() {
             <div className="lobbyStatus">
                 <div>Players: {lobbyUsers.length} / {gameLobbySession?.maxPlayers} </div>
                 <div> Lobby ID: {gameLobbySession?.lobbyCode}</div>
-                <Link to={"/aux-arena"} className="button" >Start</Link>
+                <button className = "button" onClick = {startGame} disabled = {!userSession?.host}> Start Game </button>
             </div>
             <div className="playerbox"            
             >
+                                <button className="button" onClick = {() => console.log(sockets)}> Socket </button>
                 {
                     lobbyUsers.map((user : UserSession, index) => {
                         

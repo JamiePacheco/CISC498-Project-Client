@@ -6,15 +6,16 @@ export type PromptPairStatus = "WAITING_FOR_PLAYERS" | "WAITING_FOR_VOTES" | "RE
 
 export interface Prompt {
     prompt : string,
-    authorId : string
+    authorId : string,
+    wasGenerated : boolean
 }
 
 export interface PromptPair {
 
     promptId : string,
     prompt : Prompt,
-    playerList : PlayerState[],
+    players : PlayerState[],
     promptSubmissions : Record<string, PromptSubmission>,
-    votes: Vote[],
+    voteSubmissions: Vote[],
     promptPairStatus: PromptPairStatus
 }

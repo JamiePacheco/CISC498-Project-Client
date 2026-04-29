@@ -4,25 +4,40 @@ import { UserSession } from "../../Interfaces/UserSession";
 import { UserEvent } from "../../Interfaces/socket/UserEvent";
 import { GameLobbyMessage } from "../../Interfaces/socket/GameLobbyMessage";
 import { LobbySession } from "../../Interfaces/LobbySession";
+import { GameSession } from "../../Interfaces/GameSession";
+import { RoundSession } from "../../Interfaces/RoundSession";
+import { GameSettings } from "../../Interfaces/GameSettings";
 
 export interface LobbyConnectionState {
     lobbyId: number | null;
     lobbySession?: LobbySession;
+    gameSession? : GameSession;
+    roundSession? : RoundSession;
     userSession?: UserSession;
     users: UserSession[];
     chat: GameLobbyMessage[];
     lastSequence: number;
+    socketPackets: GameLobbyEvent<any>[]; // debugging purposes, used to check what packets have been sent to the user
 }
 
 const initialState: LobbyConnectionState = {
     lobbyId: null,
     lobbySession: undefined,
     userSession: undefined,
+    gameSession: undefined,
+    roundSession: undefined,
     users: [],
     chat: [],
+    socketPackets: [],
     lastSequence: 0,
 };
 
+/* TODO 
+    - Implement all needed models into the respective folders (also double check properties and make sure they are the same)
+    - Implement gameSession and roundSession into redux state
+    - Implement Start Game and make sure gameSession loads and is sent to all users (have basic test of all properties)
+    - Make it so phasechange changes the component in AuxArena.tsx
+*/
 const lobbySlice = createSlice({
     name: "lobby",
     initialState,
@@ -44,8 +59,16 @@ const lobbySlice = createSlice({
         sendMessage(state, action: PayloadAction<{lobbyId : number, gameLobbyMessage : GameLobbyMessage}>) {
             // middleware sends socket message
         },
+        startGameSession(state, action: PayloadAction<{gameLobby : LobbySession, gameSettings : GameSettings}>) {
+            // middleware will handle sending socket request
+        },
         lobbyEventReceived(state, action: PayloadAction<GameLobbyEvent<any>>) {
             const event = action.payload;
+
+            console.log(`Event Receieved: ${event.type}`)
+            console.log(event)
+
+            state.socketPackets.push(event);
 
             if (event.sequence <= state.lastSequence) return;
             state.lastSequence = event.sequence;
@@ -87,9 +110,21 @@ const lobbySlice = createSlice({
                         u => !removedIds.has(u.tempId)
                     );
                     break;
+                case MessageEvent.GAME_STARTED:
+                    state.gameSession = event.payload.gameSession;
+                    if (state.lobbySession) {
+                        state.lobbySession.status = event.payload.lobbyStatus;
+                        state.lobbySession.lastUpdated = event.payload.lastUpdated;
+                    }
+                    break;    
+                case MessageEvent.PHASE_CHANGE:
+                    if (state.roundSession && state.gameSession) {
+                        state.roundSession.roundStatus = event.payload.roundStatus;
+                        state.gameSession.lastUpdatedAt = event.timestamp;
+                        state.roundSession.phaseDuration = event.payload.phaseDuration;
+                    }
             }
         },
-
         lobbyMessageReceived(state, action: PayloadAction<GameLobbyMessage>) {
             console.log("lobby message received")
             state.chat.push(action.payload);
@@ -142,6 +177,9 @@ const lobbySlice = createSlice({
 export const {
     joinLobby,
     sendMessage,
+    startGameSession,
+
+
     lobbyEventReceived,
     lobbyMessageReceived,
     userMessageReceived,

@@ -14,8 +14,6 @@ export default function ChatBox(){
 
     function sendChatMessage(){
 
-
-
         if (lobby.userSession === undefined || lobby.lobbySession == null) return;
 
         const newMessageContent : GameLobbyMessage = {
@@ -88,6 +86,7 @@ export default function ChatBox(){
                 }}
                 ></input>
                 <button className="send-button" onClick={sendChatMessage}>Send</button>
+                
             </div>
     )
 }

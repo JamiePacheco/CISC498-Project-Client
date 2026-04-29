@@ -1,4 +1,5 @@
 import { PromptSubmission } from "./PromptSubmission";
+import { VoteSubmission } from "./VoteSubmission";
 
 export interface PlayerState {
     userId : number,
@@ -7,4 +8,5 @@ export interface PlayerState {
     ready : boolean,
     isSpectator : boolean,
     promptSubmissions : PromptSubmission[]
+    voteSubmissions : VoteSubmission[]
 }

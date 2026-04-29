@@ -30,11 +30,12 @@ const phaseTranslation: Record<number, string> = {
 export default function AuxArena(){
     const user = useSelector((state:RootState)=>state.user);
     const game = useSelector((state:RootState)=>state.game);
+    const lobby = useSelector((state:RootState)=>state.lobby);
     const dispatch = useDispatch<AppDispatch>();
 
     // * Local States * //
     const [isPlayer, setPlayerStatus] = useState<boolean>(false);
-    const [showChat, setChat] = useState<Boolean>(false);
+    const [showChat, setChat] = useState<Boolean>(true);
 
     function toggleChat(){
         setChat(!showChat);
@@ -68,7 +69,10 @@ export default function AuxArena(){
     return (
          <div className="game-screen">
             <div className={"timer"}>{game.gameInfo.countDown/**Change this to end time - curr time */}</div>
+
             <button onClick={nextPhase} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
+
+            
             Phase: {phaseTranslation[game.gameInfo.gamePhase]}
             <div className={"prompt-box"}>
                 {`${game.gameInfo.prompt !== ""}`? `Prompt: ${game.gameInfo.prompt}` : "No Prompts Currently"}

@@ -7,11 +7,13 @@ export enum RoundStatus {
     VOTING,
     SCORING,
     WAITING,
+    TRANSITIONING
 }
-
 
 export interface RoundSession {
     roundId : number,
     roundStatus : RoundStatus,
-    promptPairs : Record<string, PromptPair>
+    promptPairs : Record<string, PromptPair>,
+    phaseDuration : number,
+    currentPromptId : string,
 }
