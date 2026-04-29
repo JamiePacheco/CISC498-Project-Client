@@ -159,3 +159,25 @@
     60% { background: linear-gradient(to right, rgba(45, 0, 136, 1) 80%, rgba(255, 89, 0, 1) 20%); }
     100% { background: linear-gradient(to right, rgba(45, 0, 136, 1) 100%, rgba(255, 89, 0, 1) 0%); }
 }
+
+.timer{
+    position: absolute;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:0.5rem;
+    top: 15%;
+    left: 2rem;
+    border: 5px solid;
+    border-radius: 30rem;
+    width: 1.4em;
+    height: 1.4em;
+}
+
+.Prompt{border-color: rgba(232, 39, 17, 1);}
+.Picking{border-color: rgba(250, 191, 128, 1);}
+.Viewing1{border-color: rgba(233, 229, 8, 1);}
+.Viewing2{border-color: rgba(6, 239, 26, 1)}
+.Voting{border-color: rgba(36, 65, 255, 1)}
+.Winner{border-color: rgba(187, 0, 255, 1);}

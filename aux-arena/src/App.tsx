@@ -24,7 +24,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/game-lobby' element={<GameLobby/>}/>
-          {/* <Route path="/aux-arena" element={<AuxArena/>}></Route> */}
+          <Route path="/aux-arena" element={<AuxArena/>}></Route>
         </Routes>
       </header>
     </div>

@@ -70,6 +70,7 @@ const gameSlice = createSlice({
             state.player2.votes = action.payload.player2Votes;
         },changePhase: (state)=> {
             const temp:number = state.gameInfo.gamePhase;
+            state.gameInfo.countDown = 10;
             state.gameInfo.gamePhase = (temp+1) % 6;
         },selectSong: (state, action:PayloadAction<songSelectPayload>)=>{
             if(action.payload.playerNumber === 1){
@@ -77,10 +78,15 @@ const gameSlice = createSlice({
             }else if(action.payload.playerNumber=== 2){
                 state.player2.chosenSong = action.payload.songInfo;
             }
-        },endGame: () => initialState
+        }, decrement: (state)=>{
+            if(state.gameInfo.countDown > 0){
+                state.gameInfo.countDown--;
+            }
+        },
+        endGame: () => initialState
     }
 })
 
 export default gameSlice.reducer;
 
-export const { setPlayer, setPrompt, assignVotes, selectSong, changePhase, endGame } = gameSlice.actions;
+export const { setPlayer, setPrompt, assignVotes, selectSong, changePhase, endGame, decrement } = gameSlice.actions;
