@@ -6,6 +6,12 @@ import { useEffect, useState } from "react";
 import { selectSong } from "../../redux/Store/gameSlices";
 import testCase from "../../testCaseTOBEREMOVED/aux_arena_bird_brain_test_data.json"
 
+import "../Css/PixelCorners.css"
+import "../Css/AuxArena.css"
+import { PromptPair } from "../../Interfaces/PromptPair";
+import { searchMusic } from "../../service/YoutubeService";
+import { SonQueryResult } from "./SongQueryResults";
+
 interface inputs{
     isPlayer: boolean;
 }
@@ -15,6 +21,9 @@ export default function PickingPhase({
     }:inputs){
     
     const game = useSelector((state: RootState)=>state.game);
+
+    const prompts = useSelector((state : RootState)=>state.lobby.assignedPrompts);
+
     const dispatch = useDispatch<AppDispatch>();
     
     const [input, setInput] = useState<string>("");
@@ -26,6 +35,9 @@ export default function PickingPhase({
     const [isEditing, setEditing] = useState<boolean>(false);
     const [resultList, setResults] = useState<song[]>([]);
     //Pulled from server
+
+    const [currentPrompt, setCurrentPrompt] = useState(0);
+
 
     function updateInput(event:any){
         setInput(event.target.value)
@@ -48,33 +60,54 @@ export default function PickingPhase({
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             //Send "input" to server, input is song name here
-            const list:song[] = testCase.items.map(i => ({
-                title: i.snippet.title,
-                thumbnail:i.snippet.thumbnails.high.url,
-                url: i.id.videoId,
-                startTimeStamp: 0,
-                endTimeStamp: 15
-            }));
-            setResults([...list]);
-            dispatch((selectSong({playerNumber:2, songInfo:list[1]})));
-            setInput("");
+
+            searchMusic(input).then(res => {
+                console.log(res)
+                const searchResults = res.data.responseContent;
+
+                console.log(searchResults)
+
+                const list:song[] = searchResults.items.map((i: any) => ({
+                    title: i.snippet.title,
+                    thumbnail:i.snippet.thumbnails.high.url,
+                    url: i.id.videoId,
+                    startTimeStamp: 0,
+                    endTimeStamp: 15
+                }));
+                setResults([...list]);
+                setInput("");
+            })    
         }
     };
 
+    const selectPrompt = (idx : number) => {
+        setCurrentPrompt(idx);
+    }
+
     return (
-         <div>
-            {isPlayer && <div> 
-                Search a song: 
-                <br></br>
-                <input type="text" placeholder="Press Enter to send" onKeyDown={handleKeyDown}
-                    value={input} onChange={updateInput} className="text-box">
-                </input>
-                <br></br>
-                <div className="game-display">
-                    Results: {selectedSong.title}
-                    {resultList[0] && <Results isEditing={isEditing} setEditing={setEditing} timeStamp={myTimeStamp} setTimeStamp={setTimeStamp} songs={resultList} 
-                    setSelected={setSelection} selected={selectedSong}></Results>}
+         <div className="pickingBody pixel-corners">
+            {isPlayer && <div className = "pickingContent">
+                
+                <div className="prompt-tabs">
+                    {prompts.map((p, idx) => {
+                        return (
+                            <div onClick={() => selectPrompt(idx)} > Prompt {idx + 1} </div>
+                        )
+                    })
+                    }
                 </div>
+                
+                
+                <div style = {{display : currentPrompt === 0 ? "block" : "none"}}>
+                    <div> Prompt: "{prompts[0].prompt.prompt}"</div> 
+                    <SonQueryResult promptPair={prompts[0]} />
+                </div>
+            
+                <div style = {{display : currentPrompt === 1 ? "block" : "none"}}>
+                    <div> Prompt: "{prompts[1].prompt.prompt}"</div> 
+                    <SonQueryResult promptPair={prompts[1]} />
+                </div>
+                                
             </div>}
             {!isPlayer && <div>
                 {game.player1.userInfo.displayName} and {game.player2.userInfo.displayName} are choosing songs, get ready to vote!

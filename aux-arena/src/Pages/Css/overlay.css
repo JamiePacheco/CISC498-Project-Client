@@ -3,6 +3,10 @@
 .overlay{
   background: linear-gradient(to top left, rgba(32, 1, 94, 1) 0%, rgba(64, 0, 147, 1) 100%);
   position:absolute;
+
+  display: flex;
+  flex-direction: column;
+
   border-radius: 1em;
   width: 40vh;
   height: 50vh;

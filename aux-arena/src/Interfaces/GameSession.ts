@@ -1,3 +1,4 @@
+import { GameSettings } from "./GameSettings";
 import { PlayerState } from "./PlayerState";
 import { RoundSession } from "./RoundSession";
 
@@ -11,6 +12,7 @@ export interface GameSession {
     lastUpdatedAt : string
     players : Record<string, PlayerState>
     currentRound : RoundSession,
-    rounds : RoundSession[] 
+    rounds : RoundSession[],
+    gameSettings : GameSettings
 
 }

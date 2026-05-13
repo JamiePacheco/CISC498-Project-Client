@@ -7,6 +7,8 @@ import { LobbySession } from "../../Interfaces/LobbySession";
 import { GameSession } from "../../Interfaces/GameSession";
 import { RoundSession } from "../../Interfaces/RoundSession";
 import { GameSettings } from "../../Interfaces/GameSettings";
+import { Prompt, PromptPair } from "../../Interfaces/PromptPair";
+import { PromptSubmission } from "../../Interfaces/PromptSubmission";
 
 export interface LobbyConnectionState {
     lobbyId: number | null;
@@ -18,6 +20,7 @@ export interface LobbyConnectionState {
     chat: GameLobbyMessage[];
     lastSequence: number;
     socketPackets: GameLobbyEvent<any>[]; // debugging purposes, used to check what packets have been sent to the user
+    assignedPrompts : PromptPair[];
 }
 
 const initialState: LobbyConnectionState = {
@@ -29,6 +32,7 @@ const initialState: LobbyConnectionState = {
     users: [],
     chat: [],
     socketPackets: [],
+    assignedPrompts: [],
     lastSequence: 0,
 };
 
@@ -62,6 +66,12 @@ const lobbySlice = createSlice({
         startGameSession(state, action: PayloadAction<{gameLobby : LobbySession, gameSettings : GameSettings}>) {
             // middleware will handle sending socket request
         },
+        sendPrompt(state, action : PayloadAction<{gameLobby : LobbySession, prompt : Prompt}>) {
+
+        },
+        sendSong(state, action: PayloadAction<{gameLobby : LobbySession, promptSubmission : PromptSubmission}>) {
+
+        },
         lobbyEventReceived(state, action: PayloadAction<GameLobbyEvent<any>>) {
             const event = action.payload;
 
@@ -85,12 +95,16 @@ const lobbySlice = createSlice({
                     break;
 
                 case MessageEvent.NEW_HOST:
-                    if (state.lobbySession) {
+                    if (state.lobbySession && state.userSession) {
                         state.lobbySession.host = event.payload;
                         state.lobbySession.activeUsers[event.payload.tempId].host = true;
 
                         const newHostIndex = state.users.findIndex((u : UserSession) => u.tempId === event.payload.tempId);
                         state.users[newHostIndex].host = true;
+
+                        // if (state.users[newHostIndex].tempId === state.userSession.tempId) {
+                        //     state.userSession.host = true;
+                        // }
                     }
                     break;
 
@@ -116,12 +130,46 @@ const lobbySlice = createSlice({
                         state.lobbySession.status = event.payload.lobbyStatus;
                         state.lobbySession.lastUpdated = event.payload.lastUpdated;
                     }
+
+                    if (state.gameSession?.currentRound) {
+                        state.roundSession = state.gameSession.currentRound;
+                    }
+
+                    
                     break;    
                 case MessageEvent.PHASE_CHANGE:
                     if (state.roundSession && state.gameSession) {
                         state.roundSession.roundStatus = event.payload.roundStatus;
-                        state.gameSession.lastUpdatedAt = event.timestamp;
                         state.roundSession.phaseDuration = event.payload.phaseDuration;
+                        state.gameSession.lastUpdatedAt = event.timestamp;
+
+                        // reset players ready status (only acts as visual indicator on each phase screen)
+                        Object.keys(state.gameSession.players).forEach((id : string) => {
+                                if (state.gameSession) state.gameSession.players[id].ready = false
+                            }
+                        )
+                    }
+                    break;
+                case MessageEvent.PROMPT_SUBMITTED:
+                    if (state.roundSession && state.gameSession) {
+                        console.log("Prompt Submitted")
+                        const userPrompt = event.payload
+                        state.gameSession.players[userPrompt.authorId].ready = true;
+                    }
+                    break;
+                case MessageEvent.SUBMISSION_RECEIVED:
+                    if (state.roundSession && state.gameSession) {
+                        console.log("Song Submission Receieved")
+                        state.gameSession.players[event.payload].ready = true;
+                    }
+                    break;
+                case MessageEvent.DISPLAY_PROMPT:
+                    if (state.roundSession && state.gameSession) {
+
+                        const promptPair : PromptPair = event.payload;
+
+                        state.roundSession.promptPairs[promptPair.promptId] = promptPair;
+                        state.roundSession.currentPromptId = promptPair.promptId;
                     }
             }
         },
@@ -162,6 +210,10 @@ const lobbySlice = createSlice({
                     if (userIndex === -1) state.users.push(userSession);
                     else state.users[userIndex] = userSession
                     break;
+                case "PROMPT_ASSIGNED":
+                    if (state.gameSession && state.userSession) {
+                        state.assignedPrompts.push(message.messageContent);
+                    }
             }
         },
         resetConnection: () => {
@@ -178,7 +230,8 @@ export const {
     joinLobby,
     sendMessage,
     startGameSession,
-
+    sendPrompt,
+    sendSong,
 
     lobbyEventReceived,
     lobbyMessageReceived,

@@ -29,7 +29,7 @@ export interface GameLobbyPageState {
 
 const defaultSettings : GameSettings = {
     gameMode : "PROMPT_BATTLE", 
-    timed: true, 
+    timed: false, 
     maxDisplayTime : 30,
     rounds : 1
 } 
@@ -144,7 +144,6 @@ export default function GameLobbyPage() {
             </div>
             <div className="playerbox"            
             >
-                                <button className="button" onClick = {() => console.log(sockets)}> Socket </button>
                 {
                     lobbyUsers.map((user : UserSession, index) => {
                         

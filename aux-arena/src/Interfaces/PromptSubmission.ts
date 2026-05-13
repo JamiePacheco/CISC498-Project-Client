@@ -10,5 +10,5 @@ export interface SongChoice {
 export interface PromptSubmission {
     songChoice : SongChoice,
     promptPairId : string,
-    submittedAt : string
+    submittedAt? : string
 }

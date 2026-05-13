@@ -128,9 +128,8 @@ export default function CreateLobby({setCreating}: userStatus){
                 <input type='text' className='text-box' placeholder={"optional"} onChange={passwordHelper}></input>
             </div>}
             <div className='input'>
-                <Link to="/game-lobby" className="enter lobby-button">Create</Link>
+                <button onClick={() => {createGameLobby()}} className="enter lobby-button">Create</button>
             </div>
-            <button onClick={() => {createGameLobby()}}> Create Lobby </button>
         </div>
     )
 }

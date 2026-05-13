@@ -94,10 +94,8 @@ export default function LobbyOverlay({setJoining}: userStatus) {
                 <input type="checkbox"></input>
             </div>
 
-            <button onClick = {() => joinLobbyAction()}> Join Lobby </button>
-
             <div className="input">
-                <Link to="/game-lobby" className="enter lobby-button">Join</Link>
+                <button onClick = {() => joinLobbyAction()} className="enter lobby-button"> Join Lobby </button>
             </div>
         </div>
     )

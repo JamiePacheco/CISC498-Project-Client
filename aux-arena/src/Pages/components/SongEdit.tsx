@@ -15,9 +15,10 @@ export interface song{
     timeStamp: number[];
     setTimeStamp: (time:number[]) => void;
     setEditing: (bool:boolean) => void;
+    handleSubmission: () => void;
 }
 
-export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: song){
+export default function SongEdit({song, timeStamp, setTimeStamp, setEditing, handleSubmission}: song){
     const [startText, setStart] = useState<string>(`${Math.floor(timeStamp[0] / 60)}:${(timeStamp[0] % 60).toString().padStart(2, "0")}`)
     const [endText, setEnd] = useState<string>(`${Math.floor(timeStamp[1] / 60)}:${(timeStamp[1] % 60).toString().padStart(2, "0")}`)
     const [lastChange, setchanged] = useState<options>("start");
@@ -64,7 +65,10 @@ export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: so
                 start = (end-15)>0 ? end - 15 : 0;
                 end = start===0? 15: end;
         }
+
         setTimeStamp([start, end]);
+
+        handleSubmission();
     }
 
     useEffect(() => {
@@ -75,25 +79,31 @@ export default function SongEdit({song, timeStamp, setTimeStamp, setEditing}: so
     return(
         <div className="songEdit purple-pixels">
             <div className="exit" onClick={() => setEditing(false)}>X</div>
-            Select a 15-30 second section:
-            <iframe id="ytplayer" width="640" height="360" title={song.title}
-                src={`https://www.youtube.com/embed/${song.url}?start=${timeStamp[0]}&end=${timeStamp[1]}`}/>    
-            <div className="timeStamp">
-                <div>
-                    Start:
-                    <input value={startText} type="text"
-                    onChange={(e) => {handleInput(e.target.value, true); setchanged("start")}} className="small-text-box"></input>
-                </div>
-                <button className="button" onClick={saveTime}>Set Timestamps</button>
-                <div>
-                    End:
-                    <input value={endText} type="text"
-                    onChange={(e) => {handleInput(e.target.value, false); setchanged("end")}} className="small-text-box"></input>
-                </div>
+            
+            <div> Select a 15-30 second section: </div>
+
+            <div>
+                 <iframe id="ytplayer" width="680" height="380" title={song.title}
+                src={`https://www.youtube.com/embed/${song.url}?start=${timeStamp[0]}&end=${timeStamp[1]}`}
+                />    
             </div>
-            Input "minutes:seconds" or "seconds" 
-            <br></br>
-            Press the button to set the timestamps
+           
+            
+            
+            <div className="timeStamp">
+                <div className = "timeframe">
+                        <input value={startText} type="text"
+                        onChange={(e) => {handleInput(e.target.value, true); setchanged("start")}} className="small-text-box"></input>
+                        to
+                        <input value={endText} type="text"
+                        onChange={(e) => {handleInput(e.target.value, false); setchanged("end")}} className="small-text-box"></input>
+
+                </div>
+                
+                <button className="button" onClick={saveTime}>Submit Song</button>
+                
+            </div>
+
         </div>
     )
 }

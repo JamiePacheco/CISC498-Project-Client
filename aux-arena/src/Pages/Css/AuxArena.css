@@ -4,6 +4,8 @@
 
 .game-display{
     padding-top:1em;
+    max-height: 100vh;
+    height: 30%;
 }
 
 .prompt-sfx{
@@ -30,11 +32,10 @@
 
 .results{
     justify-self: center;
-    position:relative;
     z-index: 1;
-    display: table;
     place-items: center;
     width: 60vw;
+    max-height: 100%;
 }
 
 .songResults{
@@ -65,9 +66,9 @@
     align-self: top;
     position: fixed;
     z-index: 10;
-    top: 20%;
-    padding-top: 5%;
-    height: 60%;
+    top: 30%;
+    padding-top: 2%;
+    height: 55%;
     width: 60%;
     border-radius: 2em;
     background: rgba(24, 21, 38, 1);
@@ -75,7 +76,22 @@
 
 .timeStamp{
     display:flex;
+    flex-direction: column;
     justify-content: space-around;
+
+    align-items: center;
+    row-gap: 10px;
+}
+
+.timeStamp button {
+    max-width: 20%;
+}
+
+.timeframe {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 15px;
 }
 
 .viewing{
@@ -181,3 +197,35 @@
 .Viewing2{border-color: rgba(6, 239, 26, 1)}
 .Voting{border-color: rgba(36, 65, 255, 1)}
 .Winner{border-color: rgba(187, 0, 255, 1);}
+
+
+.pickingBody {
+  border-radius: 3rem;
+  background: rgba(4, 10, 57, 1);
+  position: absolute;
+  top : 25%;
+  width: 70%;
+  left: 15%;
+  max-height: 70%;
+}
+
+.pickingContent {
+    padding: 10px;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.prompt-tabs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 20px;
+}
+
+.prompt-tabs div {
+    border: solid 5px rgba(8, 136, 199, 1);
+    padding: 10px;
+    min-width: 125px;
+
+}

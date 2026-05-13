@@ -1,5 +1,7 @@
 import { GameSettings } from "../Interfaces/GameSettings";
 import { LobbySession } from "../Interfaces/LobbySession";
+import { Prompt } from "../Interfaces/PromptPair";
+import { PromptSubmission } from "../Interfaces/PromptSubmission";
 import { GameLobbyMessage } from "../Interfaces/socket/GameLobbyMessage";
 import { UserSession } from "../Interfaces/UserSession";
 import { rxStomp } from "./RxStompClient";
@@ -30,9 +32,19 @@ export function startGameSession({gameLobby, gameSettings} : {gameLobby : LobbyS
     sendMessage(`/app/game-lobby/start-game/${gameLobby.id}`, gameSettings)
 }
 
+export function sendPrompt({gameLobby, prompt} : {gameLobby : LobbySession, prompt : Prompt}) {
+    console.log("Sending Prompt")
+    sendMessage(`/app/game-lobby/submit-prompt/${gameLobby.id}`, prompt);
+}
+
+export function sendSong({gameLobby, promptSubmission} : {gameLobby : LobbySession, promptSubmission : PromptSubmission}) {
+        sendMessage(`/app/game-lobby/submit-song/${gameLobby.id}`, promptSubmission);
+}
 
 export const socketCommandMap : Record<string, Function> = {
     "lobby/joinLobby" : sendUserSessionMessage,
     "lobby/sendMessage" : sendChatMessage,
-    "lobby/startGameSession" : startGameSession 
+    "lobby/startGameSession" : startGameSession,
+    "lobby/sendPrompt" : sendPrompt,
+    "lobby/sendSong" : sendSong,
 }

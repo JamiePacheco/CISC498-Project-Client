@@ -1,7 +1,7 @@
 
 export type MessageStatus = "FAILED" | "SUCCESS";
 
-export type UserEventType = "ROUND_UPDATE" | "LOBBY_UPDATE" | "CHAT_UPDATE" | "USER_UPDATE";
+export type UserEventType = "ROUND_UPDATE" | "LOBBY_UPDATE" | "CHAT_UPDATE" | "USER_UPDATE" | "PROMPT_ASSIGNED";
 
 export interface UserEvent<T> {
     messageContent : T,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import "./Css/AuxArena.css"
 import "./Css/Lobby.css"
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import ViewingPhase from "./AuxArenaComponents/ViewingPhase";
 import VotingPhase from "./AuxArenaComponents/VotingPhase";
 import WinnerPhase from "./AuxArenaComponents/WinnerPhase";
 import Timer from "./AuxArenaComponents/Timer";
+import PlayerReadyCount from "./AuxArenaComponents/PlayerReadyCount";
 
 //Prompt Phase: Players creates a prompt
 //Picking Phase: Choosing a song (Only for participating players)
@@ -28,14 +29,19 @@ const phaseTranslation = [
     "Winner"
 ]
 
+
 export default function AuxArena(){
     const user = useSelector((state:RootState)=>state.user);
     const game = useSelector((state:RootState)=>state.game);
     const lobby = useSelector((state:RootState)=>state.lobby);
+    const userSession = useSelector((state:RootState) => state.lobby.userSession);
+    const gameSession = useSelector((state:RootState) => state.lobby.gameSession);
+    const roundSession = useSelector((state:RootState) => state.lobby.roundSession);
+
+
     const dispatch = useDispatch<AppDispatch>();
 
     // * Local States * //
-    const [isPlayer, setPlayerStatus] = useState<boolean>(false);
     const [showChat, setChat] = useState<Boolean>(true);
 
     function toggleChat(){
@@ -47,15 +53,6 @@ export default function AuxArena(){
         dispatch(endGame());
     }, [user, dispatch])
 
-    useEffect(()=>{
-        if(game.player1.userInfo.userID === user.userInfo.userID || game.player2.userInfo.userID === user.userInfo.userID){
-            setPlayerStatus(true);
-            console.log("Player status changed");
-        }else{
-            setPlayerStatus(false);
-            console.log("Player status changed");
-        }
-    }, [game.player1.userInfo.userID, game.player2.userInfo.userID, user.userInfo.userID])
 
     function nextPhase(){
         if(game.gameInfo.gamePhase === 1){
@@ -67,30 +64,36 @@ export default function AuxArena(){
         }else dispatch(changePhase());
     }
 
+    if (!lobby.gameSession || !lobby.lobbySession || !lobby.roundSession) {
+        return <div> error </div>
+    }
+
+    const roundPhaseComponents : Record<string, JSX.Element> = {
+        "WRITING_PROMPT" : <PromptPhase  isPlayer={!userSession?.isSpectator}/>,
+        "CHOOSING_SONG" : <PickingPhase  isPlayer={!userSession?.isSpectator}/>,
+        "PRESENTING" : <ViewingPhase/>,
+        "VOTING" : <VotingPhase/>,
+        "SCORING" : <WinnerPhase/>
+    }
+
+    if (!userSession || !lobby || !gameSession || !roundSession) {
+        return <div> No clue how you got here buddy... </div>
+    }
+
     return (
          <div className="game-screen">
-            <Timer/>
-            <button onClick={nextPhase} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
-
+            <Timer duration={roundSession.phaseDuration} phase={roundSession.roundStatus} timed = {gameSession.gameSettings.timed} />
             
-            Phase: {phaseTranslation[game.gameInfo.gamePhase]}
-            <div className={"prompt-box"}>
-                {`${game.gameInfo.prompt !== ""}`? `Prompt: ${game.gameInfo.prompt}` : "No Prompts Currently"}
-            </div>
+            <PlayerReadyCount/>
+
+            <button onClick={nextPhase} className="button" style={{position:"absolute", right:"1em"}}>Change Phase</button>
+            
+            Phase: {roundSession.roundStatus}
+            
             <div className="game-display">
                 <button className={`chatButton ${showChat && "activeChat"}`} onClick={toggleChat} >Show Chat</button>
                 {showChat && <ChatBox/>}
-                {game.gameInfo.gamePhase===0 && 
-                    <PromptPhase isPlayer={isPlayer}/>
-                }
-                {game.gameInfo.gamePhase===1 && 
-                    <PickingPhase isPlayer={isPlayer}/>}
-                {(game.gameInfo.gamePhase === 2 || game.gameInfo.gamePhase === 3) && 
-                    <ViewingPhase/>}
-                {game.gameInfo.gamePhase === 4 && 
-                    <VotingPhase/>}
-                {game.gameInfo.gamePhase === 5 && 
-                    <WinnerPhase/>}
+                {roundPhaseComponents[roundSession.roundStatus]}
             </div>
         </div>
     )
