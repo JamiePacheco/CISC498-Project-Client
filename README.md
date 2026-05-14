@@ -1,46 +1,175 @@
-# Getting Started with Create React App
+# Aux Arena Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Frontend client for a lobby-based, music-themed party game built with React + TypeScript.  
+Players can create/join lobbies, chat in real time, and progress through game phases (prompt, song picking, viewing, voting, winner).
+
+## What This App Does
+
+This app provides the UI for a multiplayer game flow:
+
+- Users create or join a game lobby.
+- The client connects to a backend over REST and WebSockets (STOMP over SockJS).
+- Players and spectators move through game phases.
+- Players select songs (currently test-data driven in the UI), everyone votes, and a winner is shown.
+
+## Main Features
+
+- Lobby creation and join flow
+- Real-time lobby updates via WebSocket topics/queues
+- Real-time lobby chat
+- Multi-phase game screen:
+  - Prompt phase
+  - Song picking phase
+  - Viewing phase
+  - Voting phase
+  - Winner phase
+- Redux state management for user, lobby, and game state
+
+## Tech Stack
+
+- **Framework:** React 19, TypeScript
+- **Build tooling:** Create React App (`react-scripts` 5)
+- **State management:** Redux Toolkit, React Redux
+- **Networking:** Axios (REST), RxStomp + SockJS/STOMP (WebSockets)
+- **Routing:** React Router
+- **Testing:** Jest + React Testing Library (CRA default setup)
+
+## Project Structure
+
+This repo is organized as a single client app under `aux-arena`:
+
+```text
+CISC498-Project-Client/
+├─ aux-arena/
+│  ├─ public/                  # Static assets
+│  ├─ src/
+│  │  ├─ Pages/                # Main pages + UI components
+│  │  ├─ redux/                # Store, slices, middleware
+│  │  ├─ service/              # REST API service wrappers
+│  │  ├─ sockets/              # STOMP publish/subscribe helpers
+│  │  ├─ Config/               # Socket configuration
+│  │  ├─ Interfaces/           # TypeScript interfaces/types
+│  │  └─ testCaseTOBEREMOVED/  # Temporary mock data
+│  ├─ package.json
+│  └─ tsconfig.json
+├─ .gitignore
+└─ README.md
+```
+
+## Setup (Fresh Clone)
+
+1. Clone the repository.
+2. Open a terminal in the project root.
+3. Install dependencies for the client app:
+
+```bash
+cd aux-arena
+npm install
+```
+
+## Environment Variables
+
+No environment variables are currently consumed by the committed code.  
+The client currently hardcodes backend URLs to `http://localhost:8080`.
+
+If you choose to externalize configuration (recommended), use placeholder values like:
+
+```env
+REACT_APP_API_BASE_URL=http://localhost:8080/api
+REACT_APP_WS_BASE_URL=http://localhost:8080/ws
+```
+
+## Running Locally
+
+From `aux-arena`:
+
+```bash
+npm start
+```
+
+- Client runs on `http://localhost:3000`
+- Expected backend base URL: `http://localhost:8080/api`
+- Expected WebSocket endpoint: `http://localhost:8080/ws`
 
 ## Available Scripts
 
-In the project directory, you can run:
+From `aux-arena`:
 
-### `npm start`
+- `npm start` - Run the CRA dev server
+- `npm run build` - Build a production bundle into `build/`
+- `npm test` - Run tests in watch mode
+- `npm run eject` - Eject CRA config (irreversible)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Database / Migrations
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+No database schema, migration files, or DB setup scripts exist in this repository.  
+Database setup appears to be handled by the backend service this client talks to.
 
-### `npm test`
+## API Routes and Real-Time Endpoints
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### REST endpoints used by this client
 
-### `npm run build`
+Base URL (hardcoded): `http://localhost:8080/api`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `GET /v1/auth` - Authenticate user
+- `POST /v1/auth` - Register/create user
+- `POST /v1/auth/guest` - Create guest user
+- `POST /v1/game-lobby` - Create lobby
+- `GET /v1/game-lobby` - Fetch lobby (`lobby-id`, `password`)
+- `POST /v1/lobby-session/connect` - Connect user to lobby session
+- `POST /v1/youtube` - Song search
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### WebSocket endpoints used by this client
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+WebSocket/SockJS endpoint (hardcoded): `http://localhost:8080/ws`
 
-### `npm run eject`
+Client publish destinations:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- `/app/game-lobby/join/{lobbyId}`
+- `/app/game-lobby/send-message/{lobbyId}`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Client subscriptions:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- `/topic/game-lobby/{lobbyId}`
+- `/topic/game-lobby/message/{lobbyId}`
+- `/user/queue/game-lobby/{lobbyId}`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Auth / Payment / Storage / Integrations
 
-## Learn More
+- **Authentication:** Login/register UI exists; some login behavior is currently mocked in UI state.
+- **Payment:** No payment integration found.
+- **Storage:** No client-side storage integration beyond in-memory Redux state.
+- **External integrations:**
+  - Backend REST API + STOMP WebSocket service
+  - YouTube-related search endpoint via backend (`/v1/youtube`)
+  - YouTube embeds in viewing/voting phases
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Testing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Test setup exists (`Jest` + `React Testing Library`), with a default-style `App.test.tsx`.
+
+Run tests from `aux-arena`:
+
+```bash
+npm test
+```
+
+Note: the existing test appears to still target default CRA content and may need updating for current UI behavior.
+
+## Deployment Notes
+
+No deployment configuration files are present (for example: Docker, CI workflow, or infrastructure manifests).  
+A production deployment process is not defined in this repository.
+
+## Limitations / TODOs / Assumptions
+
+- Multiple comments in code indicate TODO/in-progress areas (auth flow, host assignment, spectator behavior, env-based configuration).
+- Some game logic currently uses local Redux updates and temporary/mock song data.
+- There is no backend code in this repository; successful local runtime depends on a compatible backend running separately on `localhost:8080`.
+- Socket/API URLs are currently hardcoded rather than environment-driven.
+
+## Assumptions / Needs Confirmation
+
+- Whether the intended project root for day-to-day work is `aux-arena` (it appears to be).
+- Exact backend repository/setup steps and required backend environment variables.
+- Final intended auth behavior (current login UI dispatches local state directly in at least one path).
